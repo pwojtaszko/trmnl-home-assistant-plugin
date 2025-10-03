@@ -1,0 +1,26 @@
+<div id="root">
+
+<script>
+  let entitiesList = `{{ trmnl.plugin_settings.custom_fields_values.entities | escape }}`;
+  let entitiesLines = entitiesList.split('\n').filter(line => line.trim() !== '');
+  let labels = entitiesLines.map(line => line.split(':')[0]);
+  let responses = [{{ IDX_0 | json }}, {{ IDX_1 | json }}, {{ IDX_2 | json }}, {{ IDX_3 | json }}, {{ IDX_4 | json }}, {{ IDX_5 | json }}, {{ IDX_6 | json }}, {{ IDX_7 | json }}, {{ IDX_8 | json }}, {{ IDX_9 | json }}, {{ IDX_10 | json }}, {{ IDX_11 | json }}, {{ IDX_12 | json }}, {{ IDX_13 | json }}, {{ IDX_14 | json }}, {{ IDX_15 | json }}, {{ IDX_16 | json }}, {{ IDX_17 | json }}, {{ IDX_18 | json }}, {{ IDX_19 | json }}, {{ IDX_20 | json }}];
+  const responsesByLabel = {};
+  labels.forEach((label, index) => {
+    if (!responsesByLabel[label]) {
+      responsesByLabel[label] = [];
+    }
+    responsesByLabel[label].push(responses[index]);
+  });
+
+  console.log(responsesByLabel);
+  const div = document.getElementById('root');
+  
+var span = document.createElement('span');
+span.className = 'content';
+span.innerHTML = JSON.stringify(responsesByLabel);
+div.appendChild(span);
+
+</script>
+
+</div>
