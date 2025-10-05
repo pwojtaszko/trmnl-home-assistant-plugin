@@ -25,6 +25,23 @@
   --border-radius: 4px;
 }
 
+/* 1-bit display mode - pure black and white only */
+.screen--1bit {
+  --primary-color: #000000;
+  --secondary-color: #000000;
+  --background-color: #ffffff;
+  --card-background: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --border-color: #000000;
+  --success-color: #000000;
+  --warning-color: #000000;
+  --error-color: #000000;
+  --shadow: none;
+  --shadow-hover: none;
+  --border-radius: 4px;
+}
+
 body, html {
   margin: 0;
   padding: 0;
@@ -80,12 +97,6 @@ body, html {
   padding: 12px;
   position: relative;
   overflow: hidden;
-}
-
-.entity-card.error {
-  border-color: var(--error-color);
-  background: #f8f8f8;
-  border-width: 2px;
 }
 
 .entity-card.offline {
@@ -182,7 +193,7 @@ body, html {
 }
 
 .entity-id {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-top: 4px;
   font-family: monospace;
@@ -326,6 +337,53 @@ body, html {
 }
 
 /* E-ink optimized - monochromatic only */
+
+/* 1-bit display specific overrides - pure black and white only */
+.screen--1bit .entity-card.error {
+  background: #ffffff;
+  border-color: #000000;
+}
+
+.screen--1bit .entity-card.offline {
+  background: #ffffff;
+  opacity: 1;
+}
+
+.screen--1bit .entity-icon {
+  background: #000000;
+  border-color: #000000;
+}
+
+.screen--1bit .entity-icon.temperature,
+.screen--1bit .entity-icon.sensor,
+.screen--1bit .entity-icon.light,
+.screen--1bit .entity-icon.switch,
+.screen--1bit .entity-icon.conversation,
+.screen--1bit .entity-icon.error {
+  background: #000000;
+}
+
+.screen--1bit .section-header {
+  background: #000000;
+  color: #ffffff;
+  border-bottom-color: #000000;
+}
+
+.screen--1bit .loading-spinner {
+  border-color: #000000;
+  border-top-color: #000000;
+}
+
+.screen--1bit .status-indicator {
+  background: #000000;
+  border-color: #000000;
+}
+
+.screen--1bit .status-indicator.error,
+.screen--1bit .status-indicator.warning {
+  background: #000000;
+  border-color: #000000;
+}
 
 /* Utility Classes */
 .text-center {
