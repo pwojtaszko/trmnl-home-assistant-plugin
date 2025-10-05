@@ -1,7 +1,8 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
 <style>
 /* Fallback for when Iconify icons don't load */
 .iconify-fallback {
-  font-family: Arial, sans-serif;
   font-weight: bold;
 }
 </style>
@@ -45,7 +46,7 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Inter;
   background-color: var(--background-color);
   color: var(--text-primary);
   line-height: 1.4;
@@ -66,16 +67,14 @@ body, html {
   overflow: hidden;
 }
 
-
-
 .section-header {
-  background: var(--primary-color);
-  color: white;
-  padding: 12px 16px;
-  font-weight: 600;
-  font-size: 16px;
-  text-transform: capitalize;
-  border-bottom: 2px solid var(--primary-color);
+    font-weight: 600;
+    font-size: 16px;
+    position: absolute;
+    margin-top: -12px;
+    padding-inline: 7px;
+    margin-left: 11px;
+    background: white;
 }
 
 .section-content {
@@ -196,7 +195,6 @@ body, html {
   font-size: 14px;
   color: var(--text-secondary);
   margin-top: 4px;
-  font-family: monospace;
   opacity: 0.7;
 }
 
@@ -286,7 +284,6 @@ body, html {
   }
   
   .section-header {
-    padding: 10px 12px;
     font-size: 14px;
   }
   
@@ -361,12 +358,6 @@ body, html {
 .screen--1bit .entity-icon.conversation,
 .screen--1bit .entity-icon.error {
   background: #000000;
-}
-
-.screen--1bit .section-header {
-  background: #000000;
-  color: #ffffff;
-  border-bottom-color: #000000;
 }
 
 .screen--1bit .loading-spinner {
