@@ -644,18 +644,10 @@ class HomeAssistantRenderer {
       .map(entity => this.createEntityCard(entity, label))
       .join('');
     
-    // Count valid entities (non-error)
-    const validCount = entities.filter(e => !e.error).length;
-    const totalCount = entities.length;
-    const countText = validCount < totalCount ? 
-      `${validCount}/${totalCount} entities` : 
-      `${totalCount} entities`;
-    
     return `
       <div class="entity-section" data-label="${label}">
         <div class="section-header">
           <span>${label}</span>
-          <small style="opacity: 0.8; font-weight: normal; margin-left: 8px;">(${countText})</small>
         </div>
         <div class="section-content">
           <div class="entities-grid">
