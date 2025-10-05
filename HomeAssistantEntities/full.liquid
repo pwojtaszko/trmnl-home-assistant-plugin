@@ -198,28 +198,6 @@ body, html {
   opacity: 0.7;
 }
 
-/* Status Indicators */
-.status-indicator {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary-color);
-  border: 1px solid var(--primary-color);
-}
-
-.status-indicator.error {
-  background: var(--error-color);
-  border: 2px solid var(--error-color);
-}
-
-.status-indicator.warning {
-  background: var(--warning-color);
-  border: 2px solid var(--warning-color);
-}
-
 /* Loading States */
 .loading {
   opacity: 0.5;
@@ -363,17 +341,6 @@ body, html {
 .screen--1bit .loading-spinner {
   border-color: #000000;
   border-top-color: #000000;
-}
-
-.screen--1bit .status-indicator {
-  background: #000000;
-  border-color: #000000;
-}
-
-.screen--1bit .status-indicator.error,
-.screen--1bit .status-indicator.warning {
-  background: #000000;
-  border-color: #000000;
 }
 
 /* Utility Classes */
@@ -614,7 +581,6 @@ class HomeAssistantRenderer {
     const stateInfo = this.formatEntityState(entity);
     
     const cardClass = entity.error ? 'entity-card error' : 'entity-card';
-    const statusClass = entity.error ? 'status-indicator error' : 'status-indicator';
     
     // Format icon for Iconify API URL
     const formattedIcon = this.formatIconForUrl(icon);
@@ -631,7 +597,6 @@ class HomeAssistantRenderer {
           ${stateInfo.unit ? `<span class="entity-unit">${stateInfo.unit}</span>` : ''}
         </div>
         ${entity.entity_id ? `<div class="entity-id">${entity.entity_id}</div>` : ''}
-        <div class="${statusClass}"></div>
       </div>
     `;
   }
