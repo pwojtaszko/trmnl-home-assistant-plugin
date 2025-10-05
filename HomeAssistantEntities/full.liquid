@@ -1,26 +1,864 @@
-<div id="root">
+<style>
+/* Fallback for when Iconify icons don't load */
+.iconify-fallback {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+</style>
+
+<style>
+/* Home Assistant Entities Responsive Layout */
+
+:root {
+  --primary-color: #000000;
+  --secondary-color: #333333;
+  --background-color: #ffffff;
+  --card-background: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --border-color: #cccccc;
+  --success-color: #000000;
+  --warning-color: #666666;
+  --error-color: #000000;
+  --shadow: none;
+  --shadow-hover: none;
+  --border-radius: 4px;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+#root {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Section Containers */
+.entity-section {
+  margin-bottom: 24px;
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  border: 2px solid var(--border-color);
+  overflow: hidden;
+}
+
+
+
+.section-header {
+  background: var(--primary-color);
+  color: white;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: capitalize;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.section-content {
+  padding: 16px;
+}
+
+/* Dynamic Grid Layout */
+.entities-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Entity Cards */
+.entity-card {
+  background: var(--card-background);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.entity-card.error {
+  border-color: var(--error-color);
+  background: #f8f8f8;
+  border-width: 2px;
+}
+
+.entity-card.offline {
+  opacity: 0.6;
+  background: #f8f8f8;
+}
+
+/* Entity Content */
+.entity-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.entity-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  font-size: 14px;
+  flex-shrink: 0;
+  border: 1px solid var(--primary-color);
+}
+
+.entity-icon img {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.entity-icon.temperature {
+  background: var(--secondary-color);
+}
+
+.entity-icon.sensor {
+  background: var(--primary-color);
+}
+
+.entity-icon.light {
+  background: var(--secondary-color);
+}
+
+.entity-icon.switch {
+  background: var(--primary-color);
+}
+
+.entity-icon.conversation {
+  background: var(--secondary-color);
+}
+
+.entity-icon.error {
+  background: var(--error-color);
+}
+
+.entity-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.entity-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.entity-unit {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
+
+.entity-state {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.entity-error {
+  color: var(--error-color);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.entity-id {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-family: monospace;
+  opacity: 0.7;
+}
+
+/* Status Indicators */
+.status-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.status-indicator.error {
+  background: var(--error-color);
+  border: 2px solid var(--error-color);
+}
+
+.status-indicator.warning {
+  background: var(--warning-color);
+  border: 2px solid var(--warning-color);
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.5;
+}
+
+/* Loading Container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+
+/* Removed spinning animation for e-ink compatibility */
+
+.loading-text {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #root {
+    padding: 12px;
+  }
+  
+  .entities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  
+  .entity-section {
+    margin-bottom: 16px;
+  }
+  
+  .section-header {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .section-content {
+    padding: 12px;
+  }
+  
+  .entity-card {
+    padding: 10px;
+  }
+  
+  .entity-value {
+    font-size: 16px;
+  }
+  
+  .entity-name {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .entities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .entity-header {
+    margin-bottom: 6px;
+  }
+  
+  .entity-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+  
+  .entity-icon img {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .entity-value {
+    font-size: 14px;
+  }
+  
+  .entity-name {
+    font-size: 12px;
+  }
+}
+
+/* E-ink optimized - monochromatic only */
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+
+</style>
 
 <script>
-  let entitiesList = `{{ trmnl.plugin_settings.custom_fields_values.entities | escape }}`;
-  let entitiesLines = entitiesList.split('\n').filter(line => line.trim() !== '');
-  let labels = entitiesLines.map(line => line.split(':')[0]);
-  let responses = [{{ IDX_0 | json }}, {{ IDX_1 | json }}, {{ IDX_2 | json }}, {{ IDX_3 | json }}, {{ IDX_4 | json }}, {{ IDX_5 | json }}, {{ IDX_6 | json }}, {{ IDX_7 | json }}, {{ IDX_8 | json }}, {{ IDX_9 | json }}, {{ IDX_10 | json }}, {{ IDX_11 | json }}, {{ IDX_12 | json }}, {{ IDX_13 | json }}, {{ IDX_14 | json }}, {{ IDX_15 | json }}, {{ IDX_16 | json }}, {{ IDX_17 | json }}, {{ IDX_18 | json }}, {{ IDX_19 | json }}, {{ IDX_20 | json }}];
-  const responsesByLabel = {};
-  labels.forEach((label, index) => {
-    if (!responsesByLabel[label]) {
-      responsesByLabel[label] = [];
+/**
+ * Home Assistant Entities Dynamic Renderer
+ * Handles grouping, icon mapping, and responsive grid rendering
+ */
+
+class HomeAssistantRenderer {
+  constructor(containerId = 'root') {
+    this.container = document.getElementById(containerId);
+    this.iconMap = this.createIconMap();
+    this.init();
+  }
+
+  init() {
+    if (!this.container) {
+      console.error('Container element not found');
+      return;
     }
-    responsesByLabel[label].push(responses[index]);
-  });
+    this.container.className = 'entities-container';
+  }
 
-  console.log(responsesByLabel);
-  const div = document.getElementById('root');
+  /**
+   * Create icon mapping for different entity types
+   */
+  createIconMap() {
+    return {
+      // Domain-based icons
+      'light': 'mdi:lightbulb',
+      'switch': 'mdi:toggle-switch',
+      'sensor': 'mdi:chart-line',
+      'climate': 'mdi:thermostat',
+      'cover': 'mdi:window-shutter',
+      'fan': 'mdi:fan',
+      'lock': 'mdi:lock',
+      'media_player': 'mdi:speaker',
+      'camera': 'mdi:camera',
+      'alarm_control_panel': 'mdi:security',
+      'automation': 'mdi:cog',
+      'script': 'mdi:script-text',
+      'scene': 'mdi:palette',
+      'input_boolean': 'mdi:checkbox-marked',
+      'input_number': 'mdi:numeric',
+      'input_select': 'mdi:format-list-bulleted',
+      'input_text': 'mdi:form-textbox',
+      'timer': 'mdi:timer',
+      'counter': 'mdi:counter',
+      'person': 'mdi:account',
+      'device_tracker': 'mdi:map-marker',
+      'zone': 'mdi:map',
+      'sun': 'mdi:weather-sunny',
+      'weather': 'mdi:weather-partly-cloudy',
+      'conversation': 'mdi:message-text',
+      'notify': 'mdi:bell',
+      'tts': 'mdi:volume-high',
+      'group': 'mdi:account-group',
+      'homeassistant': 'mdi:home-assistant',
+      
+      // Device class specific icons
+      'temperature': 'mdi:thermometer',
+      'humidity': 'mdi:water-percent',
+      'pressure': 'mdi:gauge',
+      'battery': 'mdi:battery',
+      'illuminance': 'mdi:brightness-6',
+      'motion': 'mdi:motion-sensor',
+      'door': 'mdi:door',
+      'window': 'mdi:window-closed',
+      'smoke': 'mdi:smoke-detector',
+      'gas': 'mdi:gas-cylinder',
+      'power': 'mdi:flash',
+      'energy': 'mdi:lightning-bolt',
+      'current': 'mdi:current-ac',
+      'voltage': 'mdi:sine-wave',
+      'frequency': 'mdi:waveform',
+      'signal_strength': 'mdi:signal',
+      'connectivity': 'mdi:wifi',
+      'co2': 'mdi:molecule-co2',
+      'pm25': 'mdi:air-filter',
+      
+      // Fallback icons
+      'default': 'mdi:information',
+      'error': 'mdi:alert-circle',
+      'unknown': 'mdi:help-circle'
+    };
+  }
+
+  /**
+   * Get icon for entity based on entity_id and device_class
+   */
+  getEntityIcon(entity) {
+    if (entity.error) {
+      return this.iconMap.error;
+    }
+
+    const entityId = entity.entity_id || '';
+    const domain = entityId.split('.')[0];
+    const deviceClass = entity.attributes?.device_class;
+    
+    // Check device class first (more specific)
+    if (deviceClass && this.iconMap[deviceClass]) {
+      return this.iconMap[deviceClass];
+    }
+    
+    // Check domain
+    if (domain && this.iconMap[domain]) {
+      return this.iconMap[domain];
+    }
+    
+    // Fallback
+    return this.iconMap.default;
+  }
+
+  /**
+   * Get entity display name
+   */
+  getEntityName(entity) {
+    if (entity.error) {
+      return 'Error';
+    }
+    
+    return entity.attributes?.friendly_name || entity.entity_id || 'Unknown Entity';
+  }
+
+  /**
+   * Format entity state value
+   */
+  formatEntityState(entity) {
+    if (entity.error) {
+      return {
+        value: entity.error,
+        unit: '',
+        isError: true
+      };
+    }
+
+    const state = entity.state;
+    const unit = entity.attributes?.unit_of_measurement || '';
+    
+    // Handle special states
+    if (state === 'on' || state === 'off') {
+      return {
+        value: state.toUpperCase(),
+        unit: '',
+        isError: false
+      };
+    }
+    
+    // Handle numeric values
+    if (!isNaN(state) && state !== '') {
+      const numValue = parseFloat(state);
+      return {
+        value: numValue % 1 === 0 ? numValue.toString() : numValue.toFixed(2),
+        unit: unit,
+        isError: false
+      };
+    }
+    
+    // Handle datetime values
+    if (state && state.includes('T') && state.includes(':')) {
+      try {
+        const date = new Date(state);
+        return {
+          value: date.toLocaleString(),
+          unit: '',
+          isError: false
+        };
+      } catch (e) {
+        // If date parsing fails, return as is
+      }
+    }
+    
+    return {
+      value: state || 'N/A',
+      unit: unit,
+      isError: false
+    };
+  }
+
+  /**
+   * Get CSS class for entity icon based on domain
+   */
+  getEntityIconClass(entity) {
+    if (entity.error) {
+      return 'entity-icon error';
+    }
+    
+    const entityId = entity.entity_id || '';
+    const domain = entityId.split('.')[0];
+    const deviceClass = entity.attributes?.device_class;
+    
+    // Use device class if available, otherwise domain
+    const iconClass = deviceClass || domain || 'default';
+    return `entity-icon ${iconClass}`;
+  }
+
+  /**
+   * Format icon name for Iconify API URL
+   */
+  formatIconForUrl(iconName) {
+    if (!iconName) {
+      return 'mdi:help-circle';
+    }
+    
+    // If already in proper format (collection:icon), return as is
+    if (iconName.includes(':')) {
+      return iconName;
+    }
+    
+    // If it starts with mdi- (like mdi-thermometer), convert to mdi:thermometer
+    if (iconName.startsWith('mdi-')) {
+      return iconName.replace('mdi-', 'mdi:');
+    }
+    
+    // Default to mdi collection if no collection specified
+    return `mdi:${iconName}`;
+  }
+
+  /**
+   * Create HTML for a single entity card
+   */
+  createEntityCard(entity, label) {
+    const name = this.getEntityName(entity);
+    const icon = this.getEntityIcon(entity);
+    const iconClass = this.getEntityIconClass(entity);
+    const stateInfo = this.formatEntityState(entity);
+    
+    const cardClass = entity.error ? 'entity-card error' : 'entity-card';
+    const statusClass = entity.error ? 'status-indicator error' : 'status-indicator';
+    
+    // Format icon for Iconify API URL
+    const formattedIcon = this.formatIconForUrl(icon);
+    const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
+    
+    return `
+      <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
+        <div class="entity-header">
+          <div class="${iconClass}"><img src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
+          <div class="entity-name" title="${name}">${name}</div>
+        </div>
+        <div class="entity-value ${stateInfo.isError ? 'entity-error' : ''}">
+          ${stateInfo.value}
+          ${stateInfo.unit ? `<span class="entity-unit">${stateInfo.unit}</span>` : ''}
+        </div>
+        ${entity.entity_id ? `<div class="entity-id">${entity.entity_id}</div>` : ''}
+        <div class="${statusClass}"></div>
+      </div>
+    `;
+  }
+
+  /**
+   * Create HTML for a section with grouped entities
+   */
+  createEntitySection(label, entities) {
+    const entitiesHtml = entities
+      .map(entity => this.createEntityCard(entity, label))
+      .join('');
+    
+    // Count valid entities (non-error)
+    const validCount = entities.filter(e => !e.error).length;
+    const totalCount = entities.length;
+    const countText = validCount < totalCount ? 
+      `${validCount}/${totalCount} entities` : 
+      `${totalCount} entities`;
+    
+    return `
+      <div class="entity-section" data-label="${label}">
+        <div class="section-header">
+          <span>${label}</span>
+          <small style="opacity: 0.8; font-weight: normal; margin-left: 8px;">(${countText})</small>
+        </div>
+        <div class="section-content">
+          <div class="entities-grid">
+            ${entitiesHtml}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Main render method
+   */
+  render(responsesByLabel) {
+    console.log('Starting render with data:', responsesByLabel);
+    
+    if (!this.container) {
+      console.error('Container not found - DOM element with id "root" missing');
+      return;
+    }
+
+    console.log('Container found:', this.container);
+
+    // Hide loading indicator
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+      console.log('Hiding loading indicator');
+      loadingIndicator.style.display = 'none';
+    }
+
+    // Clear existing content
+    console.log('Clearing existing content');
+    this.container.innerHTML = '';
+
+    // Check if we have any data
+    const labels = Object.keys(responsesByLabel);
+    console.log('Found labels:', labels);
+    
+    if (labels.length === 0) {
+      console.log('No data found, rendering empty state');
+      this.renderEmptyState();
+      return;
+    }
+
+    // Create sections HTML
+    console.log('Creating sections HTML for', labels.length, 'labels');
+    const sectionsHtml = labels
+      .sort() // Sort labels alphabetically
+      .map(label => {
+        const entities = responsesByLabel[label] || [];
+        console.log(`Creating section for label "${label}" with ${entities.length} entities:`, entities);
+        return this.createEntitySection(label, entities);
+      })
+      .join('');
+
+    console.log('Generated HTML length:', sectionsHtml.length);
+    console.log('Generated HTML preview:', sectionsHtml.substring(0, 200) + '...');
+
+    // Add sections to container
+    this.container.innerHTML = sectionsHtml;
+    console.log('HTML added to container');
+
+    console.log('Rendered', labels.length, 'sections with entities successfully');
+  }
+
+  /**
+   * Render empty state when no data is available
+   */
+  renderEmptyState() {
+    this.container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⚠</div>
+        <h3>No entities found</h3>
+        <p>Check your Home Assistant configuration and ensure entities are properly configured.</p>
+      </div>
+    `;
+  }
+
+  /**
+   * Update specific entity data (for real-time updates)
+   */
+  updateEntity(entityId, newData) {
+    const card = this.container.querySelector(`[data-entity-id="${entityId}"]`);
+    if (card) {
+      const label = card.getAttribute('data-label');
+      card.outerHTML = this.createEntityCard(newData, label);
+    }
+  }
+
+  /**
+   * Refresh all data
+   */
+  refresh(responsesByLabel) {
+    this.render(responsesByLabel);
+  }
+}
+
+// Initialize Home Assistant renderer function
+function initializeHomeAssistantRenderer() {
+  console.log('=== Home Assistant Renderer Initialization ===');
   
-var span = document.createElement('span');
-span.className = 'content';
-span.innerHTML = JSON.stringify(responsesByLabel);
-div.appendChild(span);
+  try {
+    // Data preparation from Liquid template
+    let entitiesList = `{{ trmnl.plugin_settings.custom_fields_values.entities | escape }}`;
+    console.log('Raw entities list:', entitiesList);
+    
+    let entitiesLines = entitiesList.split('\n').filter(line => line.trim() !== '');
+    console.log('Parsed entities lines:', entitiesLines);
+    
+    let labels = entitiesLines.map(line => {
+      if (line.includes(':')) {
+        return line.split(':')[0].trim();
+      }
+      return 'Default'; // Default label if no colon found
+    });
+    console.log('Extracted labels:', labels);
 
+    let responses = [
+      {{ IDX_0 | json }}, {{ IDX_1 | json }}, {{ IDX_2 | json }}, {{ IDX_3 | json }}, 
+      {{ IDX_4 | json }}, {{ IDX_5 | json }}, {{ IDX_6 | json }}, {{ IDX_7 | json }}, 
+      {{ IDX_8 | json }}, {{ IDX_9 | json }}, {{ IDX_10 | json }}, {{ IDX_11 | json }}, 
+      {{ IDX_12 | json }}, {{ IDX_13 | json }}, {{ IDX_14 | json }}, {{ IDX_15 | json }}, 
+      {{ IDX_16 | json }}, {{ IDX_17 | json }}, {{ IDX_18 | json }}, {{ IDX_19 | json }}, 
+      {{ IDX_20 | json }}
+    ];
+    
+    console.log('Raw responses array:', responses);
+    
+    // Filter out null/undefined responses
+    let validResponses = [];
+    let validLabels = [];
+    
+    for (let i = 0; i < responses.length && i < labels.length; i++) {
+      if (responses[i] !== null && responses[i] !== undefined) {
+        validResponses.push(responses[i]);
+        validLabels.push(labels[i]);
+      }
+    }
+    
+    console.log('Valid responses:', validResponses);
+    console.log('Valid labels:', validLabels);
+
+    // Group responses by label
+    const responsesByLabel = {};
+    validLabels.forEach((label, index) => {
+      if (!responsesByLabel[label]) {
+        responsesByLabel[label] = [];
+      }
+      responsesByLabel[label].push(validResponses[index]);
+    });
+
+    console.log('Final grouped data:', responsesByLabel);
+
+    // Check if we have a root container
+    const rootElement = document.getElementById('root');
+    if (!rootElement) {
+      console.error('Root element not found! Cannot render.');
+      return;
+    }
+
+    // Initialize and render the Home Assistant entities
+    console.log('Creating renderer and rendering...');
+    const renderer = new HomeAssistantRenderer('root');
+    renderer.render(responsesByLabel);
+    
+    console.log('=== Initialization Complete ===');
+    
+  } catch (error) {
+    console.error('Error during initialization:', error);
+    console.error('Error details:', error.stack);
+    
+    // Show error state in the UI
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.innerHTML = `
+        <div style="padding: 20px; text-align: center; color: #f44336;">
+          <h3>❌ Error Loading Home Assistant Data</h3>
+          <p>Please check the browser console for details.</p>
+          <pre style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
+        </div>
+      `;
+    }
+  }
+}
 </script>
 
+<div id="loading-indicator" class="loading-container">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading Home Assistant Entities...</div>
 </div>
+
+<div id="root">
+  <!-- Entities will be rendered here -->
+</div>
+
+<script>
+// Initialize the Home Assistant renderer when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing Home Assistant renderer...');
+  
+  try {
+    initializeHomeAssistantRenderer();
+    
+    // Signal to TRMNL that the page is ready for screenshot
+    if (window.trmnl) {
+      console.log('Signaling TRMNL that page is ready');
+      window.trmnl.ready();
+    } else {
+      // Fallback: dispatch a custom event that TRMNL might listen for
+      console.log('TRMNL API not found, dispatching ready event');
+      document.dispatchEvent(new CustomEvent('trmnl-ready'));
+      
+      // Additional fallback: set a global flag
+      window.trmnlReady = true;
+    }
+  } catch (error) {
+    console.error('Error initializing Home Assistant renderer:', error);
+    
+    // Even if there's an error, signal TRMNL so it doesn't wait indefinitely
+    if (window.trmnl) {
+      window.trmnl.ready();
+    } else {
+      document.dispatchEvent(new CustomEvent('trmnl-ready'));
+      window.trmnlReady = true;
+    }
+  }
+});
+
+// Fallback for older browsers or if DOMContentLoaded already fired
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  setTimeout(() => {
+    console.log('DOM already ready, initializing immediately...');
+    try {
+      initializeHomeAssistantRenderer();
+      
+      if (window.trmnl) {
+        console.log('Signaling TRMNL that page is ready (immediate)');
+        window.trmnl.ready();
+      } else {
+        console.log('TRMNL API not found, dispatching ready event (immediate)');
+        document.dispatchEvent(new CustomEvent('trmnl-ready'));
+        window.trmnlReady = true;
+      }
+    } catch (error) {
+      console.error('Error in immediate initialization:', error);
+      if (window.trmnl) {
+        window.trmnl.ready();
+      } else {
+        document.dispatchEvent(new CustomEvent('trmnl-ready'));
+        window.trmnlReady = true;
+      }
+    }
+  }, 100);
+}
+</script>
