@@ -35,5 +35,17 @@ custom_fields:
   help_text: Provide one or more entity IDs like `sensor.outdoor_temperature`, `light.living_room`. Separate multiple entities with commas. Provide labels using the format `Label:entity_id` (e.g., `Living Room Temp:sensor.outdoor_temperature`). When using same labels, it will group entities.
   optional: false
 
+- keyname: entity_style
+  field_type: select
+  name: Entity Display Style
+  description: Choose how entities are displayed on the screen
+  help_text: Simple shows compact cards with just label, icon, value and unit. Detailed shows larger cards with device class titles and takes 50% width in horizontal mode, 100% in vertical mode.
+  optional: false
+  default: simple
+  options:
+    - Simple: simple
+    - Medium: medium
+    - Detailed: detailed
+
 name: Home Assistant Entities
 refresh_interval: 15

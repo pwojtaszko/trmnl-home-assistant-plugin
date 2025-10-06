@@ -1,11 +1,4 @@
-<link rel="preconnect" href="https://fonts.googleapis.com">
 
-<style>
-/* Fallback for when Iconify icons don't load */
-.iconify-fallback {
-  font-weight: bold;
-}
-</style>
 
 <style>
 /* Home Assistant Entities Responsive Layout */
@@ -46,54 +39,49 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: Inter;
   background-color: var(--background-color);
   color: var(--text-primary);
   line-height: 1.4;
 }
 
 #root {
-  padding: 16px;
-  max-width: 1200px;
+  padding: 8px;
   margin: 0 auto;
+  width: 100%;
 }
 
 /* Section Containers */
 .entity-section {
-  margin-bottom: 24px;
-  background: var(--card-background);
-  border-radius: var(--border-radius);
-  border: 2px solid var(--border-color);
-  overflow: hidden;
+    margin-bottom: 16px;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    display: inline-flex;
 }
 
 .section-header {
     font-weight: 600;
-    font-size: 16px;
     position: absolute;
     margin-top: -12px;
     padding-inline: 7px;
-    margin-left: 11px;
+    margin-left: 5px;
     background: white;
 }
 
 .section-content {
-  padding: 16px;
+  padding: 12px;
 }
 
 /* Dynamic Grid Layout */
 .entities-grid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
 }
 
 /* Entity Cards */
 .entity-card {
   background: var(--card-background);
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 12px;
+  padding: 8px;
   position: relative;
   overflow: hidden;
 }
@@ -103,31 +91,50 @@ body, html {
   background: #f8f8f8;
 }
 
+.entity-card--detailed .device-class-title {
+  margin-bottom: 6px;
+}
+
+.entity-card--medium .device-class-title {
+  margin-bottom: 6px;
+}
+
+/* Grid layout for detailed cards */
+.entities-grid--detailed {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Grid layout for medium cards */
+.entities-grid--medium {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 /* Entity Content */
 .entity-header {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  gap: 8px;
+  margin-bottom: 4px;
+  gap: 6px;
 }
 
 .entity-icon {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: var(--primary-color);
   color: white;
-  font-size: 14px;
   flex-shrink: 0;
   border: 1px solid var(--primary-color);
 }
 
 .entity-icon img {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   filter: brightness(0) invert(1);
 }
 
@@ -157,7 +164,6 @@ body, html {
 
 .entity-name {
   font-weight: 500;
-  font-size: 14px;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -166,35 +172,29 @@ body, html {
 }
 
 .entity-value {
-  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 4px;
   word-break: break-all;
 }
 
 .entity-unit {
-  font-size: 12px;
   color: var(--text-secondary);
   margin-left: 4px;
 }
 
 .entity-state {
-  font-size: 12px;
   color: var(--text-secondary);
   text-transform: capitalize;
 }
 
 .entity-error {
   color: var(--error-color);
-  font-size: 12px;
   font-style: italic;
 }
 
 .entity-id {
-  font-size: 14px;
   color: var(--text-secondary);
-  margin-top: 4px;
+  margin-top: 2px;
   opacity: 0.7;
 }
 
@@ -226,8 +226,6 @@ body, html {
 /* Removed spinning animation for e-ink compatibility */
 
 .loading-text {
-  font-size: 16px;
-  font-weight: 500;
   text-align: center;
 }
 
@@ -241,7 +239,6 @@ body, html {
 }
 
 .empty-state-icon {
-  font-size: 48px;
   margin-bottom: 16px;
   opacity: 0.3;
 }
@@ -253,61 +250,40 @@ body, html {
   }
   
   .entities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 8px;
+    display: flex;
+    flex-wrap: wrap;
   }
   
   .entity-section {
-    margin-bottom: 16px;
-  }
-  
-  .section-header {
-    font-size: 14px;
+    margin-bottom: 12px;
   }
   
   .section-content {
-    padding: 12px;
+    padding: 8px;
   }
   
   .entity-card {
-    padding: 10px;
-  }
-  
-  .entity-value {
-    font-size: 16px;
-  }
-  
-  .entity-name {
-    font-size: 13px;
+    padding: 6px;
   }
 }
 
 @media (max-width: 480px) {
   .entities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
   
   .entity-header {
-    margin-bottom: 6px;
+    margin-bottom: 3px;
   }
   
   .entity-icon {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
+    width: 16px;
+    height: 16px;
   }
   
   .entity-icon img {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .entity-value {
-    font-size: 14px;
-  }
-  
-  .entity-name {
-    font-size: 12px;
+    width: 10px;
+    height: 10px;
   }
 }
 
@@ -365,6 +341,7 @@ class HomeAssistantRenderer {
   constructor(containerId = 'root') {
     this.container = document.getElementById(containerId);
     this.iconMap = this.createIconMap();
+    this.entityStyle = '{{ trmnl.plugin_settings.custom_fields_values.entity_style | default: "simple" }}';
     this.init();
   }
 
@@ -478,6 +455,23 @@ class HomeAssistantRenderer {
   }
 
   /**
+   * Get device class display name with proper capitalization
+   */
+  getDeviceClassTitle(entity) {
+    if (entity.error) {
+      return null;
+    }
+    
+    const deviceClass = entity.attributes?.device_class;
+    if (!deviceClass) {
+      return null;
+    }
+    
+    // Capitalize first letter and replace underscores with spaces
+    return deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' ');
+  }
+
+  /**
    * Format entity state value
    */
   formatEntityState(entity) {
@@ -485,7 +479,8 @@ class HomeAssistantRenderer {
       return {
         value: entity.error,
         unit: '',
-        isError: true
+        isError: true,
+        isNumeric: false
       };
     }
 
@@ -497,7 +492,8 @@ class HomeAssistantRenderer {
       return {
         value: state.toUpperCase(),
         unit: '',
-        isError: false
+        isError: false,
+        isNumeric: false
       };
     }
     
@@ -505,9 +501,10 @@ class HomeAssistantRenderer {
     if (!isNaN(state) && state !== '') {
       const numValue = parseFloat(state);
       return {
-        value: numValue % 1 === 0 ? numValue.toString() : numValue.toFixed(2),
+        value: numValue % 1 === 0 ? numValue.toString() : numValue.toFixed(1),
         unit: unit,
-        isError: false
+        isError: false,
+        isNumeric: true
       };
     }
     
@@ -518,7 +515,8 @@ class HomeAssistantRenderer {
         return {
           value: date.toLocaleString(),
           unit: '',
-          isError: false
+          isError: false,
+          isNumeric: false
         };
       } catch (e) {
         // If date parsing fails, return as is
@@ -528,7 +526,8 @@ class HomeAssistantRenderer {
     return {
       value: state || 'N/A',
       unit: unit,
-      isError: false
+      isError: false,
+      isNumeric: false
     };
   }
 
@@ -579,24 +578,61 @@ class HomeAssistantRenderer {
     const icon = this.getEntityIcon(entity);
     const iconClass = this.getEntityIconClass(entity);
     const stateInfo = this.formatEntityState(entity);
+    const deviceClassTitle = this.getDeviceClassTitle(entity);
     
-    const cardClass = entity.error ? 'entity-card error' : 'entity-card';
+    const baseCardClass = entity.error ? 'entity-card error' : 'entity-card';
+    let cardClass = baseCardClass;
+    if (this.entityStyle === 'detailed') {
+      cardClass = `${baseCardClass} entity-card--detailed`;
+    } else if (this.entityStyle === 'medium') {
+      cardClass = `${baseCardClass} entity-card--medium`;
+    }
     
     // Format icon for Iconify API URL
     const formattedIcon = this.formatIconForUrl(icon);
     const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
     
+    if (this.entityStyle === 'detailed') {
+      return `
+        <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
+          ${deviceClassTitle ? `<div class="device-class-title value value--xsmall">${deviceClassTitle}</div>` : ''}
+          <div class="entity-header">
+            <div class="${iconClass}"><img src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
+            <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+              ${stateInfo.value}
+              ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+            </div>
+          </div>
+          ${entity.entity_id ? `<div class="entity-id value value--xxsmall">${entity.entity_id}</div>` : ''}
+        </div>
+      `;
+    }
+    
+    if (this.entityStyle === 'medium') {
+      return `
+        <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
+          ${deviceClassTitle ? `<div class="device-class-title value value--xsmall">${deviceClassTitle}</div>` : ''}
+          <div class="entity-header">
+            <div class="${iconClass}"><img src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
+            <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+              ${stateInfo.value}
+              ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Simple style (original)
     return `
       <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
         <div class="entity-header">
           <div class="${iconClass}"><img src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
-          <div class="entity-name" title="${name}">${name}</div>
+          <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+            ${stateInfo.value}
+            ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+          </div>
         </div>
-        <div class="entity-value ${stateInfo.isError ? 'entity-error' : ''}">
-          ${stateInfo.value}
-          ${stateInfo.unit ? `<span class="entity-unit">${stateInfo.unit}</span>` : ''}
-        </div>
-        ${entity.entity_id ? `<div class="entity-id">${entity.entity_id}</div>` : ''}
       </div>
     `;
   }
@@ -609,13 +645,20 @@ class HomeAssistantRenderer {
       .map(entity => this.createEntityCard(entity, label))
       .join('');
     
+    let gridClass = 'entities-grid';
+    if (this.entityStyle === 'detailed') {
+      gridClass = 'entities-grid--detailed';
+    } else if (this.entityStyle === 'medium') {
+      gridClass = 'entities-grid--medium';
+    }
+    
     return `
       <div class="entity-section" data-label="${label}">
         <div class="section-header">
-          <span>${label}</span>
+          <span class="value value--xsmall">${label}</span>
         </div>
         <div class="section-content">
-          <div class="entities-grid">
+          <div class="${gridClass}">
             ${entitiesHtml}
           </div>
         </div>
@@ -660,7 +703,6 @@ class HomeAssistantRenderer {
     // Create sections HTML
     console.log('Creating sections HTML for', labels.length, 'labels');
     const sectionsHtml = labels
-      .sort() // Sort labels alphabetically
       .map(label => {
         const entities = responsesByLabel[label] || [];
         console.log(`Creating section for label "${label}" with ${entities.length} entities:`, entities);
@@ -684,9 +726,9 @@ class HomeAssistantRenderer {
   renderEmptyState() {
     this.container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">⚠</div>
-        <h3>No entities found</h3>
-        <p>Check your Home Assistant configuration and ensure entities are properly configured.</p>
+        <div class="empty-state-icon value value--xxxlarge">⚠</div>
+        <h3 class="value value--large">No entities found</h3>
+        <p class="value value--small">Check your Home Assistant configuration and ensure entities are properly configured.</p>
       </div>
     `;
   }
@@ -789,9 +831,9 @@ function initializeHomeAssistantRenderer() {
     if (rootElement) {
       rootElement.innerHTML = `
         <div style="padding: 20px; text-align: center; color: #f44336;">
-          <h3>❌ Error Loading Home Assistant Data</h3>
-          <p>Please check the browser console for details.</p>
-          <pre style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
+          <h3 class="value value--large">❌ Error Loading Home Assistant Data</h3>
+          <p class="value value--small">Please check the browser console for details.</p>
+          <pre class="value value--xsmall" style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
         </div>
       `;
     }
@@ -801,7 +843,7 @@ function initializeHomeAssistantRenderer() {
 
 <div id="loading-indicator" class="loading-container">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Loading Home Assistant Entities...</div>
+  <div class="loading-text value">Loading Home Assistant Entities...</div>
 </div>
 
 <div id="root">
