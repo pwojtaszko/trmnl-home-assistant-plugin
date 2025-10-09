@@ -6,58 +6,60 @@
 :root {
   --primary-color: #000000;
   --secondary-color: #333333;
-  --background-color: #ffffff;
-  --card-background: #ffffff;
   --text-primary: #000000;
   --text-secondary: #666666;
   --border-color: #cccccc;
-  --success-color: #000000;
-  --warning-color: #666666;
   --error-color: #000000;
-  --shadow: none;
-  --shadow-hover: none;
-  --border-radius: 4px;
 }
 
 /* 1-bit display mode - pure black and white only */
 .screen--1bit {
   --primary-color: #000000;
   --secondary-color: #000000;
-  --background-color: #ffffff;
-  --card-background: #ffffff;
   --text-primary: #000000;
   --text-secondary: #000000;
   --border-color: #000000;
-  --success-color: #000000;
-  --warning-color: #000000;
   --error-color: #000000;
-  --shadow: none;
-  --shadow-hover: none;
-  --border-radius: 4px;
 }
 
 body, html {
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-color);
   color: var(--text-primary);
   line-height: 1.4;
 }
 
 #root {
-  padding: 8px;
-  margin: 0 auto;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* Section Containers */
 .entity-section {
-    margin-bottom: 16px;
-    background: var(--card-background);
-    border-radius: var(--border-radius);
+    border-radius: 4px;
     border: 2px solid var(--border-color);
     overflow: hidden;
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.sections-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.sections-row .entity-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.sections-row:has(.entity-section:only-child) .entity-section {
+    flex: 0 1 auto;
+    max-width: 400px;
+    min-width: 49%;
 }
 
 .section-header {
@@ -73,22 +75,37 @@ body, html {
   padding: 12px;
 }
 
-/* Dynamic Grid Layout */
 .entities-grid {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: flex-start;
 }
 
-/* Entity Cards */
+.entities-grid:has(.entity-card:nth-child(1):nth-last-child(1)) {
+  justify-content: center;
+}
+
+.entities-grid:has(.entity-card:nth-child(2):nth-last-child(1)) {
+  justify-content: space-evenly;
+}
+
+.entities-grid:has(.entity-card:nth-child(3):nth-last-child(1)) {
+  justify-content: space-between;
+}
+
+.entities-grid .entity-card:only-child {
+  margin: 0 auto;
+}
+
 .entity-card {
-  background: var(--card-background);
   padding: 8px;
   position: relative;
   overflow: hidden;
-}
-
-.entity-card.offline {
-  opacity: 0.6;
-  background: #f8f8f8;
+  flex: 0 1 auto;
+  min-width: 80px;
+  max-width: 150px;
+  margin: 0 auto;
 }
 
 .entity-card--detailed .device-class-title {
@@ -99,19 +116,16 @@ body, html {
   margin-bottom: 6px;
 }
 
-/* Grid layout for detailed cards */
 .entities-grid--detailed {
     display: flex;
     flex-wrap: wrap;
 }
 
-/* Grid layout for medium cards */
 .entities-grid--medium {
   display: flex;
   flex-wrap: wrap;
 }
 
-/* Entity Content */
 .entity-header {
   display: flex;
   align-items: center;
@@ -174,7 +188,8 @@ body, html {
 .entity-value {
   font-weight: 700;
   color: var(--text-primary);
-  word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .entity-unit {
@@ -247,15 +262,17 @@ body, html {
 @media (max-width: 768px) {
   #root {
     padding: 12px;
+    gap: 12px;
+  }
+  
+  .sections-row {
+    flex-direction: column; /* Stack sections vertically on mobile */
+    gap: 12px;
   }
   
   .entities-grid {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .entity-section {
-    margin-bottom: 12px;
+    justify-content: flex-start; /* On mobile, align cards to start */
+    gap: 6px;
   }
   
   .section-content {
@@ -264,12 +281,20 @@ body, html {
   
   .entity-card {
     padding: 6px;
+    min-width: 70px; /* Smaller minimum on mobile */
+    max-width: 120px; /* Smaller maximum on mobile */
   }
 }
 
 @media (max-width: 480px) {
   .entities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    justify-content: space-between; /* Distribute remaining space on small screens */
+    gap: 4px;
+  }
+  
+  .entity-card {
+    min-width: 60px;
+    max-width: 100px;
   }
   
   .entity-header {
@@ -287,38 +312,6 @@ body, html {
   }
 }
 
-/* E-ink optimized - monochromatic only */
-
-/* 1-bit display specific overrides - pure black and white only */
-.screen--1bit .entity-card.error {
-  background: #ffffff;
-  border-color: #000000;
-}
-
-.screen--1bit .entity-card.offline {
-  background: #ffffff;
-  opacity: 1;
-}
-
-.screen--1bit .entity-icon {
-  background: #000000;
-  border-color: #000000;
-}
-
-.screen--1bit .entity-icon.temperature,
-.screen--1bit .entity-icon.sensor,
-.screen--1bit .entity-icon.light,
-.screen--1bit .entity-icon.switch,
-.screen--1bit .entity-icon.conversation,
-.screen--1bit .entity-icon.error {
-  background: #000000;
-}
-
-.screen--1bit .loading-spinner {
-  border-color: #000000;
-  border-top-color: #000000;
-}
-
 /* Utility Classes */
 .text-center {
   text-align: center;
@@ -328,14 +321,19 @@ body, html {
   display: none;
 }
 
+.value--xxxlarge { font-size: 3rem; }
+.value--xxlarge { font-size: 2.5rem; }
+.value--xlarge { font-size: 2rem; }
+.value--large { font-size: 1.5rem; }
+.value--medium { font-size: 1.125rem; }
+.value--small { font-size: 1rem; }
+.value--xsmall { font-size: 0.875rem; }
+.value--xxsmall { font-size: 0.75rem; }
+.value--tnums { font-variant-numeric: tabular-nums; }
 
 </style>
 
 <script>
-/**
- * Home Assistant Entities Dynamic Renderer
- * Handles grouping, icon mapping, and responsive grid rendering
- */
 
 class HomeAssistantRenderer {
   constructor(containerId = 'root') {
@@ -347,15 +345,11 @@ class HomeAssistantRenderer {
 
   init() {
     if (!this.container) {
-      console.error('Container element not found');
       return;
     }
     this.container.className = 'entities-container';
   }
 
-  /**
-   * Create icon mapping for different entity types
-   */
   createIconMap() {
     return {
       // Domain-based icons
@@ -417,9 +411,6 @@ class HomeAssistantRenderer {
     };
   }
 
-  /**
-   * Get icon for entity based on entity_id and device_class
-   */
   getEntityIcon(entity) {
     if (entity.error) {
       return this.iconMap.error;
@@ -429,23 +420,17 @@ class HomeAssistantRenderer {
     const domain = entityId.split('.')[0];
     const deviceClass = entity.attributes?.device_class;
     
-    // Check device class first (more specific)
     if (deviceClass && this.iconMap[deviceClass]) {
       return this.iconMap[deviceClass];
     }
     
-    // Check domain
     if (domain && this.iconMap[domain]) {
       return this.iconMap[domain];
     }
     
-    // Fallback
     return this.iconMap.default;
   }
 
-  /**
-   * Get entity display name
-   */
   getEntityName(entity) {
     if (entity.error) {
       return 'Error';
@@ -454,9 +439,6 @@ class HomeAssistantRenderer {
     return entity.attributes?.friendly_name || entity.entity_id || 'Unknown Entity';
   }
 
-  /**
-   * Get device class display name with proper capitalization
-   */
   getDeviceClassTitle(entity) {
     if (entity.error) {
       return null;
@@ -471,9 +453,6 @@ class HomeAssistantRenderer {
     return deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' ');
   }
 
-  /**
-   * Format entity state value
-   */
   formatEntityState(entity) {
     if (entity.error) {
       return {
@@ -543,36 +522,26 @@ class HomeAssistantRenderer {
     const domain = entityId.split('.')[0];
     const deviceClass = entity.attributes?.device_class;
     
-    // Use device class if available, otherwise domain
     const iconClass = deviceClass || domain || 'default';
     return `entity-icon ${iconClass}`;
   }
 
-  /**
-   * Format icon name for Iconify API URL
-   */
   formatIconForUrl(iconName) {
     if (!iconName) {
       return 'mdi:help-circle';
     }
     
-    // If already in proper format (collection:icon), return as is
     if (iconName.includes(':')) {
       return iconName;
     }
     
-    // If it starts with mdi- (like mdi-thermometer), convert to mdi:thermometer
     if (iconName.startsWith('mdi-')) {
       return iconName.replace('mdi-', 'mdi:');
     }
     
-    // Default to mdi collection if no collection specified
     return `mdi:${iconName}`;
   }
 
-  /**
-   * Create HTML for a single entity card
-   */
   createEntityCard(entity, label) {
     const name = this.getEntityName(entity);
     const icon = this.getEntityIcon(entity);
@@ -588,7 +557,6 @@ class HomeAssistantRenderer {
       cardClass = `${baseCardClass} entity-card--medium`;
     }
     
-    // Format icon for Iconify API URL
     const formattedIcon = this.formatIconForUrl(icon);
     const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
     
@@ -637,9 +605,6 @@ class HomeAssistantRenderer {
     `;
   }
 
-  /**
-   * Create HTML for a section with grouped entities
-   */
   createEntitySection(label, entities) {
     const entitiesHtml = entities
       .map(entity => this.createEntityCard(entity, label))
@@ -666,58 +631,38 @@ class HomeAssistantRenderer {
     `;
   }
 
-  /**
-   * Main render method
-   */
   render(responsesByLabel) {
-    console.log('Starting render with data:', responsesByLabel);
-    
     if (!this.container) {
-      console.error('Container not found - DOM element with id "root" missing');
       return;
     }
 
-    console.log('Container found:', this.container);
-
-    // Hide loading indicator
     const loadingIndicator = document.getElementById('loading-indicator');
     if (loadingIndicator) {
-      console.log('Hiding loading indicator');
       loadingIndicator.style.display = 'none';
     }
 
-    // Clear existing content
-    console.log('Clearing existing content');
     this.container.innerHTML = '';
 
-    // Check if we have any data
     const labels = Object.keys(responsesByLabel);
-    console.log('Found labels:', labels);
     
     if (labels.length === 0) {
-      console.log('No data found, rendering empty state');
       this.renderEmptyState();
       return;
     }
 
-    // Create sections HTML
-    console.log('Creating sections HTML for', labels.length, 'labels');
-    const sectionsHtml = labels
-      .map(label => {
-        const entities = responsesByLabel[label] || [];
-        console.log(`Creating section for label "${label}" with ${entities.length} entities:`, entities);
-        return this.createEntitySection(label, entities);
-      })
-      .join('');
+    const sections = labels.map(label => {
+      const entities = responsesByLabel[label] || [];
+      return this.createEntitySection(label, entities);
+    });
 
-    console.log('Generated HTML length:', sectionsHtml.length);
-    console.log('Generated HTML preview:', sectionsHtml.substring(0, 200) + '...');
+    const rows = [];
+    for (let i = 0; i < sections.length; i += 2) {
+      const sectionsInRow = sections.slice(i, i + 2);
+      const rowHtml = `<div class="sections-row">${sectionsInRow.join('')}</div>`;
+      rows.push(rowHtml);
+    }
 
-    // Add sections to container
-    this.container.innerHTML = sectionsHtml;
-    console.log('HTML added to container');
-
-    console.log('Rendered', labels.length, 'sections with entities successfully');
+    this.container.innerHTML = rows.join('');
   }
 
   /**
@@ -754,23 +699,16 @@ class HomeAssistantRenderer {
 
 // Initialize Home Assistant renderer function
 function initializeHomeAssistantRenderer() {
-  console.log('=== Home Assistant Renderer Initialization ===');
-  
   try {
     // Data preparation from Liquid template
     let entitiesList = `{{ trmnl.plugin_settings.custom_fields_values.entities | escape }}`;
-    console.log('Raw entities list:', entitiesList);
-    
     let entitiesLines = entitiesList.split('\n').filter(line => line.trim() !== '');
-    console.log('Parsed entities lines:', entitiesLines);
-    
     let labels = entitiesLines.map(line => {
       if (line.includes(':')) {
         return line.split(':')[0].trim();
       }
       return 'Default'; // Default label if no colon found
     });
-    console.log('Extracted labels:', labels);
 
     let responses = [
       {{ IDX_0 | json }}, {{ IDX_1 | json }}, {{ IDX_2 | json }}, {{ IDX_3 | json }}, 
@@ -780,8 +718,6 @@ function initializeHomeAssistantRenderer() {
       {{ IDX_16 | json }}, {{ IDX_17 | json }}, {{ IDX_18 | json }}, {{ IDX_19 | json }}, 
       {{ IDX_20 | json }}
     ];
-    
-    console.log('Raw responses array:', responses);
     
     // Filter out null/undefined responses
     let validResponses = [];
@@ -793,9 +729,7 @@ function initializeHomeAssistantRenderer() {
         validLabels.push(labels[i]);
       }
     }
-    
-    console.log('Valid responses:', validResponses);
-    console.log('Valid labels:', validLabels);
+
 
     // Group responses by label
     const responsesByLabel = {};
@@ -806,26 +740,15 @@ function initializeHomeAssistantRenderer() {
       responsesByLabel[label].push(validResponses[index]);
     });
 
-    console.log('Final grouped data:', responsesByLabel);
-
     // Check if we have a root container
     const rootElement = document.getElementById('root');
     if (!rootElement) {
-      console.error('Root element not found! Cannot render.');
       return;
     }
 
-    // Initialize and render the Home Assistant entities
-    console.log('Creating renderer and rendering...');
     const renderer = new HomeAssistantRenderer('root');
     renderer.render(responsesByLabel);
-    
-    console.log('=== Initialization Complete ===');
-    
   } catch (error) {
-    console.error('Error during initialization:', error);
-    console.error('Error details:', error.stack);
-    
     // Show error state in the UI
     const rootElement = document.getElementById('root');
     if (rootElement) {
@@ -852,27 +775,21 @@ function initializeHomeAssistantRenderer() {
 
 <script>
 // Initialize the Home Assistant renderer when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, initializing Home Assistant renderer...');
-  
+document.addEventListener('DOMContentLoaded', function() {  
   try {
     initializeHomeAssistantRenderer();
     
     // Signal to TRMNL that the page is ready for screenshot
     if (window.trmnl) {
-      console.log('Signaling TRMNL that page is ready');
       window.trmnl.ready();
     } else {
       // Fallback: dispatch a custom event that TRMNL might listen for
-      console.log('TRMNL API not found, dispatching ready event');
       document.dispatchEvent(new CustomEvent('trmnl-ready'));
       
       // Additional fallback: set a global flag
       window.trmnlReady = true;
     }
-  } catch (error) {
-    console.error('Error initializing Home Assistant renderer:', error);
-    
+  } catch (error) {    
     // Even if there's an error, signal TRMNL so it doesn't wait indefinitely
     if (window.trmnl) {
       window.trmnl.ready();
@@ -886,20 +803,16 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fallback for older browsers or if DOMContentLoaded already fired
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   setTimeout(() => {
-    console.log('DOM already ready, initializing immediately...');
     try {
       initializeHomeAssistantRenderer();
       
       if (window.trmnl) {
-        console.log('Signaling TRMNL that page is ready (immediate)');
         window.trmnl.ready();
       } else {
-        console.log('TRMNL API not found, dispatching ready event (immediate)');
         document.dispatchEvent(new CustomEvent('trmnl-ready'));
         window.trmnlReady = true;
       }
     } catch (error) {
-      console.error('Error in immediate initialization:', error);
       if (window.trmnl) {
         window.trmnl.ready();
       } else {
