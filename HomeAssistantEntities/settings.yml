@@ -31,8 +31,8 @@ custom_fields:
 - keyname: entities
   field_type: text
   name: Entity (each on new line)
-  description: List of Home Assistant entity IDs the integration should read or monitor
-  help_text: Provide one or more entity IDs like `sensor.outdoor_temperature`, `light.living_room`. Separate multiple entities with commas. Provide labels using the format `Label:entity_id` (e.g., `Living Room Temp:sensor.outdoor_temperature`). When using same labels, it will group entities.
+  description: List of Home Assistant entity IDs with required labels that the integration should read or monitor
+  help_text: Provide one or more entity IDs with labels using the required format `Label:entity_id` (e.g., `Living Room Temp:sensor.outdoor_temperature`). When using same labels, it will group entities together. Each entity should be on a new line.
   optional: false
 
 - keyname: entity_style
