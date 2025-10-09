@@ -47,5 +47,16 @@ custom_fields:
     - Medium: medium
     - Detailed: detailed
 
+- keyname: layout
+  field_type: select
+  name: Layout Style
+  description: Choose how entities are arranged on the screen
+  help_text: Sections arranges entities in organized sections with labels, placing two sections per row. Free flows entities naturally, grouping by label but allowing them to wrap freely across the screen.
+  optional: false
+  default: sections
+  options:
+    - Sections: sections
+    - Free Flow: free
+
 name: Home Assistant Entities
-refresh_interval: 15
+refresh_interval: 1

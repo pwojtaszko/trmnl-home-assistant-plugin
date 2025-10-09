@@ -45,6 +45,7 @@ body, html {
 
 .sections-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     width: 100%;
     max-width: 100%;
@@ -58,8 +59,7 @@ body, html {
 
 .sections-row:has(.entity-section:only-child) .entity-section {
     flex: 0 1 auto;
-    max-width: 400px;
-    min-width: 49%;
+    width: 100%;
 }
 
 .section-header {
@@ -71,7 +71,7 @@ body, html {
     background: white;
 }
 
-.section-content {
+.sections-row .section-content {
   padding: 12px;
 }
 
@@ -99,7 +99,7 @@ body, html {
 }
 
 .entity-card {
-  padding: 8px;
+    padding: 12px 8px 8px 8px;
   position: relative;
   overflow: hidden;
   flex: 0 1 auto;
@@ -312,6 +312,25 @@ body, html {
   }
 }
 
+/* Layout-specific styles */
+/* Free layout styles */
+.free-layout-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.layout-free .entity-section {
+  width: max-content;
+  flex: 0 0 auto;
+}
+
+.layout-free .entity-card {
+  margin: 0;
+}
+
 /* Utility Classes */
 .text-center {
   text-align: center;
@@ -340,6 +359,7 @@ class HomeAssistantRenderer {
     this.container = document.getElementById(containerId);
     this.iconMap = this.createIconMap();
     this.entityStyle = '{{ trmnl.plugin_settings.custom_fields_values.entity_style | default: "simple" }}';
+    this.layout = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "sections" }}';
     this.init();
   }
 
@@ -347,7 +367,7 @@ class HomeAssistantRenderer {
     if (!this.container) {
       return;
     }
-    this.container.className = 'entities-container';
+    this.container.className = `entities-container layout-${this.layout}`;
   }
 
   createIconMap() {
@@ -655,14 +675,17 @@ class HomeAssistantRenderer {
       return this.createEntitySection(label, entities);
     });
 
-    const rows = [];
-    for (let i = 0; i < sections.length; i += 2) {
-      const sectionsInRow = sections.slice(i, i + 2);
-      const rowHtml = `<div class="sections-row">${sectionsInRow.join('')}</div>`;
-      rows.push(rowHtml);
+    if (this.layout === 'sections') {
+      const rows = [];
+      for (let i = 0; i < sections.length; i += 2) {
+        const sectionsInRow = sections.slice(i, i + 2);
+        rows.push(`<div class="sections-row">${sectionsInRow.join('')}</div>`);
+      }
+      this.container.innerHTML = rows.join('');
+    } else {
+      // For free layout, wrap all sections in a free-layout container
+      this.container.innerHTML = `<div class="free-layout-container">${sections.join('')}</div>`;
     }
-
-    this.container.innerHTML = rows.join('');
   }
 
   /**
