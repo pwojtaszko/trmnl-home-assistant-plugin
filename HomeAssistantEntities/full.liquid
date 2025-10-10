@@ -1,8 +1,13 @@
 
 
 <style>
-/* Home Assistant Entities Responsive Layout */
+/* ======================================
+   Home Assistant Entities Responsive Layout
+   ====================================== */
 
+/* ======================================
+   CSS Custom Properties (Variables)
+   ====================================== */
 :root {
   --primary-color: #000000;
   --secondary-color: #333333;
@@ -22,11 +27,18 @@
   --error-color: #000000;
 }
 
-body, html {
+/* ======================================
+   Base Styles
+   ====================================== */
+body, 
+html {
   color: var(--text-primary);
   line-height: 1.4;
 }
 
+/* ======================================
+   Layout & Container Styles
+   ====================================== */
 #root {
   width: 100%;
   display: flex;
@@ -34,47 +46,70 @@ body, html {
   gap: 12px;
 }
 
-.entity-section {
-    border-radius: 4px;
-    border: 2px solid var(--border-color);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
 .sections-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .sections-row .entity-section {
-    flex: 1;
-    min-width: 200px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .sections-row:has(.entity-section:only-child) .entity-section {
-    flex: 0 1 auto;
-    width: 100%;
+  flex: 0 1 auto;
+  width: 100%;
+}
+
+/* Free layout styles */
+.free-layout-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.layout-free .entity-section {
+  width: max-content;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.layout-free .entity-card {
+  margin: 0;
+}
+
+/* ======================================
+   Entity Sections & Cards
+   ====================================== */
+.entity-section {
+  border-radius: 4px;
+  border: 2px solid var(--border-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .section-header {
-    font-weight: 600;
-    position: absolute;
-    margin-top: -12px;
-    padding-inline: 7px;
-    margin-left: 5px;
-    background: white;
+  font-weight: 600;
+  position: absolute;
+  margin-top: -12px;
+  padding-inline: 7px;
+  margin-left: 5px;
+  background: white;
 }
 
 .sections-row .section-content {
   padding: 12px;
 }
 
+/* Entity Grids */
 .entities-grid {
   display: flex;
   flex-wrap: wrap;
@@ -98,32 +133,23 @@ body, html {
   margin: 0 auto;
 }
 
+.entities-grid--detailed, .entities-grid--medium {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Entity Cards */
 .entity-card {
-    padding: 12px 8px 8px 8px;
+  padding: 12px 8px 8px 8px;
   position: relative;
   overflow: hidden;
   flex: 0 1 auto;
   min-width: 80px;
-  max-width: 150px;
   margin: 0 auto;
 }
 
-.entity-card--detailed .device-class-title {
+.entity-card--detailed .device-class-title, .entity-card--medium .device-class-title {
   margin-bottom: 6px;
-}
-
-.entity-card--medium .device-class-title {
-  margin-bottom: 6px;
-}
-
-.entities-grid--detailed {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.entities-grid--medium {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .entity-header {
@@ -133,6 +159,9 @@ body, html {
   gap: 6px;
 }
 
+/* ======================================
+   Icons & Visual Elements
+   ====================================== */
 .entity-icon {
   width: 30px;
   height: 30px;
@@ -152,23 +181,12 @@ body, html {
   filter: brightness(0) invert(1);
 }
 
-.entity-icon.temperature {
-  background: var(--secondary-color);
-}
-
-.entity-icon.sensor {
+/* Icon Color Variations */
+.entity-icon.sensor, .entity-icon.switch {
   background: var(--primary-color);
 }
 
-.entity-icon.light {
-  background: var(--secondary-color);
-}
-
-.entity-icon.switch {
-  background: var(--primary-color);
-}
-
-.entity-icon.conversation {
+.entity-icon.light, .entity-icon.conversation, .entity-icon.temperature {
   background: var(--secondary-color);
 }
 
@@ -176,6 +194,7 @@ body, html {
   background: var(--error-color);
 }
 
+/* Entity Content */
 .entity-name {
   font-weight: 500;
   color: var(--text-primary);
@@ -213,40 +232,9 @@ body, html {
   opacity: 0.7;
 }
 
-/* Loading States */
-.loading {
-  opacity: 0.5;
-}
-
-/* Loading Container */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  padding: 40px 20px;
-  color: var(--text-secondary);
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--primary-color);
-  border-radius: 50%;
-  margin-bottom: 16px;
-}
-
-/* Removed spinning animation for e-ink compatibility */
-
-.loading-text {
-  text-align: center;
-}
-
-
-
-/* Empty State */
+/* ======================================
+   Empty States
+   ====================================== */
 .empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -258,81 +246,11 @@ body, html {
   opacity: 0.3;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  #root {
-    padding: 12px;
-    gap: 12px;
-  }
-  
-  .sections-row {
-    flex-direction: column; /* Stack sections vertically on mobile */
-    gap: 12px;
-  }
-  
-  .entities-grid {
-    justify-content: flex-start; /* On mobile, align cards to start */
-    gap: 6px;
-  }
-  
-  .section-content {
-    padding: 8px;
-  }
-  
-  .entity-card {
-    padding: 6px;
-    min-width: 70px; /* Smaller minimum on mobile */
-    max-width: 120px; /* Smaller maximum on mobile */
-  }
-}
 
-@media (max-width: 480px) {
-  .entities-grid {
-    justify-content: space-between; /* Distribute remaining space on small screens */
-    gap: 4px;
-  }
-  
-  .entity-card {
-    min-width: 60px;
-    max-width: 100px;
-  }
-  
-  .entity-header {
-    margin-bottom: 3px;
-  }
-  
-  .entity-icon {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .entity-icon img {
-    width: 10px;
-    height: 10px;
-  }
-}
 
-/* Layout-specific styles */
-/* Free layout styles */
-.free-layout-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.layout-free .entity-section {
-  width: max-content;
-  flex: 0 0 auto;
-  max-width: 100%;
-}
-
-.layout-free .entity-card {
-  margin: 0;
-}
-
-/* Utility Classes */
+/* ======================================
+   Utility Classes
+   ====================================== */
 .text-center {
   text-align: center;
 }
@@ -341,15 +259,42 @@ body, html {
   display: none;
 }
 
-.value--xxxlarge { font-size: 3rem; }
-.value--xxlarge { font-size: 2.5rem; }
-.value--xlarge { font-size: 2rem; }
-.value--large { font-size: 1.5rem; }
-.value--medium { font-size: 1.125rem; }
-.value--small { font-size: 1rem; }
-.value--xsmall { font-size: 0.875rem; }
-.value--xxsmall { font-size: 0.75rem; }
-.value--tnums { font-variant-numeric: tabular-nums; }
+/* Font Size Utilities */
+.value--xxxlarge { 
+  font-size: 3rem; 
+}
+
+.value--xxlarge { 
+  font-size: 2.5rem; 
+}
+
+.value--xlarge { 
+  font-size: 2rem; 
+}
+
+.value--large { 
+  font-size: 1.5rem; 
+}
+
+.value--medium { 
+  font-size: 1.125rem; 
+}
+
+.value--small { 
+  font-size: 1rem; 
+}
+
+.value--xsmall { 
+  font-size: 0.875rem; 
+}
+
+.value--xxsmall { 
+  font-size: 0.75rem; 
+}
+
+.value--tnums { 
+  font-variant-numeric: tabular-nums; 
+}
 
 </style>
 
@@ -433,6 +378,9 @@ class HomeAssistantRenderer {
   }
 
   getEntityIcon(entity) {
+    if (entity.icon) {
+      return 
+    }
     if (entity.error) {
       return this.iconMap.error;
     }
@@ -465,13 +413,10 @@ class HomeAssistantRenderer {
       return null;
     }
     
-    const deviceClass = entity.attributes?.device_class;
-    if (!deviceClass) {
-      return null;
-    }
+    const deviceClass = entity.attributes?.device_class ?? '';
     
     // Capitalize first letter and replace underscores with spaces
-    return deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' ');
+    return entity.attributes?.friendly_name ?? deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' ');
   }
 
   formatEntityState(entity) {
@@ -565,13 +510,14 @@ class HomeAssistantRenderer {
 
   createEntityCard(entity, label) {
     const name = this.getEntityName(entity);
-    const icon = this.getEntityIcon(entity);
+    const icon = entity.icon ?? this.getEntityIcon(entity);
     const iconClass = this.getEntityIconClass(entity);
     const stateInfo = this.formatEntityState(entity);
     const deviceClassTitle = this.getDeviceClassTitle(entity);
     
     const baseCardClass = entity.error ? 'entity-card error' : 'entity-card';
     let cardClass = baseCardClass;
+
     if (this.entityStyle === 'detailed') {
       cardClass = `${baseCardClass} entity-card--detailed`;
     } else if (this.entityStyle === 'medium') {
@@ -582,6 +528,11 @@ class HomeAssistantRenderer {
     const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
     
     if (this.entityStyle === 'detailed') {
+      const lastUpdated = entity.last_updated ? (() => {
+        const d = new Date(entity.last_updated);
+        return d.toLocaleString(undefined, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      })() : ''; 
+    
       return `
         <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
           ${deviceClassTitle ? `<div class="device-class-title value value--xsmall">${deviceClassTitle}</div>` : ''}
@@ -592,7 +543,7 @@ class HomeAssistantRenderer {
               ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
             </div>
           </div>
-          ${entity.entity_id ? `<div class="entity-id value value--xxsmall">${entity.entity_id}</div>` : ''}
+          ${lastUpdated ? `<div class="entity-last-updated value value--xxsmall">Updated: ${lastUpdated}</div>` : ''}
         </div>
       `;
     }
@@ -640,9 +591,9 @@ class HomeAssistantRenderer {
     
     return `
       <div class="entity-section" data-label="${label}">
-        <div class="section-header">
+        ${label !== '-' ? `<div class="section-header">
           <span class="value value--xsmall">${label}</span>
-        </div>
+        </div>` : ''}
         <div class="section-content">
           <div class="${gridClass}">
             ${entitiesHtml}
@@ -655,11 +606,6 @@ class HomeAssistantRenderer {
   render(responsesByLabel) {
     if (!this.container) {
       return;
-    }
-
-    const loadingIndicator = document.getElementById('loading-indicator');
-    if (loadingIndicator) {
-      loadingIndicator.style.display = 'none';
     }
 
     this.container.innerHTML = '';
@@ -684,14 +630,10 @@ class HomeAssistantRenderer {
       }
       this.container.innerHTML = rows.join('');
     } else {
-      // For free layout, wrap all sections in a free-layout container
       this.container.innerHTML = `<div class="free-layout-container">${sections.join('')}</div>`;
     }
   }
 
-  /**
-   * Render empty state when no data is available
-   */
   renderEmptyState() {
     this.container.innerHTML = `
       <div class="empty-state">
@@ -702,9 +644,6 @@ class HomeAssistantRenderer {
     `;
   }
 
-  /**
-   * Update specific entity data (for real-time updates)
-   */
   updateEntity(entityId, newData) {
     const card = this.container.querySelector(`[data-entity-id="${entityId}"]`);
     if (card) {
@@ -713,25 +652,20 @@ class HomeAssistantRenderer {
     }
   }
 
-  /**
-   * Refresh all data
-   */
   refresh(responsesByLabel) {
     this.render(responsesByLabel);
   }
 }
 
-// Initialize Home Assistant renderer function
 function initializeHomeAssistantRenderer() {
   try {
-    // Data preparation from Liquid template
     let entitiesList = `{{ trmnl.plugin_settings.custom_fields_values.entities | escape }}`;
     let entitiesLines = entitiesList.split('\n').filter(line => line.trim() !== '');
     let labels = entitiesLines.map(line => {
       if (line.includes(':')) {
         return line.split(':')[0].trim();
       }
-      return 'Default'; // Default label if no colon found
+      return 'Default';
     });
 
     let responses = [
@@ -743,7 +677,6 @@ function initializeHomeAssistantRenderer() {
       {{ IDX_20 | json }}
     ];
     
-    // Filter out null/undefined responses
     let validResponses = [];
     let validLabels = [];
     
@@ -754,8 +687,6 @@ function initializeHomeAssistantRenderer() {
       }
     }
 
-
-    // Group responses by label
     const responsesByLabel = {};
     validLabels.forEach((label, index) => {
       if (!responsesByLabel[label]) {
@@ -764,7 +695,6 @@ function initializeHomeAssistantRenderer() {
       responsesByLabel[label].push(validResponses[index]);
     });
 
-    // Check if we have a root container
     const rootElement = document.getElementById('root');
     if (!rootElement) {
       return;
@@ -773,7 +703,6 @@ function initializeHomeAssistantRenderer() {
     const renderer = new HomeAssistantRenderer('root');
     renderer.render(responsesByLabel);
   } catch (error) {
-    // Show error state in the UI
     const rootElement = document.getElementById('root');
     if (rootElement) {
       rootElement.innerHTML = `
@@ -788,33 +717,23 @@ function initializeHomeAssistantRenderer() {
 }
 </script>
 
-<div id="loading-indicator" class="loading-container">
-  <div class="loading-spinner"></div>
-  <div class="loading-text value">Loading Home Assistant Entities...</div>
-</div>
-
 <div id="root">
   <!-- Entities will be rendered here -->
 </div>
 
 <script>
-// Initialize the Home Assistant renderer when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {  
   try {
     initializeHomeAssistantRenderer();
     
-    // Signal to TRMNL that the page is ready for screenshot
     if (window.trmnl) {
       window.trmnl.ready();
     } else {
-      // Fallback: dispatch a custom event that TRMNL might listen for
       document.dispatchEvent(new CustomEvent('trmnl-ready'));
       
-      // Additional fallback: set a global flag
       window.trmnlReady = true;
     }
   } catch (error) {    
-    // Even if there's an error, signal TRMNL so it doesn't wait indefinitely
     if (window.trmnl) {
       window.trmnl.ready();
     } else {
@@ -824,7 +743,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Fallback for older browsers or if DOMContentLoaded already fired
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   setTimeout(() => {
     try {
