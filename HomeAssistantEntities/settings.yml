@@ -78,5 +78,18 @@ custom_fields:
     - Left: left
     - Right: right
 
+- keyname: text_scale
+  field_type: select
+  name: Global Text Scale
+  description: Adjust the overall text size for all elements
+  help_text: Choose the text scaling level that best fits your display. Smaller scales work better for high-resolution displays, while larger scales improve readability on smaller screens.
+  optional: false
+
+  default: normal
+  options:
+    - Normal: normal
+    - Large: lg
+    - Extra Large: xl
+
 name: Home Assistant Entities
 refresh_interval: 1
