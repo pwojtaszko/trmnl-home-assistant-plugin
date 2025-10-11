@@ -41,9 +41,37 @@ html {
    ====================================== */
 #root {
   width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Main content area that can overflow behind pills */
+.main-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Flex layout adjustments based on pill position */
+#root:has(.pills-container--left) {
+  flex-direction: row;
+}
+
+#root:has(.pills-container--right) {
+  flex-direction: row-reverse;
+}
+
+#root:has(.pills-container--top) {
+  flex-direction: column;
+}
+
+#root:has(.pills-container--bottom) {
+  flex-direction: column-reverse;
 }
 
 .sections-row {
@@ -72,16 +100,6 @@ html {
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 16px;
-}
-
-.layout-free .entity-section {
-  width: max-content;
-  flex: 0 0 auto;
-  max-width: 100%;
-}
-
-.layout-free .entity-card {
-  margin: 0;
 }
 
 /* ======================================
@@ -249,6 +267,145 @@ html {
 
 
 /* ======================================
+   Pill Components
+   ====================================== */
+.pills-container {
+  display: flex;
+  gap: 8px;
+}
+
+.pills-container--top {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.pills-container--bottom {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.pills-container--left {
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100vh;
+  width: auto;
+  min-width: 50px;
+}
+
+.pills-container--right {
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100vh;
+  width: auto;
+  min-width: 50px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  background: white;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-height: 24px;
+  max-width: 120px;
+}
+
+.pill-icon {
+    height: 20px;
+}
+
+/* Vertical pills for left/right positioning */
+.pills-container--left .pill,
+.pills-container--right .pill {
+  flex-direction: row-reverse;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  min-height: 80px;
+  max-width: 32px;
+  width: 32px;
+  padding: 8px 4px;
+}
+
+.pills-container--left .pill-icon,
+.pills-container--right .pill-icon {
+  transform: rotate(0deg);
+  margin-bottom: 4px;
+}
+
+.pills-container--left .pill-value,
+.pills-container--right .pill-value {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  white-space: normal;
+  text-align: center;
+}
+
+.pill.state--on {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.pill.state--off {
+  background: white;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+.pill.state--unavailable, .pill.state--unknown {
+  background: white;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+  opacity: 0.6;
+}
+
+.pill.error {
+  background: white;
+  color: var(--error-color);
+  border-color: var(--error-color);
+}
+
+.pill-icon img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0);
+}
+
+.pill.state--on .pill-icon img {
+  filter: brightness(0) invert(1);
+}
+
+.pill-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 1-bit display adjustments for pills */
+.screen--1bit .pill {
+  border-color: #000000;
+  background: white;
+  color: #000000;
+}
+
+.screen--1bit .pill.state--on {
+  background: #000000;
+  color: white;
+}
+
+/* ======================================
    Utility Classes
    ====================================== */
 .text-center {
@@ -306,6 +463,7 @@ class HomeAssistantRenderer {
     this.iconMap = this.createIconMap();
     this.entityStyle = '{{ trmnl.plugin_settings.custom_fields_values.entity_style | default: "simple" }}';
     this.layout = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "sections" }}';
+    this.pillPosition = '{{ trmnl.plugin_settings.custom_fields_values.pill_position | default: "top" }}';
     this.init();
   }
 
@@ -378,8 +536,8 @@ class HomeAssistantRenderer {
   }
 
   getEntityIcon(entity) {
-    if (entity.icon) {
-      return 
+    if (entity.attributes.icon) {
+      return entity.attributes.icon;
     }
     if (entity.error) {
       return this.iconMap.error;
@@ -508,6 +666,32 @@ class HomeAssistantRenderer {
     return `mdi:${iconName}`;
   }
 
+  createPill(entity) {
+    const name = this.getEntityName(entity);
+    const icon = entity.icon ?? this.getEntityIcon(entity);
+    const stateInfo = this.formatEntityState(entity);
+    
+    const formattedIcon = this.formatIconForUrl(icon);
+    const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
+    
+    let pillClass = 'pill';
+    
+    if (entity.error) {
+      pillClass += ' error';
+    } else {
+      pillClass += ` state--${entity.state?.toLowerCase()}`;
+    }
+    
+    return `
+      <div class="${pillClass}" data-entity-id="${entity.entity_id || 'error'}">
+        <div class="pill-icon">
+          <img src="${iconUrl}" alt="${name}" onerror="this.style.display='none'">
+        </div>
+        <span class="pill-value value--xxsmall ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
+      </div>
+    `;
+  }
+
   createEntityCard(entity, label) {
     const name = this.getEntityName(entity);
     const icon = entity.icon ?? this.getEntityIcon(entity);
@@ -577,6 +761,24 @@ class HomeAssistantRenderer {
     `;
   }
 
+  createPillsContainer(pillsByLabel) {
+    if (!pillsByLabel || !pillsByLabel.pills || pillsByLabel.pills.length === 0) {
+      return '';
+    }
+    
+    const allPills = pillsByLabel.pills.map(pill => this.createPill(pill));
+    
+    if (allPills.length === 0) {
+      return '';
+    }
+    
+    return `
+      <div class="pills-container pills-container--${this.pillPosition}">
+        ${allPills.join('')}
+      </div>
+    `;
+  }
+
   createEntitySection(label, entities) {
     const entitiesHtml = entities
       .map(entity => this.createEntityCard(entity, label))
@@ -603,43 +805,69 @@ class HomeAssistantRenderer {
     `;
   }
 
-  render(responsesByLabel) {
+  render(responsesByLabel, pillsByLabel) {
     if (!this.container) {
       return;
     }
 
     this.container.innerHTML = '';
 
-    const labels = Object.keys(responsesByLabel);
+    const labels = Object.keys(responsesByLabel || {});
+    const pillLabels = Object.keys(pillsByLabel || {});
     
-    if (labels.length === 0) {
+    if (labels.length === 0 && pillLabels.length === 0) {
       this.renderEmptyState();
       return;
     }
 
-    const sections = labels.map(label => {
-      const entities = responsesByLabel[label] || [];
-      return this.createEntitySection(label, entities);
-    });
+    // Create pills container
+    const pillsHtml = this.createPillsContainer(pillsByLabel);
 
-    if (this.layout === 'sections') {
-      const rows = [];
-      for (let i = 0; i < sections.length; i += 2) {
-        const sectionsInRow = sections.slice(i, i + 2);
-        rows.push(`<div class="sections-row">${sectionsInRow.join('')}</div>`);
+    // Create entity sections
+    let mainContentHtml = '';
+    if (labels.length > 0) {
+      const sections = labels.map(label => {
+        const entities = responsesByLabel[label] || [];
+        return this.createEntitySection(label, entities);
+      });
+
+      if (this.layout === 'sections') {
+        const rows = [];
+        for (let i = 0; i < sections.length; i += 2) {
+          const sectionsInRow = sections.slice(i, i + 2);
+          rows.push(`<div class="sections-row">${sectionsInRow.join('')}</div>`);
+        }
+        mainContentHtml = rows.join('');
+      } else {
+        mainContentHtml = `<div class="free-layout-container">${sections.join('')}</div>`;
       }
-      this.container.innerHTML = rows.join('');
+    }
+
+    // Create the flex layout structure
+    if (pillsHtml) {
+      this.container.innerHTML = `
+        ${pillsHtml}
+        <div class="main-content">
+          ${mainContentHtml}
+        </div>
+      `;
     } else {
-      this.container.innerHTML = `<div class="free-layout-container">${sections.join('')}</div>`;
+      this.container.innerHTML = `
+        <div class="main-content">
+          ${mainContentHtml}
+        </div>
+      `;
     }
   }
 
   renderEmptyState() {
     this.container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon value value--xxxlarge">⚠</div>
-        <h3 class="value value--large">No entities found</h3>
-        <p class="value value--small">Check your Home Assistant configuration and ensure entities are properly configured.</p>
+      <div class="main-content">
+        <div class="empty-state">
+          <div class="empty-state-icon value value--xxxlarge">⚠</div>
+          <h3 class="value value--large">No entities found</h3>
+          <p class="value value--small">Check your Home Assistant configuration and ensure entities are properly configured.</p>
+        </div>
       </div>
     `;
   }
@@ -652,13 +880,14 @@ class HomeAssistantRenderer {
     }
   }
 
-  refresh(responsesByLabel) {
-    this.render(responsesByLabel);
+  refresh(responsesByLabel, pillsByLabel) {
+    this.render(responsesByLabel, pillsByLabel);
   }
 }
 
 function initializeHomeAssistantRenderer() {
   try {
+    // Regular entities
     let entitiesList = `{{ trmnl.plugin_settings.custom_fields_values.entities | escape }}`;
     let entitiesLines = entitiesList.split('\n').filter(line => line.trim() !== '');
     let labels = entitiesLines.map(line => {
@@ -668,15 +897,29 @@ function initializeHomeAssistantRenderer() {
       return 'Default';
     });
 
+    // Pill entities (no labels, just entity IDs)
+    let pillEntitiesList = `{{ trmnl.plugin_settings.custom_fields_values.pill_entities | escape }}`;
+    let pillEntitiesLines = pillEntitiesList.split('\n').filter(line => line.trim() !== '');
+
+    // Entity responses (IDX_0 to IDX_29 for regular entities)
     let responses = [
       {{ IDX_0 | json }}, {{ IDX_1 | json }}, {{ IDX_2 | json }}, {{ IDX_3 | json }}, 
       {{ IDX_4 | json }}, {{ IDX_5 | json }}, {{ IDX_6 | json }}, {{ IDX_7 | json }}, 
       {{ IDX_8 | json }}, {{ IDX_9 | json }}, {{ IDX_10 | json }}, {{ IDX_11 | json }}, 
       {{ IDX_12 | json }}, {{ IDX_13 | json }}, {{ IDX_14 | json }}, {{ IDX_15 | json }}, 
       {{ IDX_16 | json }}, {{ IDX_17 | json }}, {{ IDX_18 | json }}, {{ IDX_19 | json }}, 
-      {{ IDX_20 | json }}
+      {{ IDX_20 | json }}, {{ IDX_21 | json }}, {{ IDX_22 | json }}, {{ IDX_23 | json }}, 
+      {{ IDX_24 | json }}, {{ IDX_25 | json }}, {{ IDX_26 | json }}, {{ IDX_27 | json }}, 
+      {{ IDX_28 | json }}, {{ IDX_29 | json }}
+    ];
+
+    // Pill responses (IDX_30 to IDX_34 for pill entities)
+    let pillResponses = [
+      {{ IDX_30 | json }}, {{ IDX_31 | json }}, {{ IDX_32 | json }}, {{ IDX_33 | json }}, 
+      {{ IDX_34 | json }}
     ];
     
+    // Process regular entities
     let validResponses = [];
     let validLabels = [];
     
@@ -695,13 +938,27 @@ function initializeHomeAssistantRenderer() {
       responsesByLabel[label].push(validResponses[index]);
     });
 
+    // Process pill entities (no labels)
+    let validPillResponses = [];
+    
+    for (let i = 0; i < pillResponses.length && i < pillEntitiesLines.length; i++) {
+      if (pillResponses[i] !== null && pillResponses[i] !== undefined) {
+        validPillResponses.push(pillResponses[i]);
+      }
+    }
+
+    // Group all pills together (no labels)
+    const pillsByLabel = {
+      'pills': validPillResponses
+    };
+
     const rootElement = document.getElementById('root');
     if (!rootElement) {
       return;
     }
 
     const renderer = new HomeAssistantRenderer('root');
-    renderer.render(responsesByLabel);
+    renderer.render(responsesByLabel, pillsByLabel);
   } catch (error) {
     const rootElement = document.getElementById('root');
     if (rootElement) {
