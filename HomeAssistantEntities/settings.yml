@@ -12,34 +12,34 @@ custom_fields:
 - keyname: author_bio
   field_type: author_bio
   name: Author
-  description: Author - pwojtaszko - This plugin will work with any Home assistant that has API enabled
+  description: Created by pwojtaszko | GitHub→ https://github.com/pwojtaszko/trmnl-home-assistant-plugin | Works with any Home Assistant instance with API enabled
 
 - keyname: ha_server
   field_type: string
-  name: HA Server Url
-  description: URL of your Home Assistant instance (include protocol and port if needed)
-  help_text: Enter the full base URL for your Home Assistant server (for example https://homeassistant.local:8123 or https://192.168.1.10:8123). The integration will use this to call the REST API. it must be reachable from where the plugin runs.
+  name: Home Assistant URL
+  description: Your Home Assistant server address
+  help_text: Enter your full Home Assistant URL (examples→ https://homeassistant.local:8123 or https://192.168.1.100:8123)
   optional: false
 
 - keyname: ha_long_lived_token
   field_type: password
-  name: HA Long lived token
-  description: Home Assistant long-lived access token used to authenticate API requests
-  help_text: Create a long-lived access token in Home Assistant under your user profile (Settings → Long-Lived Access Tokens). Paste the whole token here. Keep this secret — it grants access to your Home Assistant instance.
+  name: Access Token
+  description: Long-lived access token from Home Assistant
+  help_text: Go to Profile → Long-Lived Access Tokens → Create Token. Copy and paste the token here.
   optional: false
 
 - keyname: entities
   field_type: text
-  name: Entity (each on new line)
-  description: List of Home Assistant entity IDs with required labels that the integration should read or monitor
-  help_text: Provide one or more entity IDs with labels using the required format `Label:entity_id` (e.g., `Living Room Temp:sensor.outdoor_temperature`). When using same labels, it will group entities together. Each entity should be on a new line.
+  name: Entities (one per line)
+  description: Your Home Assistant entities with labels
+  help_text: Format→ Label:entity_id (example→ Living Room:sensor.temperature). Entities with the same label will be grouped together. Each entity should be on a new line.
   optional: false
 
 - keyname: entity_style
   field_type: select
-  name: Entity Display Style
-  description: Choose how entities are displayed on the screen
-  help_text: Simple shows compact cards with just label, icon, value and unit. Detailed shows larger cards with device class titles and takes 50% width in horizontal mode, 100% in vertical mode.
+  name: Card Style
+  description: Size and detail level of entity cards
+  help_text: Simple→ icon + value. Medium→ additional friendly name. Detailed→ additional entity update date.
   optional: false
   default: simple
   options:
@@ -49,9 +49,9 @@ custom_fields:
 
 - keyname: layout
   field_type: select
-  name: Layout Style
-  description: Choose how entities are arranged on the screen
-  help_text: Sections arranges entities in organized sections with labels, placing two sections per row. Free flows entities naturally, grouping by label but allowing them to wrap freely across the screen.
+  name: Layout
+  description: How entities are arranged
+  help_text: Sections→ organized in labeled groups (2 groups per row). Free Flow→ natural wrapping (fits more).
   optional: false
   default: sections
   options:
@@ -60,16 +60,16 @@ custom_fields:
 
 - keyname: pill_entities
   field_type: text
-  name: Pill Entities (each on new line)
-  description: List of Home Assistant entity IDs to display as compact pills
-  help_text: Provide one or more entity IDs (e.g., `binary_sensor.motion_detector`, `switch.porch_light`). Pills are compact status indicators perfect for binary sensors, switches, and other entities with simple states. Each entity should be on a new line.
+  name: Pill Entities (optional)
+  description: Compact status indicators (one per line)
+  help_text: Entity IDs for small status pills (example→ binary_sensor.front_door). Perfect for doors, motion sensors, switches. Each entity should be on a new line.
   optional: true
 
 - keyname: pill_position
   field_type: select
   name: Pill Position
-  description: Choose where pills should be positioned on the screen
-  help_text: Top places pills at the top of the screen, Bottom at the bottom, Left on the left side, and Right on the right side.
+  description: Where to show pills
+  help_text: Choose where the pill indicators appear on your display.
   optional: false
   default: top
   options:
@@ -80,16 +80,15 @@ custom_fields:
 
 - keyname: text_scale
   field_type: select
-  name: Global Text Scale
-  description: Adjust the overall text size for all elements
-  help_text: Choose the text scaling level that best fits your display. Smaller scales work better for high-resolution displays, while larger scales improve readability on smaller screens.
+  name: Text Size
+  description: Overall text scaling
+  help_text: Adjust text size for your display. Use Large for smaller screens, Small for high-resolution displays.
   optional: false
-
   default: normal
   options:
+    - Small: small
     - Normal: normal
-    - Large: lg
-    - Extra Large: xl
+    - Large: large
 
 name: Home Assistant Entities
 refresh_interval: 1
