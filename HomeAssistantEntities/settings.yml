@@ -91,4 +91,4 @@ custom_fields:
     - Large: large
 
 name: Home Assistant Entities
-refresh_interval: 1
+refresh_interval: 5
