@@ -1,0 +1,8 @@
+{
+  "name": "TRMNL Webhook",
+  "content_in_root": false,
+  "render_readme": true,
+  "domains": ["trmnl_webhook"],
+  "country": "any",
+  "homeassistant": "2023.0.0"
+}

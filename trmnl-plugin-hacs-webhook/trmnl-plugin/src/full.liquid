@@ -1,0 +1,630 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://usetrmnl.com/css/latest/plugins.css">
+    <script src="https://usetrmnl.com/js/latest/plugins.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;350;375;400;450;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* Layout */
+      #root {
+        font-family: 'Inter', 'NicoClean', sans-serif;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        position: relative;
+        overflow: hidden;
+      }
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: hidden;
+        z-index: 1;
+      }
+      #root:has(.pills-container--left) {
+        flex-direction: row;
+      }
+      #root:has(.pills-container--right) {
+        flex-direction: row-reverse;
+      }
+      #root:has(.pills-container--top) {
+        flex-direction: column;
+      }
+      #root:has(.pills-container--bottom) {
+        flex-direction: column-reverse;
+      }
+      .sections-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      /* Custom styles */
+      .pill-component {
+        border: 2px black solid;
+        display: flex;
+        align-items: center;
+        gap: 5px;    
+        padding: 3px 5px;
+      }
+      .pill-component img{
+        width: 24px;
+        height: 24px;
+      }
+      /* Entity group styling */
+      .entity-group {
+        border: 2px solid black;
+        border-radius: 16px;
+        padding: 20px 16px 16px 16px;
+        margin-top: 16px;
+        background: #fff;
+        position: relative;
+      }
+      .entity-group .group-header {
+        position: absolute;
+        top: -16px;
+        background: #fff;
+        padding: 0 4px;
+        z-index: 2;
+      }
+      .entity-group .group-header span {
+        /* No font changes, inherit font */
+        color: inherit;
+      }
+      .entity-group .group-content {
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body class="environment trmnl">
+    <div class="screen">
+      <div class="view view--full">
+        <div class="layout">
+          <script>
+
+class HomeAssistantRenderer {
+  constructor(containerId = 'root') {
+    this.container = document.getElementById(containerId);
+    this.iconMap = this.createIconMap();
+    this.entityStyle = '{{ trmnl.plugin_settings.custom_fields_values.entity_style | default: "simple" }}';
+    this.layout = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "sections" }}';
+    this.pillPosition = '{{ trmnl.plugin_settings.custom_fields_values.pill_position | default: "top" }}';
+    this.textScale = '{{ trmnl.plugin_settings.custom_fields_values.text_scale | default: "normal" }}';
+    this.init();
+  }
+
+  init() {
+    if (!this.container) {
+      return;
+    }
+    this.container.className = `entities-container layout-${this.layout} text-scale--${this.textScale}`;
+  }
+
+  createIconMap() {
+    return {
+      // Domain-based icons
+      'light': 'mdi:lightbulb',
+      'switch': 'mdi:toggle-switch',
+      'sensor': 'mdi:chart-line',
+      'climate': 'mdi:thermostat',
+      'cover': 'mdi:window-shutter',
+      'fan': 'mdi:fan',
+      'lock': 'mdi:lock',
+      'media_player': 'mdi:speaker',
+      'camera': 'mdi:camera',
+      'alarm_control_panel': 'mdi:security',
+      'automation': 'mdi:cog',
+      'script': 'mdi:script-text',
+      'scene': 'mdi:palette',
+      'input_boolean': 'mdi:checkbox-marked',
+      'input_number': 'mdi:numeric',
+      'input_select': 'mdi:format-list-bulleted',
+      'input_text': 'mdi:form-textbox',
+      'timer': 'mdi:timer',
+      'counter': 'mdi:counter',
+      'person': 'mdi:account',
+      'device_tracker': 'mdi:map-marker',
+      'zone': 'mdi:map',
+      'sun': 'mdi:weather-sunny',
+      'weather': 'mdi:weather-partly-cloudy',
+      'conversation': 'mdi:message-text',
+      'notify': 'mdi:bell',
+      'tts': 'mdi:volume-high',
+      'group': 'mdi:account-group',
+      'homeassistant': 'mdi:home-assistant',
+      
+      // Device class specific icons
+      'temperature': 'mdi:thermometer',
+      'humidity': 'mdi:water-percent',
+      'pressure': 'mdi:gauge',
+      'battery': 'mdi:battery',
+      'illuminance': 'mdi:brightness-6',
+      'motion': 'mdi:motion-sensor',
+      'door': 'mdi:door',
+      'window': 'mdi:window-closed',
+      'smoke': 'mdi:smoke-detector',
+      'gas': 'mdi:gas-cylinder',
+      'power': 'mdi:flash',
+      'energy': 'mdi:lightning-bolt',
+      'current': 'mdi:current-ac',
+      'voltage': 'mdi:sine-wave',
+      'frequency': 'mdi:waveform',
+      'signal_strength': 'mdi:signal',
+      'connectivity': 'mdi:wifi',
+      'co2': 'mdi:molecule-co2',
+      'pm25': 'mdi:air-filter',
+      
+      // Fallback icons
+      'default': 'mdi:information',
+      'error': 'mdi:alert-circle',
+      'unknown': 'mdi:help-circle'
+    };
+  }
+
+  getEntityIcon(entity) {
+    if (entity.attributes.icon) {
+      return entity.attributes.icon;
+    }
+    if (entity.error) {
+      return this.iconMap.error;
+    }
+
+    const entityId = entity.entity_id || '';
+    const domain = entityId.split('.')[0];
+    const deviceClass = entity.attributes?.device_class;
+    
+    if (deviceClass && this.iconMap[deviceClass]) {
+      return this.iconMap[deviceClass];
+    }
+    
+    if (domain && this.iconMap[domain]) {
+      return this.iconMap[domain];
+    }
+    
+    return this.iconMap.default;
+  }
+
+  getEntityName(entity) {
+    if (entity.error) {
+      return 'Error';
+    }
+    
+    return entity.attributes?.friendly_name || entity.entity_id || 'Unknown Entity';
+  }
+
+  getDeviceClassTitle(entity) {
+    if (entity.error) {
+      return null;
+    }
+    
+    const deviceClass = entity.attributes?.device_class ?? '';
+    
+    // Capitalize first letter and replace underscores with spaces
+    return entity.attributes?.friendly_name ?? deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' ');
+  }
+
+  formatEntityState(entity) {
+    if (entity.error) {
+      return {
+        value: entity.error,
+        unit: '',
+        isError: true,
+        isNumeric: false
+      };
+    }
+
+    const state = entity.state;
+    const unit = entity.attributes?.unit_of_measurement || '';
+    
+    // Handle special states
+    if (state === 'on' || state === 'off') {
+      return {
+        value: state.toUpperCase(),
+        unit: '',
+        isError: false,
+        isNumeric: false
+      };
+    }
+    
+    // Handle numeric values
+    if (!isNaN(state) && state !== '') {
+      const numValue = parseFloat(state);
+      return {
+        value: numValue % 1 === 0 ? numValue.toString() : numValue.toFixed(1),
+        unit: unit,
+        isError: false,
+        isNumeric: true
+      };
+    }
+    
+    // Handle datetime values
+    if (state && state.includes('T') && state.includes(':')) {
+      try {
+        const date = new Date(state);
+        return {
+          value: date.toLocaleString(),
+          unit: '',
+          isError: false,
+          isNumeric: false
+        };
+      } catch (e) {
+        // If date parsing fails, return as is
+      }
+    }
+    
+    return {
+      value: state || 'N/A',
+      unit: unit,
+      isError: false,
+      isNumeric: false
+    };
+  }
+
+  /**
+   * Get CSS class for entity icon based on domain
+   */
+  getEntityIconClass(entity) {
+    if (entity.error) {
+      return 'entity-icon error';
+    }
+    
+    const entityId = entity.entity_id || '';
+    const domain = entityId.split('.')[0];
+    const deviceClass = entity.attributes?.device_class;
+    
+    const iconClass = deviceClass || domain || 'default';
+    return `entity-icon ${iconClass}`;
+  }
+
+  formatIconForUrl(iconName) {
+    if (!iconName) {
+      return 'mdi:help-circle';
+    }
+    
+    if (iconName.includes(':')) {
+      return iconName;
+    }
+    
+    if (iconName.startsWith('mdi-')) {
+      return iconName.replace('mdi-', 'mdi:');
+    }
+    
+    return `mdi:${iconName}`;
+  }
+
+  createPill(entity) {
+    const name = this.getEntityName(entity);
+    const icon = entity.icon ?? this.getEntityIcon(entity);
+    const stateInfo = this.formatEntityState(entity);
+    
+    const formattedIcon = this.formatIconForUrl(icon);
+    const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
+        
+    return `
+      <div class="pill-component rounded--full" data-entity-id="${entity.entity_id || 'error'}">
+        <img class="image" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'">
+        <span class="pill-value value--xsmall ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
+      </div>
+    `;
+  }
+
+  createEntityCard(entity, label) {
+    const name = this.getEntityName(entity);
+    const icon = entity.icon ?? this.getEntityIcon(entity);
+    const iconClass = this.getEntityIconClass(entity);
+    const stateInfo = this.formatEntityState(entity);
+    const deviceClassTitle = this.getDeviceClassTitle(entity);
+    
+    const baseCardClass = entity.error ? 'entity-card error' : 'entity-card';
+    let cardClass = baseCardClass;
+
+    if (this.entityStyle === 'detailed') {
+      cardClass = `${baseCardClass} entity-card--detailed`;
+    } else if (this.entityStyle === 'medium') {
+      cardClass = `${baseCardClass} entity-card--medium`;
+    }
+    
+    const formattedIcon = this.formatIconForUrl(icon);
+    const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
+    
+    if (this.entityStyle === 'detailed') {
+      const lastUpdated = entity.last_updated ? (() => {
+        const d = new Date(entity.last_updated);
+        return d.toLocaleString(undefined, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      })() : ''; 
+    
+      return `
+        <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
+          ${deviceClassTitle ? `<div class="device-class-title value value--xsmall">${deviceClassTitle}</div>` : ''}
+          <div class="entity-header">
+            <div class="${iconClass}"><img class="image" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
+            <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+              ${stateInfo.value}
+              ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+            </div>
+          </div>
+          ${lastUpdated ? `<div class="entity-last-updated value value--xxsmall">Updated: ${lastUpdated}</div>` : ''}
+        </div>
+      `;
+    }
+    
+    if (this.entityStyle === 'medium') {
+      return `
+        <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
+          ${deviceClassTitle ? `<div class="device-class-title value value--xsmall">${deviceClassTitle}</div>` : ''}
+          <div class="entity-header">
+            <div class="${iconClass}"><img class="image" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
+            <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+              ${stateInfo.value}
+              ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Simple style (original)
+    return `
+      <div class="${cardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
+        <div class="entity-header">
+          <div class="${iconClass}"><img class="image" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'"></div>
+          <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+            ${stateInfo.value}
+            ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  createPillsContainer(pillsByLabel) {
+    if (!pillsByLabel || !pillsByLabel.pills || pillsByLabel.pills.length === 0) {
+      return '';
+    }
+    
+    const allPills = pillsByLabel.pills.map(pill => this.createPill(pill));
+    
+    if (allPills.length === 0) {
+      return '';
+    }
+    
+      // Use flex classes for pills layout based on position
+      let flexClass = '';
+      switch (this.pillPosition) {
+        case 'top':
+          flexClass = 'flex flex--row flex--center-x flex--top';
+          break;
+        case 'bottom':
+          flexClass = 'flex flex--row flex--center-x flex--bottom';
+          break;
+        case 'left':
+          flexClass = 'flex flex--col flex--left flex--center-y';
+          break;
+        case 'right':
+          flexClass = 'flex flex--col flex--right flex--center-y';
+          break;
+        default:
+          flexClass = 'flex flex--row flex--center-x flex--top';
+      }
+      return `
+        <div class="pills-container pills-container--${this.pillPosition} ${flexClass} gap">
+          ${allPills.join('')}
+        </div>
+      `;
+  }
+
+  createEntitySection(label, entities) {
+    const entitiesHtml = entities
+      .map(entity => this.createEntityCard(entity, label))
+      .join('');
+    
+    let gridClass = 'entities-grid';
+    if (this.entityStyle === 'detailed') {
+      gridClass = 'entities-grid--detailed';
+    } else if (this.entityStyle === 'medium') {
+      gridClass = 'entities-grid--medium';
+    }
+    
+    return `
+      <div class="entity-group" data-label="${label}">
+        ${label !== '-' ? `<div class="group-header">
+          <span class="value value--small">${label}</span>
+        </div>` : ''}
+        <div class="group-content grid grid--wrap grid--min-56 ${gridClass}">
+            ${entitiesHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  render(responsesByLabel, pillsByLabel) {
+    if (!this.container) {
+      return;
+    }
+
+    this.container.innerHTML = '';
+
+    const labels = Object.keys(responsesByLabel || {});
+    const pillLabels = Object.keys(pillsByLabel || {});
+    
+    if (labels.length === 0 && pillLabels.length === 0) {
+      this.renderEmptyState();
+      return;
+    }
+
+    // Create pills container
+    const pillsHtml = this.createPillsContainer(pillsByLabel);
+
+    // Create entity sections
+    let mainContentHtml = '';
+    if (labels.length > 0) {
+      const sections = labels.map(label => {
+        const entities = responsesByLabel[label] || [];
+        return this.createEntitySection(label, entities);
+      });
+
+      mainContentHtml = `<div class="free-layout-container">${sections.join('')}</div>`;
+    }
+
+    // Create the flex layout structure
+    if (pillsHtml) {
+      this.container.innerHTML = `
+        ${pillsHtml}
+        <div class="main-content">
+          ${mainContentHtml}
+        </div>
+      `;
+    } else {
+      this.container.innerHTML = `
+        <div class="main-content">
+          ${mainContentHtml}
+        </div>
+      `;
+    }
+  }
+
+  renderEmptyState() {
+    this.container.innerHTML = `
+      <div class="main-content">
+        <div class="empty-state">
+          <div class="empty-state-icon value value--xxxlarge">⚠</div>
+          <h3 class="value value--large">No entities found</h3>
+          <p class="value value--small">Check your Home Assistant configuration and ensure entities are properly configured.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  updateEntity(entityId, newData) {
+    const card = this.container.querySelector(`[data-entity-id="${entityId}"]`);
+    if (card) {
+      const label = card.getAttribute('data-label');
+      card.outerHTML = this.createEntityCard(newData, label);
+    }
+  }
+
+  refresh(responsesByLabel, pillsByLabel) {
+    this.render(responsesByLabel, pillsByLabel);
+  }
+}
+
+function initializeHomeAssistantRenderer() {
+  try {
+    // Get webhook data
+    const webhookData = {
+      groups: {{ groups | json }},
+      pills: {{ pills | json }}
+    };
+    
+    if (!webhookData) {
+      throw new Error('No webhook data received. Please ensure the HACS TRMNL Webhook integration is properly configured and sending data.');
+    }
+
+    // Process groups from webhook data
+    const responsesByLabel = {};
+    
+    if (webhookData.groups && Array.isArray(webhookData.groups)) {
+      webhookData.groups.forEach(group => {
+        const groupName = group.groupName || 'Default';
+        if (group.entities && Array.isArray(group.entities)) {
+          responsesByLabel[groupName] = group.entities;
+        }
+      });
+    }
+
+    // Process pills from webhook data
+    const pillsByLabel = {
+      'pills': webhookData.pills || []
+    };
+
+    const rootElement = document.getElementById('root');
+    if (!rootElement) {
+      return;
+    }
+
+    const renderer = new HomeAssistantRenderer('root');
+    renderer.render(responsesByLabel, pillsByLabel);
+  } catch (error) {
+    console.error('Error initializing renderer:', error);
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.innerHTML = `
+        <div style="padding: 20px; text-align: center; color: #f44336;">
+          <h3 class="value value--large">❌ Error Loading Home Assistant Data</h3>
+          <p class="value value--small">Please check the browser console for details.</p>
+          <pre class="value value--xsmall" style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
+        </div>
+      `;
+    }
+  }
+}
+          </script>
+
+          <div id="root">
+            <!-- Entities will be rendered here -->
+          </div>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              try {
+                initializeHomeAssistantRenderer();
+
+                if (window.trmnl) {
+                  window.trmnl.ready();
+                } else {
+                  document.dispatchEvent(new CustomEvent('trmnl-ready'));
+
+                  window.trmnlReady = true;
+                }
+              } catch (error) {
+                if (window.trmnl) {
+                  window.trmnl.ready();
+                } else {
+                  document.dispatchEvent(new CustomEvent('trmnl-ready'));
+                  window.trmnlReady = true;
+                }
+              }
+            });
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+              setTimeout(() => {
+                try {
+                  initializeHomeAssistantRenderer();
+
+                  if (window.trmnl) {
+                    window.trmnl.ready();
+                  } else {
+                    document.dispatchEvent(new CustomEvent('trmnl-ready'));
+                    window.trmnlReady = true;
+                  }
+                } catch (error) {
+                  if (window.trmnl) {
+                    window.trmnl.ready();
+                  } else {
+                    document.dispatchEvent(new CustomEvent('trmnl-ready'));
+                    window.trmnlReady = true;
+                  }
+                }
+              }, 100);
+            }
+          </script>
+        </div>
+
+        {% if trmnl.plugin_settings.custom_fields_values.hide_title_bar != 'hide' %}
+          <div class="title_bar">
+            <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg">
+            <span class="title">{{ trmnl.plugin.name }}</span>
+            <span class="instance">{{ trmnl.plugin_instance.name }}</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
