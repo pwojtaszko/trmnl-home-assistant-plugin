@@ -19,19 +19,14 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 i += 1
             num_groups = i if i > 0 else 1
             add_group = user_input.get("add_another_group", False)
-            # Build groups from user_input
+            # Build groups from user_input (just entity IDs)
             new_groups = []
             for idx in range(num_groups):
                 group_name = user_input.get(f"group_{idx}_name", f"Group {idx+1}")
                 group_entities = user_input.get(f"group_{idx}_entities", [])
-                hass = self.hass
-                valid_entities = []
-                for ent in group_entities:
-                    if ent:
-                        state = hass.states.get(ent)
-                        if state:
-                            valid_entities.append(state.as_dict())
-                group_dict = {"entities": valid_entities}
+                group_dict = {
+                    "entities": [{"entity_id": ent} for ent in group_entities if ent]
+                }
                 if group_name:
                     group_dict["groupName"] = group_name
                 new_groups.append(group_dict)
@@ -48,30 +43,13 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             webhook_url = user_input.get("webhook_url") or prev_data.get("webhook_url", "")
             pill_entities = user_input.get("pill_entities", [])
-            pills_obj = []
-            for ent in pill_entities:
-                if ent:
-                    state = self.hass.states.get(ent)
-                    if state:
-                        pills_obj.append(state.as_dict())
+            pills_obj = [{"entity_id": ent} for ent in pill_entities if ent]
             data = {
                 "webhook_url": webhook_url,
                 "groups": new_groups,
                 "pills": pills_obj
             }
-            try:
-                await send_to_trmnl_webhook(data, webhook_url)
-                return self.async_create_entry(title="TRMNL Webhook", data=data)
-            except Exception as e:
-                schema = self._get_dynamic_schema(prev_data, user_input, num_groups)
-                return self.async_show_form(
-                    step_id="user",
-                    data_schema=schema,
-                    errors={"base": "webhook_failed"},
-                    description_placeholders={
-                        "info": "Add pill entities and configure groups."
-                    },
-                )
+            return self.async_create_entry(title="TRMNL Webhook", data=data)
         else:
             groups = prev_data.get("groups", [])
             num_groups = len(groups) if groups else 1
@@ -152,20 +130,16 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
             for idx in range(num_groups):
                 if user_input.get(f"remove_group_{idx}"):
                     removed_indices.append(idx)
-            # Build groups from user_input
+            # Build groups from user_input (just entity IDs)
             updated_groups = []
             for idx in range(num_groups):
                 if idx in removed_indices:
                     continue
                 group_name = user_input.get(f"group_{idx}_name", f"Group {idx+1}")
                 group_entities = user_input.get(f"group_{idx}_entities", [])
-                valid_entities = []
-                for ent in group_entities:
-                    if ent:
-                        state = hass.states.get(ent)
-                        if state:
-                            valid_entities.append(state.as_dict())
-                group_dict = {"entities": valid_entities}
+                group_dict = {
+                    "entities": [{"entity_id": ent} for ent in group_entities if ent]
+                }
                 if group_name:
                     group_dict["groupName"] = group_name
                 updated_groups.append(group_dict)
@@ -182,27 +156,13 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
                 )
             webhook_url = user_input.get("webhook_url", prev_data.get("webhook_url", ""))
             pills_entities = user_input.get("pill_entities", [])
-            pills_obj = []
-            for ent in pills_entities:
-                if ent:
-                    state = hass.states.get(ent)
-                    if state:
-                        pills_obj.append(state.as_dict())
+            pills_obj = [{"entity_id": ent} for ent in pills_entities if ent]
             data = {
                 "webhook_url": webhook_url,
                 "groups": updated_groups,
                 "pills": pills_obj
             }
-            try:
-                await send_to_trmnl_webhook(data, webhook_url)
-                return self.async_create_entry(title="TRMNL Webhook Options", data=data)
-            except Exception as e:
-                schema = self._get_dynamic_options_schema(prev_data, user_input, len(updated_groups))
-                return self.async_show_form(
-                    step_id="init",
-                    data_schema=schema,
-                    errors={"base": "webhook_failed"}
-                )
+            return self.async_create_entry(title="TRMNL Webhook Options", data=data)
         else:
             groups = prev_data.get("groups", [])
             num_groups = len(groups) if groups else 1
