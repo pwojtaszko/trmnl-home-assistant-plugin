@@ -6,6 +6,5 @@
   "documentation": "https://github.com/pwojtaszko/trmnl-home-assistant-plugin",
   "iot_class": "cloud_push",
   "requirements": ["requests"],
-  "version": "1.0.0",
-    "translation_key": "trmnl_webhook"
+  "version": "1.0.0"
 }
