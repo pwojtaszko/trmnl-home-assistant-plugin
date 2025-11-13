@@ -81,10 +81,26 @@
       .entity-group .group-content {
         margin-top: 8px;
       }
+
+      .entity-card {
+        min-width: 100px;
+      }
+
+      /* Flex layout */
+      .free-layout-container.flex {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .free-layout-container.flex .entity-group .group-content {
+          display: flex;
+          flex-wrap: wrap;
+      }
+
+    
     </style>
   </head>
   <body class="environment trmnl">
-    <div class="screen">
       <div class="view view--full">
         <div class="layout">
           <script>
@@ -470,7 +486,7 @@ class HomeAssistantRenderer {
         return this.createEntitySection(label, entities);
       });
 
-      mainContentHtml = `<div class="free-layout-container">${sections.join('')}</div>`;
+      mainContentHtml = `<div class="free-layout-container flex">${sections.join('')}</div>`;
     }
 
     // Create the flex layout structure
@@ -628,6 +644,5 @@ function initializeHomeAssistantRenderer() {
           </div>
         {% endif %}
       </div>
-    </div>
   </body>
 </html>
