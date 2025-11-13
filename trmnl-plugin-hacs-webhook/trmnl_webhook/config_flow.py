@@ -34,12 +34,17 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 new_groups.append({"groupName": f"Group {len(new_groups)+1}", "entities": []})
                 num_groups = len(new_groups)
                 schema = self._get_dynamic_schema(prev_data, user_input, num_groups)
+                
+                # Build description_placeholders for dynamic group labels
+                placeholders = {}
+                for i in range(num_groups):
+                    placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
+                    placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
+                
                 return self.async_show_form(
                     step_id="user",
                     data_schema=schema,
-                    description_placeholders={
-                        "info": "config_flow.info"
-                    },
+                    description_placeholders=placeholders,
                 )
             webhook_url = user_input.get("webhook_url") or prev_data.get("webhook_url", "")
             pill_entities = user_input.get("pill_entities", [])
@@ -54,34 +59,36 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             groups = prev_data.get("groups", [])
             num_groups = len(groups) if groups else 1
             schema = self._get_dynamic_schema(prev_data, user_input, num_groups)
+            
+            # Build description_placeholders for dynamic group labels
+            placeholders = {}
+            for i in range(num_groups):
+                placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
+                placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
+            
             return self.async_show_form(
                 step_id="user",
                 data_schema=schema,
-                description_placeholders={
-                    "info": "config_flow.info"
-                },
+                description_placeholders=placeholders,
             )
 
     def _get_dynamic_schema(self, prev_data=None, user_input=None, num_groups=1):
         prev_data = prev_data or {}
-        # Always preserve webhook_url from user_input if present, else prev_data
         webhook_url_default = ""
         if user_input and "webhook_url" in user_input:
             webhook_url_default = user_input["webhook_url"]
         else:
             webhook_url_default = prev_data.get("webhook_url", "")
         schema_dict = {
-            vol.Required("webhook_url", default=webhook_url_default, description={"translation_key": "config_flow.webhook_url"}): str,
+            vol.Required("webhook_url", default=webhook_url_default): str,
         }
-        # Pills first
         pill_entities_default = []
         if user_input:
             pill_entities_default = user_input.get("pill_entities", [e.get("entity_id") for e in prev_data.get("pills", [])])
         elif prev_data.get("pills"):
             pill_entities_default = [e.get("entity_id") for e in prev_data["pills"]]
-        schema_dict[vol.Optional("pill_entities", default=pill_entities_default, description={"translation_key": "config_flow.pill_entities"})] = selector({"entity": {"multiple": True}})
+        schema_dict[vol.Optional("pill_entities", default=pill_entities_default)] = selector({"entity": {"multiple": True}})
 
-        # Dynamic groups
         groups = prev_data.get("groups", [])
         for i in range(num_groups):
             group_name_default = None
@@ -95,10 +102,9 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             else:
                 group_name_default = f"Group {i+1}"
                 group_entities_default = []
-            schema_dict[vol.Optional(f"group_{i}_name", default=group_name_default, description={"translation_key": "config_flow.group_name"})] = str
-            schema_dict[vol.Optional(f"group_{i}_entities", default=group_entities_default, description={"translation_key": "config_flow.group_entities"})] = selector({"entity": {"multiple": True}})
-        # Add another group checkbox at the end
-        schema_dict[vol.Optional("add_another_group", default=False, description={"translation_key": "config_flow.add_another_group"})] = bool
+            schema_dict[vol.Optional(f"group_{i}_name", default=group_name_default)] = str
+            schema_dict[vol.Optional(f"group_{i}_entities", default=group_entities_default)] = selector({"entity": {"multiple": True}})
+        schema_dict[vol.Optional("add_another_group", default=False)] = bool
         return vol.Schema(schema_dict)
 
 
@@ -147,12 +153,18 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
                 updated_groups.append({"groupName": f"Group {len(updated_groups)+1}", "entities": []})
                 num_groups = len(updated_groups)
                 schema = self._get_dynamic_options_schema(prev_data, user_input, num_groups)
+                
+                # Build description_placeholders for dynamic group labels
+                placeholders = {}
+                for i in range(num_groups):
+                    placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
+                    placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
+                    placeholders[f"remove_group_{i}"] = {"number": str(i + 1)}
+                
                 return self.async_show_form(
                     step_id="init",
                     data_schema=schema,
-                    description_placeholders={
-                        "info": "config_flow.edit_info"
-                    },
+                    description_placeholders=placeholders,
                 )
             webhook_url = user_input.get("webhook_url", prev_data.get("webhook_url", ""))
             pills_entities = user_input.get("pill_entities", [])
@@ -167,22 +179,28 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
             groups = prev_data.get("groups", [])
             num_groups = len(groups) if groups else 1
             schema = self._get_dynamic_options_schema(prev_data, user_input, num_groups)
-            return self.async_show_form(step_id="init", data_schema=schema, description_placeholders={"info": "config_flow.edit_info"})
+            
+            # Build description_placeholders for dynamic group labels
+            placeholders = {}
+            for i in range(num_groups):
+                placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
+                placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
+                placeholders[f"remove_group_{i}"] = {"number": str(i + 1)}
+            
+            return self.async_show_form(step_id="init", data_schema=schema, description_placeholders=placeholders)
 
     def _get_dynamic_options_schema(self, prev_data=None, user_input=None, num_groups=1):
         prev_data = prev_data or {}
         schema_dict = {
-            vol.Required("webhook_url", default=prev_data.get("webhook_url", ""), description={"translation_key": "config_flow.webhook_url"}): str,
+            vol.Required("webhook_url", default=prev_data.get("webhook_url", "")): str,
         }
-        # Pills first
         pill_entities_default = []
         if user_input:
             pill_entities_default = user_input.get("pill_entities", [e.get("entity_id") for e in prev_data.get("pills", [])])
         elif prev_data.get("pills"):
             pill_entities_default = [e.get("entity_id") for e in prev_data["pills"]]
-        schema_dict[vol.Optional("pill_entities", default=pill_entities_default, description={"translation_key": "config_flow.pill_entities"})] = selector({"entity": {"multiple": True}})
+        schema_dict[vol.Optional("pill_entities", default=pill_entities_default)] = selector({"entity": {"multiple": True}})
 
-        # Dynamic groups
         groups = prev_data.get("groups", [])
         for i in range(num_groups):
             group_name_default = None
@@ -196,10 +214,10 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
             else:
                 group_name_default = f"Group {i+1}"
                 group_entities_default = []
-            schema_dict[vol.Optional(f"group_{i}_name", default=group_name_default, description={"translation_key": "config_flow.group_name"})] = str
-            schema_dict[vol.Optional(f"group_{i}_entities", default=group_entities_default, description={"translation_key": "config_flow.group_entities"})] = selector({"entity": {"multiple": True}})
-            schema_dict[vol.Optional(f"remove_group_{i}", default=False, description={"translation_key": "config_flow.remove_group"})] = bool
-        schema_dict[vol.Optional("add_another_group", default=False, description={"translation_key": "config_flow.add_another_group"})] = bool
+            schema_dict[vol.Optional(f"group_{i}_name", default=group_name_default)] = str
+            schema_dict[vol.Optional(f"group_{i}_entities", default=group_entities_default)] = selector({"entity": {"multiple": True}})
+            schema_dict[vol.Optional(f"remove_group_{i}", default=False)] = bool
+        schema_dict[vol.Optional("add_another_group", default=False)] = bool
         return vol.Schema(schema_dict)
 
     def _get_options_schema(self, prev_data=None, user_input=None, num_groups=1):
