@@ -46,28 +46,36 @@ custom_fields:
     - Left: left
     - Right: right
 
-- keyname: text_scale
-  field_type: select
-  name: Text Size
-  description: Overall text scaling
-  help_text: Adjust text size for your display. Use Large for smaller screens, Small for high-resolution displays.
-  optional: false
-  default: normal
-  options:
-    - Small: small
-    - Normal: normal
-    - Large: large
-
-- keyname: hide_title_bar
+- keyname: show_title_bar
   field_type: select
   name: Show Title Bar
   description: Display the title bar at the bottom
   help_text: Show the title bar with plugin name and instance name at the bottom of the screen.
   optional: false
-  default: show
+  default: "true"
   options:
-    - Show: show
-    - Hide: hide
+    - Show: "true"
+    - Hide: "false"
 
+- keyname: show_entity_title
+  field_type: select
+  name: Show Entity Title
+  description: Display the entity title (friendly name) on cards
+  help_text: Show the title bar with plugin name and instance name at the bottom of the screen.
+  optional: false
+  default: "true"
+  options:
+    - Show: "true"
+    - Hide: "false"
+# Checkbox for showing entity icon
+- keyname: show_entity_icon
+  field_type: select
+  name: Show Entity Icon
+  description: Display the entity icon on cards
+  optional: false
+  default: "true"
+  options:
+    - Show: "true"
+    - Hide: "false"
 name: Home Assistant Entities (Webhook)
 refresh_interval: 5

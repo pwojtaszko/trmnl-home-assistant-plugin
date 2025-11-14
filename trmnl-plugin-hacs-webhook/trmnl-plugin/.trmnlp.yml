@@ -11,4 +11,8 @@ custom_fields: {}
 
 # override variables
 variables:
-  trmnl: {}
+  trmnl: {
+    plugin: {
+      name: "Home Assistant Entities"
+    }
+  }
