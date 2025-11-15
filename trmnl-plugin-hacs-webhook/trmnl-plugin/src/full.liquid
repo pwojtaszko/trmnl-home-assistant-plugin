@@ -112,6 +112,7 @@
       .free-layout-container.flex {
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
       }
 
       .free-layout-container.flex .entity-group .group-content {
@@ -379,12 +380,12 @@ class HomeAssistantRenderer {
     `;
   }
 
-  createPillsContainer(pillsByLabel) {
-    if (!pillsByLabel || !pillsByLabel.pills || pillsByLabel.pills.length === 0) {
+  createPillsContainer(pills) {
+    if (!pills || pills.length === 0) {
       return '';
     }
     
-    const allPills = pillsByLabel.pills.map(pill => this.createPill(pill));
+    const allPills = pills.map(pill => this.createPill(pill));
     
     if (allPills.length === 0) {
       return '';
@@ -415,16 +416,16 @@ class HomeAssistantRenderer {
       `;
   }
 
-  createEntitySection(label, entities) {
+  createEntitySection({ entities, groupName }) {
     const entitiesHtml = entities
-      .map(entity => this.createEntityCard(entity, label))
+      .map(entity => this.createEntityCard(entity, groupName))
       .join('');
         
     return `
-      <div class="entity-group" data-label="${label}">
-        ${label !== '-' ? `<div class="group-header">
-          <span class="value value--small">${label}</span>
-        </div>` : ''}
+      <div class="entity-group" data-label="${groupName}">
+        <div class="group-header">
+          ${groupName ? `<span class="value value--small">${groupName}</span>` : ''}
+        </div>
         <div class="group-content grid grid--wrap grid--min-56 entities-grid">
             ${entitiesHtml}
         </div>
@@ -432,30 +433,28 @@ class HomeAssistantRenderer {
     `;
   }
 
-  render(responsesByLabel, pillsByLabel) {
+  render(webhookData) {
     if (!this.container) {
       return;
     }
 
     this.container.innerHTML = '';
 
-    const labels = Object.keys(responsesByLabel || {});
-    const pillLabels = Object.keys(pillsByLabel || {});
+    const { groups, pills } = webhookData || {};
     
-    if (labels.length === 0 && pillLabels.length === 0) {
+    if (groups.length === 0 && pills.length === 0) {
       this.renderEmptyState();
       return;
     }
 
     // Create pills container
-    const pillsHtml = this.createPillsContainer(pillsByLabel);
+    const pillsHtml = this.createPillsContainer(pills);
 
     // Create entity sections
     let mainContentHtml = '';
-    if (labels.length > 0) {
-      const sections = labels.map(label => {
-        const entities = responsesByLabel[label] || [];
-        return this.createEntitySection(label, entities);
+    if (groups.length > 0) {
+      const sections = groups.map(group => {
+        return this.createEntitySection(group);
       });
 
       mainContentHtml = `<div class="free-layout-container flex">${sections.join('')}</div>`;
@@ -515,30 +514,13 @@ function initializeHomeAssistantRenderer() {
       throw new Error('No webhook data received. Please ensure the HACS TRMNL Webhook integration is properly configured and sending data.');
     }
 
-    // Process groups from webhook data
-    const responsesByLabel = {};
-    
-    if (webhookData.groups && Array.isArray(webhookData.groups)) {
-      webhookData.groups.forEach(group => {
-        const groupName = group.groupName || 'Default';
-        if (group.entities && Array.isArray(group.entities)) {
-          responsesByLabel[groupName] = group.entities;
-        }
-      });
-    }
-
-    // Process pills from webhook data
-    const pillsByLabel = {
-      'pills': webhookData.pills || []
-    };
-
     const rootElement = document.getElementById('root');
     if (!rootElement) {
       return;
     }
 
     const renderer = new HomeAssistantRenderer('root');
-    renderer.render(responsesByLabel, pillsByLabel);
+    renderer.render(webhookData);
   } catch (error) {
     console.error('Error initializing renderer:', error);
     const rootElement = document.getElementById('root');
