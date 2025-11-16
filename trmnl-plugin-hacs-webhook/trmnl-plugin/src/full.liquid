@@ -113,7 +113,6 @@
       .free-layout-container.flex {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
       }
 
       .free-layout-container.flex .entity-group .group-content {
@@ -121,6 +120,61 @@
           flex-wrap: wrap;
       }
 
+         /* List layout styles */
+        .free-layout-container.list {
+          max-width: 100%;
+          column-gap: 32px;
+          width: 48%;
+          min-width: 250px;
+          margin-top: 16px;
+          flex-wrap: wrap;
+        }
+        .free-layout-container.list .entity-group {
+          width: 100%;
+          background: none;
+          border: none;
+          border-radius: 0;
+          margin-bottom: 0;
+          padding: 0;
+        }
+        .free-layout-container.list .group-header {
+          font-weight: 600;
+          font-size: 1.1em;
+          margin-bottom: 8px;
+          position: static;
+          background: none;
+          padding: 0;
+        }
+        .free-layout-container.list .group-content {
+          width: 100%;
+          display: block;
+          margin-bottom: 16px;
+          break-inside: avoid;
+        }
+        .free-layout-container.list .entity-list-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 4px 0;
+          border: none;
+          background: none;
+          margin: 0 0 2px 0;
+        }
+        .free-layout-container.list .entity-list-row .entity-icon {
+          width: 22px;
+          height: 22px;
+        }
+        .free-layout-container.list .entity-list-row .entity-value {
+          font-size: 1em;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+        .free-layout-container.list .entity-list-row .entity-name {
+          flex: 1;
+          font-size: 1em;
+          font-weight: 400;
+          white-space: nowrap;
+        }
     
     </style>
   </head>
@@ -128,11 +182,13 @@
       <div class="view view--full view--half_vertical view--half_horizontal view--quadrant">
         <div class="layout">
           <script>
+     
 
 class HomeAssistantRenderer {
   constructor(containerId = 'root') {
     this.container = document.getElementById(containerId);
     this.iconMap = this.createIconMap();
+    this.layoutStyle = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "groups" }}';
     this.pillPosition = '{{ trmnl.plugin_settings.custom_fields_values.pill_position | default: "top" }}';
     this.showEntityTitle = {{ trmnl.plugin_settings.custom_fields_values.show_entity_title | default: true }};
     this.showEntityIcon = {{ trmnl.plugin_settings.custom_fields_values.show_entity_icon | default: true }};
@@ -246,7 +302,7 @@ class HomeAssistantRenderer {
     const deviceClass = entity.attributes?.device_class ?? '';
     
     // Capitalize first letter and replace underscores with spaces
-    return entity.attributes?.friendly_name ?? deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' ');
+    return entity.attributes?.friendly_name ?? (deviceClass.charAt(0).toUpperCase() + deviceClass.slice(1).replace(/_/g, ' '));
   }
 
   formatEntityState(entity) {
@@ -418,20 +474,49 @@ class HomeAssistantRenderer {
   }
 
   createEntitySection({ entities, groupName }) {
-    const entitiesHtml = entities
-      .map(entity => this.createEntityCard(entity, groupName))
-      .join('');
-        
-    return `
-      <div class="entity-group" data-label="${groupName}">
-        <div class="group-header">
-          ${groupName ? `<span class="value value--small">${groupName}</span>` : ''}
-        </div>
-        <div class="group-content grid grid--wrap grid--min-56 entities-grid">
-            ${entitiesHtml}
-        </div>
-      </div>
-    `;
+      if (this.layoutStyle === 'list') {
+        // List layout: 2 columns, each 400px, left then right
+        const entityRows = entities.map(entity => {
+          const name = this.getEntityName(entity);
+          const icon = entity.icon ?? this.getEntityIcon(entity);
+          const iconClass = this.getEntityIconClass(entity);
+          const stateInfo = this.formatEntityState(entity);
+          const formattedIcon = this.formatIconForUrl(icon);
+          const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
+            return `
+              <div class="entity-list-row" data-entity-id="${entity.entity_id || 'error'}">
+                ${this.showEntityTitle ? `<span class="entity-name">${name}</span>` : ''}
+                ${this.showEntityIcon ? `<img class="entity-icon ${iconClass}" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'">` : ''}
+                <span class="entity-value">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
+              </div>
+            `;
+        });
+        return `
+          <div class="entity-group" data-label="${groupName}">
+            <div class="group-header">
+              ${groupName ? `<span class="value value--small">${groupName}</span>` : ''}
+            </div>
+            <div class="group-content">
+              ${entityRows.join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        // Default (card) layout
+        const entitiesHtml = entities
+          .map(entity => this.createEntityCard(entity, groupName))
+          .join('');
+        return `
+          <div class="entity-group" data-label="${groupName}">
+            <div class="group-header">
+              ${groupName ? `<span class="value value--small">${groupName}</span>` : ''}
+            </div>
+            <div class="group-content grid grid--wrap grid--min-56 entities-grid">
+                ${entitiesHtml}
+            </div>
+          </div>
+        `;
+      }
   }
 
   render(webhookData) {
@@ -451,31 +536,31 @@ class HomeAssistantRenderer {
     // Create pills container
     const pillsHtml = this.createPillsContainer(pills);
 
-    // Create entity sections
-    let mainContentHtml = '';
-    if (groups.length > 0) {
-      const sections = groups.map(group => {
-        return this.createEntitySection(group);
-      });
+      // Create entity sections
+      let mainContentHtml = '';
+      if (groups.length > 0) {
+        const sections = groups.map(group => {
+          return this.createEntitySection(group);
+        });
+        const layoutClass = this.layoutStyle === 'list' ? 'list' : 'flex';
+        mainContentHtml = `<div class="free-layout-container ${layoutClass}">${sections.join('')}</div>`;
+      }
 
-      mainContentHtml = `<div class="free-layout-container flex">${sections.join('')}</div>`;
-    }
-
-    // Create the flex layout structure
-    if (pillsHtml) {
-      this.container.innerHTML = `
-        ${pillsHtml}
-        <div class="main-content">
-          ${mainContentHtml}
-        </div>
-      `;
-    } else {
-      this.container.innerHTML = `
-        <div class="main-content">
-          ${mainContentHtml}
-        </div>
-      `;
-    }
+      // Create the layout structure
+      if (pillsHtml) {
+        this.container.innerHTML = `
+          ${pillsHtml}
+          <div class="main-content">
+            ${mainContentHtml}
+          </div>
+        `;
+      } else {
+        this.container.innerHTML = `
+          <div class="main-content">
+            ${mainContentHtml}
+          </div>
+        `;
+      }
   }
 
   renderEmptyState() {

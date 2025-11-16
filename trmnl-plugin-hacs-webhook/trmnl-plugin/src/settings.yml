@@ -14,12 +14,11 @@ custom_fields:
   field_type: select
   name: Layout
   description: How entities are arranged
-  help_text: Sections→ organized in labeled groups (2 groups per row). Free Flow→ natural wrapping (fits more).
   optional: false
-  default: sections
+  default: groups
   options:
-    - Sections: sections
-    - Free Flow: free
+    - Groups: groups
+    - List: list
 
 - keyname: pill_position
   field_type: select
