@@ -4,6 +4,7 @@ from homeassistant.core import callback
 from . import DOMAIN
 from .webhook import send_to_trmnl_webhook
 from homeassistant.helpers.selector import selector
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
@@ -54,6 +55,57 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "groups": new_groups,
                 "pills": pills_obj
             }
+            # Send webhook on config creation
+            if data.get("webhook_url"):
+                hass = self.hass
+                session = async_get_clientsession(hass)
+                # Expand entities like in __init__.py
+                groups = data.get("groups", [])
+                pills = data.get("pills", [])
+                updated_groups = []
+                for group in groups:
+                    updated_entities = []
+                    for entity in group.get("entities", []):
+                        entity_id = entity.get("entity_id")
+                        state_obj = hass.states.get(entity_id)
+                        if state_obj:
+                            updated_entity = {
+                                "entity_id": entity_id,
+                                "state": state_obj.state,
+                                "attributes": dict(state_obj.attributes),
+                                "last_changed": str(state_obj.last_changed),
+                                "last_updated": str(state_obj.last_updated),
+                            }
+                            updated_entities.append(updated_entity)
+                        else:
+                            updated_entities.append(entity)
+                    updated_group = dict(group)
+                    updated_group["entities"] = updated_entities
+                    updated_groups.append(updated_group)
+                updated_pills = []
+                for pill in pills:
+                    entity_id = pill.get("entity_id")
+                    state_obj = hass.states.get(entity_id)
+                    if state_obj:
+                        updated_pill = {
+                            "entity_id": entity_id,
+                            "state": state_obj.state,
+                            "attributes": dict(state_obj.attributes),
+                            "last_changed": str(state_obj.last_changed),
+                            "last_updated": str(state_obj.last_updated),
+                        }
+                        updated_pills.append(updated_pill)
+                    else:
+                        updated_pills.append(pill)
+                webhook_data = {
+                    "groups": updated_groups,
+                    "pills": updated_pills
+                }
+                try:
+                    await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
+                except Exception as e:
+                    import logging
+                    logging.getLogger(__name__).error(f"TRMNL Webhook config_flow initial webhook failed: {e}")
             return self.async_create_entry(title="TRMNL Webhook", data=data)
         else:
             groups = prev_data.get("groups", [])
@@ -174,6 +226,56 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
                 "groups": updated_groups,
                 "pills": pills_obj
             }
+            # Send webhook on options update
+            if data.get("webhook_url"):
+                session = async_get_clientsession(hass)
+                # Expand entities like in __init__.py
+                groups = data.get("groups", [])
+                pills = data.get("pills", [])
+                updated_groups = []
+                for group in groups:
+                    updated_entities = []
+                    for entity in group.get("entities", []):
+                        entity_id = entity.get("entity_id")
+                        state_obj = hass.states.get(entity_id)
+                        if state_obj:
+                            updated_entity = {
+                                "entity_id": entity_id,
+                                "state": state_obj.state,
+                                "attributes": dict(state_obj.attributes),
+                                "last_changed": str(state_obj.last_changed),
+                                "last_updated": str(state_obj.last_updated),
+                            }
+                            updated_entities.append(updated_entity)
+                        else:
+                            updated_entities.append(entity)
+                    updated_group = dict(group)
+                    updated_group["entities"] = updated_entities
+                    updated_groups.append(updated_group)
+                updated_pills = []
+                for pill in pills:
+                    entity_id = pill.get("entity_id")
+                    state_obj = hass.states.get(entity_id)
+                    if state_obj:
+                        updated_pill = {
+                            "entity_id": entity_id,
+                            "state": state_obj.state,
+                            "attributes": dict(state_obj.attributes),
+                            "last_changed": str(state_obj.last_changed),
+                            "last_updated": str(state_obj.last_updated),
+                        }
+                        updated_pills.append(updated_pill)
+                    else:
+                        updated_pills.append(pill)
+                webhook_data = {
+                    "groups": updated_groups,
+                    "pills": updated_pills
+                }
+                try:
+                    await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
+                except Exception as e:
+                    import logging
+                    logging.getLogger(__name__).error(f"TRMNL Webhook config_flow options webhook failed: {e}")
             return self.async_create_entry(title="config_flow.options_title", data=data)
         else:
             groups = prev_data.get("groups", [])

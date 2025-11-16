@@ -97,6 +97,7 @@
 
       .entity-card {
         min-width: 100px;
+        margin: 0 auto;
       }
 
       .entity-header {
@@ -529,7 +530,7 @@ function initializeHomeAssistantRenderer() {
         <div style="padding: 20px; text-align: center; color: #f44336;">
           <h3 class="value value--large">❌ Error Loading Home Assistant Data</h3>
           <p class="value value--small">Please check the browser console for details.</p>
-          <pre class="value value--xsmall" style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
+          <pre class="value value--small" style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
         </div>
       `;
     }
