@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Nastavitev TRMNL Webhook",
-        "description": "Konfigurirajte integracijo TRMNL Webhook.",
+        "title": "Nastavitev TRMNL Dashboard",
+        "description": "Konfigurirajte integracijo TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL spletnega kavlja",
           "pill_entities": "Entitete tablet",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Možnosti TRMNL Webhook",
+        "title": "Možnosti TRMNL Dashboard",
         "description": "Uredite entitete tablet in nastavite skupine.",
         "data": {
           "webhook_url": "URL spletnega kavlja",

@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook Astellung",
-        "description": "Konfiguréiert Är TRMNL Webhook Integratioun.",
+        "title": "TRMNL Dashboard Astellung",
+        "description": "Konfiguréiert Är TRMNL Dashboard Integratioun.",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "Pëll Entitéiten",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook Optiounen",
+        "title": "TRMNL Dashboard Optiounen",
         "description": "Pëll Entitéiten änneren an Gruppen astellen.",
         "data": {
           "webhook_url": "Webhook URL",

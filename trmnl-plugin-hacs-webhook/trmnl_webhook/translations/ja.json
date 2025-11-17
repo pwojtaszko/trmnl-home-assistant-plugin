@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhookの設定",
-        "description": "TRMNL Webhookの統合を設定します。",
+        "title": "TRMNL Dashboardの設定",
+        "description": "TRMNL Dashboardの統合を設定します。",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "ピルエンティティ",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhookのオプション",
+        "title": "TRMNL Dashboardのオプション",
         "description": "ピルエンティティを編集し、グループを設定します。",
         "data": {
           "webhook_url": "Webhook URL",

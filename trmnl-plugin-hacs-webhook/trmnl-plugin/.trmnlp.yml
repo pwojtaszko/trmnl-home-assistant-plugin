@@ -12,7 +12,7 @@ custom_fields: {}
 # override variables
 variables:
   trmnl: {
-    plugin: {
-      name: "Home Assistant Entities"
+    plugin_settings: {
+      name: "Home Assistant Dashboard"
     }
   }

@@ -1,7 +1,7 @@
 import logging
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-DOMAIN = "trmnl_webhook"
+DOMAIN = "trmnl_dashboard"
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry):
@@ -76,7 +76,7 @@ async def async_setup_entry(hass, entry):
                 try:
                     await send_to_trmnl_webhook(session, webhook_data, webhook_url)
                 except Exception as e:
-                    _LOGGER.error(f"TRMNL Webhook periodic update failed: {e}")
+                    _LOGGER.error(f"TRMNL Dashboard periodic update failed: {e}")
 
         remove_listener = async_track_time_interval(
             hass,
@@ -133,10 +133,10 @@ async def async_setup_entry(hass, entry):
             try:
                 await send_to_trmnl_webhook(session, webhook_data, webhook_url)
             except Exception as e:
-                _LOGGER.error(f"TRMNL Webhook initial update failed: {e}")
+                _LOGGER.error(f"TRMNL Dashboard initial update failed: {e}")
 
     except Exception as setup_ex:
-        _LOGGER.error(f"TRMNL Webhook: Error in async_setup_entry: {setup_ex}")
+        _LOGGER.error(f"TRMNL Dashboard: Error in async_setup_entry: {setup_ex}")
 
     async def _reload_service(call):
         await async_reload_entry(hass, entry)

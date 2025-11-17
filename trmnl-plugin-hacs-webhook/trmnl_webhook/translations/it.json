@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Configurazione TRMNL Webhook",
-        "description": "Configura la tua integrazione TRMNL Webhook.",
+        "title": "Configurazione TRMNL Dashboard",
+        "description": "Configura la tua integrazione TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL Webhook",
           "pill_entities": "Entità pillola",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opzioni TRMNL Webhook",
+        "title": "Opzioni TRMNL Dashboard",
         "description": "Modifica le entità pillola e configura i gruppi.",
         "data": {
           "webhook_url": "URL Webhook",

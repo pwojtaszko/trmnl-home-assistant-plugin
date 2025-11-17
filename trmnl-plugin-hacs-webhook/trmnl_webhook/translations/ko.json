@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook 설정",
-        "description": "TRMNL Webhook 통합을 구성하세요.",
+        "title": "TRMNL Dashboard 설정",
+        "description": "TRMNL Dashboard 통합을 구성하세요.",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "알약 엔터티",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook 옵션",
+        "title": "TRMNL Dashboard 옵션",
         "description": "알약 엔터티를 편집하고 그룹을 구성하세요.",
         "data": {
           "webhook_url": "Webhook URL",

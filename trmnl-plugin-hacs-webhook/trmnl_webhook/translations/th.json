@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "การตั้งค่า TRMNL Webhook",
-        "description": "กำหนดค่าอินทิเกรต TRMNL Webhook ของคุณ",
+        "title": "การตั้งค่า TRMNL Dashboard",
+        "description": "กำหนดค่าอินทิเกรต TRMNL Dashboard ของคุณ",
         "data": {
           "webhook_url": "URL ของ Webhook",
           "pill_entities": "เอนทิตีของยาเม็ด",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "ตัวเลือก TRMNL Webhook",
+        "title": "ตัวเลือก TRMNL Dashboard",
         "description": "แก้ไขเอนทิตีของยาเม็ดและกำหนดค่ากลุ่ม",
         "data": {
           "webhook_url": "URL ของ Webhook",

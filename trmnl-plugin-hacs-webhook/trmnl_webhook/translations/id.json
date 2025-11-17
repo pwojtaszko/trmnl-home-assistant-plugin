@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Pengaturan TRMNL Webhook",
-        "description": "Konfigurasikan integrasi TRMNL Webhook Anda.",
+        "title": "Pengaturan TRMNL Dashboard",
+        "description": "Konfigurasikan integrasi TRMNL Dashboard Anda.",
         "data": {
           "webhook_url": "URL Webhook",
           "pill_entities": "Entitas Pil",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opsi TRMNL Webhook",
+        "title": "Opsi TRMNL Dashboard",
         "description": "Edit entitas pil dan konfigurasikan grup.",
         "data": {
           "webhook_url": "URL Webhook",

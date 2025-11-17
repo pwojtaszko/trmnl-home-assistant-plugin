@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhookin asetukset",
-        "description": "Määritä TRMNL Webhook -integraatio.",
+        "title": "TRMNL Dashboardin asetukset",
+        "description": "Määritä TRMNL Dashboard -integraatio.",
         "data": {
           "webhook_url": "Webhook-osoite",
           "pill_entities": "Pilleriyksiköt",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhookin asetukset",
+        "title": "TRMNL Dashboardin asetukset",
         "description": "Muokkaa pilleriyksiköitä ja ryhmiä.",
         "data": {
           "webhook_url": "Webhook-osoite",

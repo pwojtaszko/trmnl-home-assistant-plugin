@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook beállítása",
-        "description": "Állítsa be a TRMNL Webhook integrációt.",
+        "title": "TRMNL Dashboard beállítása",
+        "description": "Állítsa be a TRMNL Dashboard integrációt.",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "Tabletta entitások",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook beállítások",
+        "title": "TRMNL Dashboard beállítások",
         "description": "Tabletta entitások szerkesztése és csoportok konfigurálása.",
         "data": {
           "webhook_url": "Webhook URL",

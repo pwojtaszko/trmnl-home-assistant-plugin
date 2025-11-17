@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Nastavení TRMNL Webhook",
-        "description": "Nakonfigurujte integraci TRMNL Webhook.",
+        "title": "Nastavení TRMNL Dashboard",
+        "description": "Nakonfigurujte integraci TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL webhooku",
           "pill_entities": "Entita pilulky",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Možnosti TRMNL Webhook",
+        "title": "Možnosti TRMNL Dashboard",
         "description": "Upravte entity pilulky a nakonfigurujte skupiny.",
         "data": {
           "webhook_url": "URL webhooku",

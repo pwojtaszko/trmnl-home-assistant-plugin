@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook Ayarları",
-        "description": "TRMNL Webhook entegrasyonunuzu yapılandırın.",
+        "title": "TRMNL Dashboard Ayarları",
+        "description": "TRMNL Dashboard entegrasyonunuzu yapılandırın.",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "Hap varlıkları",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook Seçenekleri",
+        "title": "TRMNL Dashboard Seçenekleri",
         "description": "Hap varlıklarını düzenleyin ve grupları yapılandırın.",
         "data": {
           "webhook_url": "Webhook URL",

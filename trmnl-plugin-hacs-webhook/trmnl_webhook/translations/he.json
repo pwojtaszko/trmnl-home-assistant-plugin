@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "הגדרת TRMNL Webhook",
-        "description": "הגדר את האינטגרציה של TRMNL Webhook שלך.",
+        "title": "הגדרת TRMNL Dashboard",
+        "description": "הגדר את האינטגרציה של TRMNL Dashboard שלך.",
         "data": {
           "webhook_url": "כתובת Webhook",
           "pill_entities": "יישויות כדור",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "אפשרויות TRMNL Webhook",
+        "title": "אפשרויות TRMNL Dashboard",
         "description": "ערוך יישויות כדור והגדר קבוצות.",
         "data": {
           "webhook_url": "כתובת Webhook",

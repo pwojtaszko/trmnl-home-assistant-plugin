@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Настройка TRMNL Webhook",
-        "description": "Настройте интеграцию TRMNL Webhook.",
+        "title": "Настройка TRMNL Dashboard",
+        "description": "Настройте интеграцию TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL вебхука",
           "pill_entities": "Сущности таблеток",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Опции TRMNL Webhook",
+        "title": "Опции TRMNL Dashboard",
         "description": "Редактируйте сущности таблеток и настраивайте группы.",
         "data": {
           "webhook_url": "URL вебхука",

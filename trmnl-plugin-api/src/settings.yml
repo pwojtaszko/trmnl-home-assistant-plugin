@@ -90,5 +90,5 @@ custom_fields:
     - Normal: normal
     - Large: large
 
-name: Home Assistant Entities
+name: Home Assistant Dashboard
 refresh_interval: 5

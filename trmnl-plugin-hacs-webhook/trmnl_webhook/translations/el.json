@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Ρύθμιση TRMNL Webhook",
-        "description": "Διαμορφώστε την ενσωμάτωση TRMNL Webhook.",
+        "title": "Ρύθμιση TRMNL Dashboard",
+        "description": "Διαμορφώστε την ενσωμάτωση TRMNL Dashboard.",
         "data": {
           "webhook_url": "Διεύθυνση webhook",
           "pill_entities": "Οντότητες χαπιών",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Επιλογές TRMNL Webhook",
+        "title": "Επιλογές TRMNL Dashboard",
         "description": "Επεξεργαστείτε τις οντότητες χαπιών και διαμορφώστε ομάδες.",
         "data": {
           "webhook_url": "Διεύθυνση webhook",

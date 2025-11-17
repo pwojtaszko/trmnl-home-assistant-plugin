@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook nustatymai",
-        "description": "Konfigūruokite TRMNL Webhook integraciją.",
+        "title": "TRMNL Dashboard nustatymai",
+        "description": "Konfigūruokite TRMNL Dashboard integraciją.",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "Tablečių objektai",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook parinktys",
+        "title": "TRMNL Dashboard parinktys",
         "description": "Redaguokite tablečių objektus ir konfigūruokite grupes.",
         "data": {
           "webhook_url": "Webhook URL",

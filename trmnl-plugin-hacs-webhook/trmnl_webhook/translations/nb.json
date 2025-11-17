@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook-oppsett",
-        "description": "Konfigurer din TRMNL Webhook-integrasjon.",
+        "title": "TRMNL Dashboard-oppsett",
+        "description": "Konfigurer din TRMNL Dashboard-integrasjon.",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "Pilleenheter",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook-alternativer",
+        "title": "TRMNL Dashboard-alternativer",
         "description": "Rediger pilleenheter og konfigurer grupper.",
         "data": {
           "webhook_url": "Webhook URL",

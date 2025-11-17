@@ -1,6 +1,6 @@
 {
-  "domain": "trmnl_webhook",
-  "name": "TRMNL Webhook",
+  "domain": "trmnl_dashboard",
+  "name": "TRMNL Dashboard",
   "codeowners": ["@yourgithub"],
   "config_flow": true,
   "documentation": "https://github.com/pwojtaszko/trmnl-home-assistant-plugin",

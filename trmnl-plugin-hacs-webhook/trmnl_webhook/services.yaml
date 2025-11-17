@@ -1,4 +1,4 @@
 reload:
-  name: Reload TRMNL Webhook
-  description: Reloads the TRMNL Webhook integration without restarting Home Assistant.
+  name: Reload TRMNL Dashboard
+  description: Reloads the TRMNL Dashboard integration without restarting Home Assistant.
   fields: {}

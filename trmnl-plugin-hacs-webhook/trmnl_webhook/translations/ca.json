@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Configuració de TRMNL Webhook",
-        "description": "Configura la teva integració TRMNL Webhook.",
+        "title": "Configuració de TRMNL Dashboard",
+        "description": "Configura la teva integració TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL del webhook",
           "pill_entities": "Entitats de píndoles",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opcions de TRMNL Webhook",
+        "title": "Opcions de TRMNL Dashboard",
         "description": "Edita les entitats de píndoles i configura els grups.",
         "data": {
           "webhook_url": "URL del webhook",

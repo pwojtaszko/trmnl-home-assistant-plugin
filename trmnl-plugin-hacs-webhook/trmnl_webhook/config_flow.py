@@ -105,8 +105,8 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
                 except Exception as e:
                     import logging
-                    logging.getLogger(__name__).error(f"TRMNL Webhook config_flow initial webhook failed: {e}")
-            return self.async_create_entry(title="TRMNL Webhook", data=data)
+                    logging.getLogger(__name__).error(f"TRMNL Dashboard config_flow initial webhook failed: {e}")
+            return self.async_create_entry(title="TRMNL Dashboard", data=data)
         else:
             groups = prev_data.get("groups", [])
             num_groups = len(groups) if groups else 1
@@ -275,7 +275,7 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
                     await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
                 except Exception as e:
                     import logging
-                    logging.getLogger(__name__).error(f"TRMNL Webhook config_flow options webhook failed: {e}")
+                    logging.getLogger(__name__).error(f"TRMNL Dashboard config_flow options webhook failed: {e}")
             return self.async_create_entry(title="config_flow.options_title", data=data)
         else:
             groups = prev_data.get("groups", [])

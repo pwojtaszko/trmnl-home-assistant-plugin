@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook 設定",
-        "description": "配置您的 TRMNL Webhook 整合。",
+        "title": "TRMNL Dashboard 設定",
+        "description": "配置您的 TRMNL Dashboard 整合。",
         "data": {
           "webhook_url": "Webhook 網址",
           "pill_entities": "藥丸實體",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook 選項",
+        "title": "TRMNL Dashboard 選項",
         "description": "編輯藥丸實體並配置分組。",
         "data": {
           "webhook_url": "Webhook 網址",

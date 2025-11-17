@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "Configuración de TRMNL Webhook",
-        "description": "Configura tu integración de TRMNL Webhook.",
+        "title": "Configuración de TRMNL Dashboard",
+        "description": "Configura tu integración de TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL del webhook",
           "pill_entities": "Entidades de pastillas",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opciones de TRMNL Webhook",
+        "title": "Opciones de TRMNL Dashboard",
         "description": "Edita las entidades de pastillas y configura los grupos.",
         "data": {
           "webhook_url": "URL del webhook",

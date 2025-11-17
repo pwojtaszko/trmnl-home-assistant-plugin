@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "إعداد TRMNL Webhook",
-        "description": "قم بإعداد تكامل TRMNL Webhook الخاص بك.",
+        "title": "إعداد TRMNL Dashboard",
+        "description": "قم بإعداد تكامل TRMNL Dashboard الخاص بك.",
         "data": {
           "webhook_url": "رابط الويب هوك",
           "pill_entities": "كيانات الحبوب",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "خيارات TRMNL Webhook",
+        "title": "خيارات TRMNL Dashboard",
         "description": "حرر كيانات الحبوب وقم بتكوين المجموعات.",
         "data": {
           "webhook_url": "رابط الويب هوك",

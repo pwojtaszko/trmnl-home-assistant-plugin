@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook 设置",
-        "description": "配置您的 TRMNL Webhook 集成。",
+        "title": "TRMNL Dashboard 设置",
+        "description": "配置您的 TRMNL Dashboard 集成。",
         "data": {
           "webhook_url": "Webhook 地址",
           "pill_entities": "药丸实体",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook 选项",
+        "title": "TRMNL Dashboard 选项",
         "description": "编辑药丸实体并配置分组。",
         "data": {
           "webhook_url": "Webhook 地址",

@@ -1,8 +1,8 @@
 {
-  "name": "TRMNL Webhook",
+  "name": "TRMNL Dashboard",
   "content_in_root": false,
   "render_readme": true,
-  "domains": ["trmnl_webhook"],
+  "domains": ["trmnl_dashboard"],
   "country": "any",
   "homeassistant": "2023.0.0"
 }

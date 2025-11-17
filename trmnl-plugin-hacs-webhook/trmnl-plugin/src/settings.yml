@@ -8,7 +8,7 @@ custom_fields:
 - keyname: author_bio
   field_type: author_bio
   name: Author
-  description: Created by pwojtaszko | GitHub→ https://github.com/pwojtaszko/trmnl-home-assistant-plugin | Works with any Home Assistant instance with HACS TRMNL Webhook integration enabled
+  description: Created by pwojtaszko | GitHub→ https://github.com/pwojtaszko/trmnl-home-assistant-plugin | Works with any Home Assistant instance with HACS TRMNL Dashboard integration enabled
 
 - keyname: layout
   field_type: select

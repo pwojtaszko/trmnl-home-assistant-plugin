@@ -1,10 +1,10 @@
 {
-  "title": "TRMNL Webhook",
+  "title": "TRMNL Dashboard",
   "config": {
     "step": {
       "user": {
-        "title": "TRMNL Webhook सेटअप",
-        "description": "अपना TRMNL Webhook इंटीग्रेशन कॉन्फ़िगर करें।",
+        "title": "TRMNL Dashboard सेटअप",
+        "description": "अपना TRMNL Dashboard इंटीग्रेशन कॉन्फ़िगर करें।",
         "data": {
           "webhook_url": "Webhook URL",
           "pill_entities": "पिल इकाइयाँ",
@@ -46,7 +46,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "TRMNL Webhook विकल्प",
+        "title": "TRMNL Dashboard विकल्प",
         "description": "पिल इकाइयों को संपादित करें और समूहों को कॉन्फ़िगर करें।",
         "data": {
           "webhook_url": "Webhook URL",
