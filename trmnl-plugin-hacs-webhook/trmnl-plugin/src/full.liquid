@@ -58,6 +58,10 @@
       }
 
       /* Custom styles */
+      .pills-container {
+        margin-bottom: 10px;
+      }
+
       .pill-component {
         border: 2px black solid;
         display: flex;
@@ -69,13 +73,14 @@
         width: 24px;
         height: 24px;
       }
-      .app-root.list .pill-component {
+      .app-root.list-layout .pill-component {
         border: none;
       }
 
       .entity-name, .entity-value {
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .entity-value {
@@ -90,18 +95,20 @@
         background: #fff;
         position: relative;
       }
-      .entity-group .group-header {
+      
+      .group-header {
         position: absolute;
         top: -16px;
         background: #fff;
         padding: 0 4px;
         z-index: 2;
       }
-      .entity-group .group-header span {
+      
+      .group-header span {
         color: inherit;
       }
 
-      .entity-group .group-content {
+      .group-content {
         margin-top: 8px;
         gap: 20px;
       }
@@ -114,86 +121,95 @@
       .entity-header {
         display: flex;
         align-items: center;
+        gap: 2px;
       }
 
       .entity-icon {
         width: 25px;
       }
 
-      /* Flex layout */
-      .free-layout-container.flex {
+      /* Groups layout */
+      .groups-layout .free-layout-container {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .groups-layout .free-layout-container .group-content {
         display: flex;
         flex-wrap: wrap;
       }
 
-      .free-layout-container.flex .entity-group .group-content {
-          display: flex;
-          flex-wrap: wrap;
+      /* List layout styles */
+      .list-layout .free-layout-container {
+        max-width: 100%;
+        column-gap: 60px;
+        width: 46%;
+        min-width: 250px;
+        flex-wrap: wrap;
+        display: flex;
+        flex-direction: column;
+        max-height: 100%;
+        row-gap: var(--list-gap-small);
+      }
+      
+      .list-layout .free-layout-container .entity-group {
+        width: 100%;
+        background: none;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .list-layout .free-layout-container .group-header {
+        font-weight: 600;
+        margin-bottom: 8px;
+        position: static;
+        background: none;
+        padding: 0;
+      }
+      
+      .list-layout .free-layout-container .group-content {
+        display: grid;
+        grid-template-columns: 1fr 28px auto;
+        width: 100%;
+        break-inside: avoid;
+        gap: 5px;
+      }
+      
+      .list-layout .free-layout-container .entity-list-row {
+        display: contents;
+      }
+      
+      .list-layout .free-layout-container .entity-list-row .entity-name {
+        grid-column: 1;
+        font-weight: 400;
+        white-space: nowrap;
+        text-align: left;
+      }
+      
+      .list-layout .free-layout-container .entity-list-row .entity-icon {
+        grid-column: 2;
+        width: 22px;
+        height: 22px;
+        justify-self: center;
+        align-self: center;
+        display: flex;
+        align-items: center;
+      }
+      
+      .list-layout .free-layout-container .entity-list-row .entity-value {
+        grid-column: 3;
+        font-weight: 500;
+        white-space: nowrap;
+        text-align: right;
       }
 
-         /* List layout styles */
-        .free-layout-container.list {
-          max-width: 100%;
-          column-gap: 60px;
-          width: 46%;
-          min-width: 250px;
-          flex-wrap: wrap;
-        }
-        .free-layout-container.list .entity-group {
-          width: 100%;
-          background: none;
-          border: none;
-          border-radius: 0;
-          margin-bottom: 0;
-          margin-top: 0;
-          padding: 0;
-        }
-        .free-layout-container.list .group-header {
-          font-weight: 600;
-          font-size: 1.1em;
-          margin-bottom: 8px;
-          position: static;
-          background: none;
-          padding: 0;
-        }
-        .free-layout-container.list .group-content {
-          display: grid;
-          grid-template-columns: 1fr 28px auto;
-          width: 100%;
-          break-inside: avoid;
-          gap: 5px;
-        }
-        .free-layout-container.list .entity-list-row {
-          display: contents;
-          align-items: center;
-          padding: 4px 0;
-          border: none;
-          background: none;
-          margin: 0 0 2px 0;
-        }
-        .free-layout-container.list .entity-list-row .entity-name {
-          grid-column: 1;
-          font-size: 1em;
-          font-weight: 400;
-          white-space: nowrap;
-          text-align: left;
-        }
-        .free-layout-container.list .entity-list-row .entity-icon {
-          grid-column: 2;
-          width: 22px;
-          height: 22px;
-          justify-self: center;
-          align-self: center;
-          display: flex;
-          align-items: center;
-        }
-        .free-layout-container.list .entity-list-row .entity-value {
-          grid-column: 3;
-          font-size: 1em;
-          font-weight: 500;
-          white-space: nowrap;
-          text-align: right;
-        }
+      .mashup--1Lx1R .free-layout-container, .mashup--2x2 .free-layout-container {
+        width: 100%;
+      }
+
     
     </style>
   </head>
@@ -207,7 +223,7 @@ class HomeAssistantRenderer {
   constructor(containerId = 'root') {
     this.container = document.getElementById(containerId);
     this.iconMap = this.createIconMap();
-    this.layoutStyle = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "groups" }}';
+    this.layoutClass = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "groups" }}-layout';
     this.pillPosition = '{{ trmnl.plugin_settings.custom_fields_values.pill_position | default: "top" }}';
     this.showEntityTitle = {{ trmnl.plugin_settings.custom_fields_values.show_entity_title | default: true }};
     this.showEntityIcon = {{ trmnl.plugin_settings.custom_fields_values.show_entity_icon | default: true }};
@@ -218,7 +234,7 @@ class HomeAssistantRenderer {
     if (!this.container) {
       return;
     }
-    this.container.className = `app-root ${this.layoutStyle}`;
+    this.container.className = `app-root ${this.layoutClass}`;
   }
 
   createIconMap() {
@@ -493,7 +509,7 @@ class HomeAssistantRenderer {
   }
 
   createEntitySection({ entities, groupName }) {
-      if (this.layoutStyle === 'list') {
+      if (this.layoutClass === 'list-layout') {
         // List layout: 2 columns, each 400px, left then right
         const entityRows = entities.map(entity => {
           const name = this.getEntityName(entity);
@@ -561,8 +577,7 @@ class HomeAssistantRenderer {
         const sections = groups.map(group => {
           return this.createEntitySection(group);
         });
-        const layoutClass = this.layoutStyle === 'list' ? 'list' : 'flex';
-        mainContentHtml = `<div class="free-layout-container ${layoutClass}">${sections.join('')}</div>`;
+        mainContentHtml = `<div class="free-layout-container">${sections.join('')}</div>`;
       }
 
       // Create the layout structure
@@ -698,7 +713,7 @@ function initializeHomeAssistantRenderer() {
 <path d="M240 224.762C240 233.012 233.25 239.762 225 239.762H15C6.75 239.762 0 233.012 0 224.762V134.762C0 126.512 4.77 114.993 10.61 109.153L109.39 10.3725C115.22 4.5425 124.77 4.5425 130.6 10.3725L229.39 109.162C235.22 114.992 240 126.522 240 134.772V224.772V224.762Z" fill="#F2F4F9"/>
 <path d="M229.39 109.153L130.61 10.3725C124.78 4.5425 115.23 4.5425 109.4 10.3725L10.61 109.153C4.78 114.983 0 126.512 0 134.762V224.762C0 233.012 6.75 239.762 15 239.762H107.27L66.64 199.132C64.55 199.852 62.32 200.262 60 200.262C48.7 200.262 39.5 191.062 39.5 179.762C39.5 168.462 48.7 159.262 60 159.262C71.3 159.262 80.5 168.462 80.5 179.762C80.5 182.092 80.09 184.322 79.37 186.412L111 218.042V102.162C104.2 98.8225 99.5 91.8425 99.5 83.7725C99.5 72.4725 108.7 63.2725 120 63.2725C131.3 63.2725 140.5 72.4725 140.5 83.7725C140.5 91.8425 135.8 98.8225 129 102.162V183.432L160.46 151.972C159.84 150.012 159.5 147.932 159.5 145.772C159.5 134.472 168.7 125.272 180 125.272C191.3 125.272 200.5 134.472 200.5 145.772C200.5 157.072 191.3 166.272 180 166.272C177.5 166.272 175.12 165.802 172.91 164.982L129 208.892V239.772H225C233.25 239.772 240 233.022 240 224.772V134.772C240 126.522 235.23 115.002 229.39 109.162V109.153Z" fill="#000"/>
 </svg>
-            <span class="title">{{ trmnl.plugin_settings.plugin.name }}</span>
+            <span class="title">Home Assistant</span>
           </div>
         {% endif %}
       </div>
