@@ -69,6 +69,18 @@
         width: 24px;
         height: 24px;
       }
+      .app-root.list .pill-component {
+        border: none;
+      }
+
+      .entity-name, .entity-value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .entity-value {
+        max-width: 150px;
+      }
       /* Entity group styling */
       .entity-group {
         border: 2px solid black;
@@ -86,7 +98,6 @@
         z-index: 2;
       }
       .entity-group .group-header span {
-        /* No font changes, inherit font */
         color: inherit;
       }
 
@@ -123,10 +134,9 @@
          /* List layout styles */
         .free-layout-container.list {
           max-width: 100%;
-          column-gap: 32px;
-          width: 48%;
+          column-gap: 60px;
+          width: 46%;
           min-width: 250px;
-          margin-top: 16px;
           flex-wrap: wrap;
         }
         .free-layout-container.list .entity-group {
@@ -135,6 +145,7 @@
           border: none;
           border-radius: 0;
           margin-bottom: 0;
+          margin-top: 0;
           padding: 0;
         }
         .free-layout-container.list .group-header {
@@ -146,34 +157,42 @@
           padding: 0;
         }
         .free-layout-container.list .group-content {
+          display: grid;
+          grid-template-columns: 1fr 28px auto;
           width: 100%;
-          display: block;
-          margin-bottom: 16px;
           break-inside: avoid;
+          gap: 5px;
         }
         .free-layout-container.list .entity-list-row {
-          display: flex;
+          display: contents;
           align-items: center;
-          gap: 10px;
           padding: 4px 0;
           border: none;
           background: none;
           margin: 0 0 2px 0;
         }
-        .free-layout-container.list .entity-list-row .entity-icon {
-          width: 22px;
-          height: 22px;
-        }
-        .free-layout-container.list .entity-list-row .entity-value {
-          font-size: 1em;
-          font-weight: 500;
-          white-space: nowrap;
-        }
         .free-layout-container.list .entity-list-row .entity-name {
-          flex: 1;
+          grid-column: 1;
           font-size: 1em;
           font-weight: 400;
           white-space: nowrap;
+          text-align: left;
+        }
+        .free-layout-container.list .entity-list-row .entity-icon {
+          grid-column: 2;
+          width: 22px;
+          height: 22px;
+          justify-self: center;
+          align-self: center;
+          display: flex;
+          align-items: center;
+        }
+        .free-layout-container.list .entity-list-row .entity-value {
+          grid-column: 3;
+          font-size: 1em;
+          font-weight: 500;
+          white-space: nowrap;
+          text-align: right;
         }
     
     </style>
@@ -199,7 +218,7 @@ class HomeAssistantRenderer {
     if (!this.container) {
       return;
     }
-    this.container.className = `entities-container`;
+    this.container.className = `app-root ${this.layoutStyle}`;
   }
 
   createIconMap() {

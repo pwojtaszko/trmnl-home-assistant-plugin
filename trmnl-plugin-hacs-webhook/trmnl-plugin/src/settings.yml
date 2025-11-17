@@ -64,5 +64,5 @@ custom_fields:
   options:
     - Show: "true"
     - Hide: "false"
-name: Home Assistant Entities (Webhook)
+name: Home Assistant Dashboard
 refresh_interval: 5
