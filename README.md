@@ -9,14 +9,14 @@ A TRMNL plugin for Home Assistant that displays your smart home entities on a TR
 ## Features
 
 - 🏠 Display any Home Assistant entity (sensors, switches, lights, etc.)
-- 🎨 Customizable dashboard
+- 🎨 Customizable dashboard with configurable icons, titles, layout types, and scale sizes
 - 🧩 Dynamic entity grouping and layout via UI
 - 🌐 Multi-language support for HACS integration
 - ⚡ Real-time updates via webhook from Home Assistant
 
 ## Screenshots
-
-*Add your screenshots here to show the dashboard and configuration UI.*
+![Groups Layout](screenshots/groups-layout.png)
+![List layout](screenshots/list-layout.png)
 
 ---
 
@@ -55,6 +55,14 @@ Before setting up this plugin, ensure you have:
 - The integration is display-only: you cannot trigger automations or change entity states from TRMNL.
 
 ---
+
+## Configuration Screenshots
+### Plugin configuration
+![plugin configuration](screenshots/plugin_configuration.png)
+
+### HACS configuration
+![hacs configuration](screenshots/hacs_configuration.png)
+
 
 ## Troubleshooting
 
