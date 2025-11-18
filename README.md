@@ -13,7 +13,7 @@ A TRMNL plugin for Home Assistant that displays your smart home entities on a TR
 - 🌐 Multi-language support for HACS integration
 - ⚡ Real-time updates via webhook from Home Assistant
 
-## Screenshots
+## Screenshots (Default settings for Grid and List layouts)
 ![Groups Layout](screenshots/groups-layout.png)
 ![List layout](screenshots/list-layout.png)
 
