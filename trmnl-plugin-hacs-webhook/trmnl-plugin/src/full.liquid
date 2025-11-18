@@ -61,6 +61,22 @@
       .pills-container {
         margin-bottom: 10px;
       }
+      
+      .pills-container--top {
+        margin-bottom: 10px;
+      }
+      
+      .pills-container--bottom {
+        margin-top: 10px;
+      }
+      
+      .pills-container--left {
+        margin-right: 10px;
+      }
+      
+      .pills-container--right {
+        margin-left: 10px;
+      }
 
       .pill-component {
         border: 2px black solid;
@@ -69,6 +85,14 @@
         gap: 5px;    
         padding: 3px 5px;
       }
+      
+      /* Rotate pills when on left or right side */
+      .pills-container--left .pill-component,
+      .pills-container--right .pill-component {
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+      }
+      
       .app-root.list-layout .pill-component {
         border: none;
       }
