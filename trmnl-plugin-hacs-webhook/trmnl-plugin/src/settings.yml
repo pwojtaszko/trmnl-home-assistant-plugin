@@ -64,5 +64,17 @@ custom_fields:
   options:
     - Show: "true"
     - Hide: "false"
+
+- keyname: scale
+  field_type: select
+  name: Scale
+  description: Text and icon size scale
+  help_text: Choose the overall size of text and icons. Title bar size remains unchanged.
+  optional: false
+  default: normal
+  options:
+    - Small: small
+    - Normal: normal
+    - Big: big
 name: Home Assistant Dashboard
 refresh_interval: 5

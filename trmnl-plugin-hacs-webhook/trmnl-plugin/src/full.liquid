@@ -69,10 +69,6 @@
         gap: 5px;    
         padding: 3px 5px;
       }
-      .pill-component img{
-        width: 24px;
-        height: 24px;
-      }
       .app-root.list-layout .pill-component {
         border: none;
       }
@@ -84,7 +80,7 @@
       }
 
       .entity-value {
-        max-width: 150px;
+        max-width: 155px;
       }
       /* Entity group styling */
       .entity-group {
@@ -98,10 +94,12 @@
       
       .group-header {
         position: absolute;
-        top: -16px;
+        top: 0;
+        transform: translateY(-50%);
         background: #fff;
         padding: 0 4px;
         z-index: 2;
+        line-height: 1;
       }
       
       .group-header span {
@@ -122,10 +120,6 @@
         display: flex;
         align-items: center;
         gap: 2px;
-      }
-
-      .entity-icon {
-        width: 25px;
       }
 
       /* Groups layout */
@@ -172,27 +166,41 @@
       
       .list-layout .free-layout-container .group-content {
         display: grid;
-        grid-template-columns: 1fr 28px auto;
         width: 100%;
         break-inside: avoid;
         gap: 5px;
+      }
+      
+      /* Dynamic grid columns based on what's shown */
+      .list-layout .free-layout-container .group-content.show-all {
+        grid-template-columns: 1fr 28px auto;
+      }
+      
+      .list-layout .free-layout-container .group-content.hide-title {
+        grid-template-columns: 28px auto;
+      }
+      
+      .list-layout .free-layout-container .group-content.hide-icon {
+        grid-template-columns: 1fr auto;
+      }
+      
+      .list-layout .free-layout-container .group-content.hide-both {
+        grid-template-columns: auto;
       }
       
       .list-layout .free-layout-container .entity-list-row {
         display: contents;
       }
       
+      /* Common styles for list elements */
       .list-layout .free-layout-container .entity-list-row .entity-name {
-        grid-column: 1;
         font-weight: 400;
         white-space: nowrap;
         text-align: left;
+        align-self: center;
       }
       
       .list-layout .free-layout-container .entity-list-row .entity-icon {
-        grid-column: 2;
-        width: 22px;
-        height: 22px;
         justify-self: center;
         align-self: center;
         display: flex;
@@ -200,11 +208,24 @@
       }
       
       .list-layout .free-layout-container .entity-list-row .entity-value {
-        grid-column: 3;
         font-weight: 500;
         white-space: nowrap;
         text-align: right;
+        align-self: center;
       }
+      
+      /* Grid column assignments based on visibility */
+      .list-layout .free-layout-container .group-content.show-all .entity-name { grid-column: 1; }
+      .list-layout .free-layout-container .group-content.show-all .entity-icon { grid-column: 2; }
+      .list-layout .free-layout-container .group-content.show-all .entity-value { grid-column: 3; }
+      
+      .list-layout .free-layout-container .group-content.hide-title .entity-icon { grid-column: 1; }
+      .list-layout .free-layout-container .group-content.hide-title .entity-value { grid-column: 2; }
+      
+      .list-layout .free-layout-container .group-content.hide-icon .entity-name { grid-column: 1; }
+      .list-layout .free-layout-container .group-content.hide-icon .entity-value { grid-column: 2; }
+      
+      .list-layout .free-layout-container .group-content.hide-both .entity-value { grid-column: 1; }
 
       .mashup--1Lx1R .free-layout-container, .mashup--2x2 .free-layout-container {
         width: 100%;
@@ -227,7 +248,44 @@ class HomeAssistantRenderer {
     this.pillPosition = '{{ trmnl.plugin_settings.custom_fields_values.pill_position | default: "top" }}';
     this.showEntityTitle = {{ trmnl.plugin_settings.custom_fields_values.show_entity_title | default: true }};
     this.showEntityIcon = {{ trmnl.plugin_settings.custom_fields_values.show_entity_icon | default: true }};
+    this.scale = '{{ trmnl.plugin_settings.custom_fields_values.scale | default: "normal" }}';
+    this.initScaleClasses();
     this.init();
+  }
+
+  initScaleClasses() {
+    // Define text size classes based on scale setting
+    const scaleConfig = {
+      small: {
+        pillValue: 'value--xxsmall',
+        entityValue: 'value--xsmall',
+        entityUnit: 'value--xxsmall',
+        deviceClass: 'value--xxsmall',
+        groupHeader: 'value--xsmall',
+        entityName: 'value--xxsmall',
+        iconSize: '20px'
+      },
+      normal: {
+        pillValue: 'value--xsmall',
+        entityValue: 'value--small',
+        entityUnit: 'value--xsmall',
+        deviceClass: 'value--xsmall',
+        groupHeader: 'value--small',
+        entityName: 'value--xsmall',
+        iconSize: '25px'
+      },
+      big: {
+        pillValue: 'value--small',
+        entityValue: 'value--regular',
+        entityUnit: 'value--small',
+        deviceClass: 'value--small',
+        groupHeader: 'value--medium',
+        entityName: 'value--small',
+        iconSize: '30px'
+      }
+    };
+    
+    this.textClasses = scaleConfig[this.scale] || scaleConfig.normal;
   }
 
   init() {
@@ -439,8 +497,8 @@ class HomeAssistantRenderer {
         
     return `
       <div class="pill-component rounded--full" data-entity-id="${entity.entity_id || 'error'}">
-        <img class="image" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'">
-        <span class="pill-value value--xsmall ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
+        <img class="image" src="${iconUrl}" alt="${name}" style="width: ${this.textClasses.iconSize}; height: ${this.textClasses.iconSize};" onerror="this.style.display='none'">
+        <span class="pill-value ${this.textClasses.pillValue} ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
       </div>
     `;
   }
@@ -460,12 +518,12 @@ class HomeAssistantRenderer {
     // Simple style (original)
     return `
       <div class="${baseCardClass}" data-entity-id="${entity.entity_id || 'error'}" data-label="${label}">
-        ${deviceClassTitle ? `<div class="device-class-title value value--xsmall">${deviceClassTitle}</div>` : ''}
+        ${deviceClassTitle ? `<div class="device-class-title value ${this.textClasses.deviceClass}">${deviceClassTitle}</div>` : ''}
         <div class="entity-header">
-          ${this.showEntityIcon ? `<img class="image ${iconClass}" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'">` : ''}
-          <div class="entity-value value value--small ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
+          ${this.showEntityIcon ? `<img class="image ${iconClass}" src="${iconUrl}" alt="${name}" style="width: ${this.textClasses.iconSize};" onerror="this.style.display='none'">` : ''}
+          <div class="entity-value value ${this.textClasses.entityValue} ${stateInfo.isNumeric ? 'value--tnums' : ''} ${stateInfo.isError ? 'entity-error' : ''}">
             ${stateInfo.value}
-            ${stateInfo.unit ? `<span class="entity-unit value value--xsmall">${stateInfo.unit}</span>` : ''}
+            ${stateInfo.unit ? `<span class="entity-unit value ${this.textClasses.entityUnit}">${stateInfo.unit}</span>` : ''}
           </div>
         </div>
       </div>
@@ -520,18 +578,29 @@ class HomeAssistantRenderer {
           const iconUrl = `https://api.iconify.design/${formattedIcon}.svg`;
             return `
               <div class="entity-list-row" data-entity-id="${entity.entity_id || 'error'}">
-                ${this.showEntityTitle ? `<span class="entity-name">${name}</span>` : ''}
-                ${this.showEntityIcon ? `<img class="entity-icon ${iconClass}" src="${iconUrl}" alt="${name}" onerror="this.style.display='none'">` : ''}
-                <span class="entity-value">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
+                ${this.showEntityTitle ? `<span class="entity-name value ${this.textClasses.entityName}">${name}</span>` : ''}
+                ${this.showEntityIcon ? `<img class="entity-icon ${iconClass}" src="${iconUrl}" alt="${name}" style="width: ${this.textClasses.iconSize}; height: ${this.textClasses.iconSize};" onerror="this.style.display='none'">` : ''}
+                <span class="entity-value value ${this.textClasses.entityValue} ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
               </div>
             `;
         });
+        
+        // Determine which CSS class to use based on visibility settings
+        let gridClass = 'show-all';
+        if (!this.showEntityTitle && !this.showEntityIcon) {
+          gridClass = 'hide-both';
+        } else if (!this.showEntityTitle) {
+          gridClass = 'hide-title';
+        } else if (!this.showEntityIcon) {
+          gridClass = 'hide-icon';
+        }
+        
         return `
           <div class="entity-group" data-label="${groupName}">
             <div class="group-header">
-              ${groupName ? `<span class="value value--small">${groupName}</span>` : ''}
+              ${groupName ? `<span class="value ${this.textClasses.groupHeader}">${groupName}</span>` : ''}
             </div>
-            <div class="group-content">
+            <div class="group-content ${gridClass}">
               ${entityRows.join('')}
             </div>
           </div>
@@ -544,7 +613,7 @@ class HomeAssistantRenderer {
         return `
           <div class="entity-group" data-label="${groupName}">
             <div class="group-header">
-              ${groupName ? `<span class="value value--small">${groupName}</span>` : ''}
+              ${groupName ? `<span class="value ${this.textClasses.groupHeader}">${groupName}</span>` : ''}
             </div>
             <div class="group-content grid grid--wrap grid--min-56 entities-grid">
                 ${entitiesHtml}
@@ -713,7 +782,7 @@ function initializeHomeAssistantRenderer() {
 <path d="M240 224.762C240 233.012 233.25 239.762 225 239.762H15C6.75 239.762 0 233.012 0 224.762V134.762C0 126.512 4.77 114.993 10.61 109.153L109.39 10.3725C115.22 4.5425 124.77 4.5425 130.6 10.3725L229.39 109.162C235.22 114.992 240 126.522 240 134.772V224.772V224.762Z" fill="#F2F4F9"/>
 <path d="M229.39 109.153L130.61 10.3725C124.78 4.5425 115.23 4.5425 109.4 10.3725L10.61 109.153C4.78 114.983 0 126.512 0 134.762V224.762C0 233.012 6.75 239.762 15 239.762H107.27L66.64 199.132C64.55 199.852 62.32 200.262 60 200.262C48.7 200.262 39.5 191.062 39.5 179.762C39.5 168.462 48.7 159.262 60 159.262C71.3 159.262 80.5 168.462 80.5 179.762C80.5 182.092 80.09 184.322 79.37 186.412L111 218.042V102.162C104.2 98.8225 99.5 91.8425 99.5 83.7725C99.5 72.4725 108.7 63.2725 120 63.2725C131.3 63.2725 140.5 72.4725 140.5 83.7725C140.5 91.8425 135.8 98.8225 129 102.162V183.432L160.46 151.972C159.84 150.012 159.5 147.932 159.5 145.772C159.5 134.472 168.7 125.272 180 125.272C191.3 125.272 200.5 134.472 200.5 145.772C200.5 157.072 191.3 166.272 180 166.272C177.5 166.272 175.12 165.802 172.91 164.982L129 208.892V239.772H225C233.25 239.772 240 233.022 240 224.772V134.772C240 126.522 235.23 115.002 229.39 109.162V109.153Z" fill="#000"/>
 </svg>
-            <span class="title">Home Assistant</span>
+            <span class="title">Home Assistant Dashboard</span>
           </div>
         {% endif %}
       </div>
