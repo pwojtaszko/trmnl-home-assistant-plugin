@@ -2,6 +2,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+## ⚠️ Deprecation Notice
+
+This plugin is deprecated and no longer maintained. Please refer to the new solution in the workspace.
+
 A comprehensive TRMNL plugin that displays Home Assistant entities with customizable layouts and styles. Monitor your smart home devices, sensors, and controls directly on your TRMNL display.
 
 ## Features
