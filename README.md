@@ -1,5 +1,4 @@
-# TRMNL Dashboard Display Plugin for Home Assistant
-
+# Home Assistant Dashboard Plugin for TRMNL
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A TRMNL plugin for Home Assistant that displays your smart home entities on a TRMNL device. Home Assistant sends entity data to TRMNL via a webhook.
