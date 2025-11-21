@@ -33,6 +33,7 @@ async def async_setup_entry(hass, entry):
             # Build dynamic data from entity states
             groups = config.get("groups", [])
             pills = config.get("pills", [])
+            visualizations = config.get("visualizations", [])
             updated_groups = []
             for group in groups:
                 updated_entities = []
@@ -68,9 +69,33 @@ async def async_setup_entry(hass, entry):
                     updated_pills.append(updated_pill)
                 else:
                     updated_pills.append(pill)
+            updated_visualizations = []
+            for viz in visualizations:
+                entity_id = viz.get("entity_id")
+                state_obj = hass.states.get(entity_id)
+                if state_obj:
+                    updated_viz = {
+                        "entity_id": entity_id,
+                        "state": state_obj.state,
+                        "attributes": dict(state_obj.attributes),
+                        "last_changed": str(state_obj.last_changed),
+                        "last_updated": str(state_obj.last_updated),
+                    }
+                    updated_visualizations.append(updated_viz)
+                else:
+                    updated_visualizations.append(viz)
             webhook_data = {
                 "groups": updated_groups,
-                "pills": updated_pills
+                "pills": updated_pills,
+                "visualizations": updated_visualizations,
+                "configuration": {
+                    "layout": config.get("layout", "groups"),
+                    "pill_position": config.get("pill_position", "top"),
+                    "show_title_bar": config.get("show_title_bar", "true"),
+                    "show_entity_title": config.get("show_entity_title", "true"),
+                    "show_entity_icon": config.get("show_entity_icon", "true"),
+                    "scale": config.get("scale", "normal")
+                }
             }
             if webhook_url:
                 try:
@@ -91,6 +116,7 @@ async def async_setup_entry(hass, entry):
             # Build dynamic data from entity states (same as periodic_update)
             groups = merged_config.get("groups", [])
             pills = merged_config.get("pills", [])
+            visualizations = merged_config.get("visualizations", [])
             updated_groups = []
             for group in groups:
                 updated_entities = []
@@ -126,9 +152,33 @@ async def async_setup_entry(hass, entry):
                     updated_pills.append(updated_pill)
                 else:
                     updated_pills.append(pill)
+            updated_visualizations = []
+            for viz in visualizations:
+                entity_id = viz.get("entity_id")
+                state_obj = hass.states.get(entity_id)
+                if state_obj:
+                    updated_viz = {
+                        "entity_id": entity_id,
+                        "state": state_obj.state,
+                        "attributes": dict(state_obj.attributes),
+                        "last_changed": str(state_obj.last_changed),
+                        "last_updated": str(state_obj.last_updated),
+                    }
+                    updated_visualizations.append(updated_viz)
+                else:
+                    updated_visualizations.append(viz)
             webhook_data = {
                 "groups": updated_groups,
-                "pills": updated_pills
+                "pills": updated_pills,
+                "visualizations": updated_visualizations,
+                "configuration": {
+                    "layout": merged_config.get("layout", "groups"),
+                    "pill_position": merged_config.get("pill_position", "top"),
+                    "show_title_bar": merged_config.get("show_title_bar", "true"),
+                    "show_entity_title": merged_config.get("show_entity_title", "true"),
+                    "show_entity_icon": merged_config.get("show_entity_icon", "true"),
+                    "scale": merged_config.get("scale", "normal")
+                }
             }
             try:
                 await send_to_trmnl_webhook(session, webhook_data, webhook_url)

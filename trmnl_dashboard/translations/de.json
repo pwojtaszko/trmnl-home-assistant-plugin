@@ -7,6 +7,12 @@
         "description": "Konfigurieren Sie Ihre TRMNL Dashboard-Integration.",
         "data": {
           "webhook_url": "Webhook-URL",
+          "layout": "Layout",
+          "pill_position": "Pillen-Position",
+          "show_title_bar": "Titelleiste anzeigen",
+          "show_entity_title": "Entitätstitel anzeigen",
+          "show_entity_icon": "Entitätsicon anzeigen",
+          "scale": "Skalierung",
           "pill_entities": "Pillen-Entitäten",
           "group_0_name": "Name für Gruppe 1",
           "group_0_entities": "Entitäten für Gruppe 1",
@@ -38,7 +44,8 @@
           "group_13_entities": "Entitäten für Gruppe 14",
           "group_14_name": "Name für Gruppe 15",
           "group_14_entities": "Entitäten für Gruppe 15",
-          "add_another_group": "Weitere Gruppe hinzufügen"
+          "add_another_group": "Weitere Gruppe hinzufügen",
+          "visualization_entities": "Visualisierungen"
         }
       }
     }
@@ -50,6 +57,12 @@
         "description": "Bearbeiten Sie Pillen-Entitäten und konfigurieren Sie Gruppen.",
         "data": {
           "webhook_url": "Webhook-URL",
+          "layout": "Layout",
+          "pill_position": "Pillen-Position",
+          "show_title_bar": "Titelleiste anzeigen",
+          "show_entity_title": "Entitätstitel anzeigen",
+          "show_entity_icon": "Entitätsicon anzeigen",
+          "scale": "Skalierung",
           "pill_entities": "Pillen-Entitäten",
           "group_0_name": "Name für Gruppe 1",
           "group_0_entities": "Entitäten für Gruppe 1",
@@ -96,8 +109,50 @@
           "group_14_name": "Name für Gruppe 15",
           "group_14_entities": "Entitäten für Gruppe 15",
           "remove_group_14": "Gruppe 15 entfernen",
-          "add_another_group": "Weitere Gruppe hinzufügen"
+          "add_another_group": "Weitere Gruppe hinzufügen",
+          "visualization_entities": "Visualisierungen"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "Gruppen",
+        "list": "Liste"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "Oben",
+        "bottom": "Unten",
+        "left": "Links",
+        "right": "Rechts"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "Anzeigen",
+        "false": "Ausblenden"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "Anzeigen",
+        "false": "Ausblenden"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "Anzeigen",
+        "false": "Ausblenden"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "Klein",
+        "normal": "Normal",
+        "big": "Groß"
       }
     }
   }

@@ -35,13 +35,11 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 new_groups.append({"groupName": f"Group {len(new_groups)+1}", "entities": []})
                 num_groups = len(new_groups)
                 schema = self._get_dynamic_schema(prev_data, user_input, num_groups)
-                
                 # Build description_placeholders for dynamic group labels
                 placeholders = {}
                 for i in range(num_groups):
                     placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
                     placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
-                
                 return self.async_show_form(
                     step_id="user",
                     data_schema=schema,
@@ -50,10 +48,19 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             webhook_url = user_input.get("webhook_url") or prev_data.get("webhook_url", "")
             pill_entities = user_input.get("pill_entities", [])
             pills_obj = [{"entity_id": ent} for ent in pill_entities if ent]
+            visualization_entities = user_input.get("visualization_entities", [])
+            visualizations_obj = [{"entity_id": ent} for ent in visualization_entities if ent]
             data = {
                 "webhook_url": webhook_url,
                 "groups": new_groups,
-                "pills": pills_obj
+                "pills": pills_obj,
+                "visualizations": visualizations_obj,
+                "layout": user_input.get("layout", "groups"),
+                "pill_position": user_input.get("pill_position", "top"),
+                "show_title_bar": "true" if user_input.get("show_title_bar", True) else "false",
+                "show_entity_title": "true" if user_input.get("show_entity_title", True) else "false",
+                "show_entity_icon": "true" if user_input.get("show_entity_icon", True) else "false",
+                "scale": user_input.get("scale", "normal")
             }
             # Send webhook on config creation
             if data.get("webhook_url"):
@@ -97,9 +104,34 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         updated_pills.append(updated_pill)
                     else:
                         updated_pills.append(pill)
+                visualization_entities = data.get("visualizations", [])
+                updated_visualizations = []
+                for viz in visualization_entities:
+                    entity_id = viz.get("entity_id")
+                    state_obj = hass.states.get(entity_id)
+                    if state_obj:
+                        updated_viz = {
+                            "entity_id": entity_id,
+                            "state": state_obj.state,
+                            "attributes": dict(state_obj.attributes),
+                            "last_changed": str(state_obj.last_changed),
+                            "last_updated": str(state_obj.last_updated),
+                        }
+                        updated_visualizations.append(updated_viz)
+                    else:
+                        updated_visualizations.append(viz)
                 webhook_data = {
                     "groups": updated_groups,
-                    "pills": updated_pills
+                    "pills": updated_pills,
+                    "visualizations": updated_visualizations,
+                    "configuration": {
+                        "layout": data.get("layout", "groups"),
+                        "pill_position": data.get("pill_position", "top"),
+                        "show_title_bar": data.get("show_title_bar", "true"),
+                        "show_entity_title": data.get("show_entity_title", "true"),
+                        "show_entity_icon": data.get("show_entity_icon", "true"),
+                        "scale": data.get("scale", "normal")
+                    }
                 }
                 try:
                     await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
@@ -134,12 +166,44 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema_dict = {
             vol.Required("webhook_url", default=webhook_url_default): str,
         }
+        
+        # TRMNL Configuration fields
+        layout_default = user_input.get("layout") if user_input else prev_data.get("layout", "groups")
+        schema_dict[vol.Optional("layout", default=layout_default)] = selector({"select": {"options": ["groups", "list"], "translation_key": "layout"}})
+        
+        pill_position_default = user_input.get("pill_position") if user_input else prev_data.get("pill_position", "top")
+        schema_dict[vol.Optional("pill_position", default=pill_position_default)] = selector({"select": {"options": ["top", "bottom", "left", "right"], "translation_key": "pill_position"}})
+        
+        show_title_bar_default = user_input.get("show_title_bar", prev_data.get("show_title_bar", True)) if user_input is not None else prev_data.get("show_title_bar", True)
+        if isinstance(show_title_bar_default, str):
+            show_title_bar_default = show_title_bar_default == "true"
+        schema_dict[vol.Optional("show_title_bar", default=show_title_bar_default)] = bool
+        
+        show_entity_title_default = user_input.get("show_entity_title", prev_data.get("show_entity_title", True)) if user_input is not None else prev_data.get("show_entity_title", True)
+        if isinstance(show_entity_title_default, str):
+            show_entity_title_default = show_entity_title_default == "true"
+        schema_dict[vol.Optional("show_entity_title", default=show_entity_title_default)] = bool
+        
+        show_entity_icon_default = user_input.get("show_entity_icon", prev_data.get("show_entity_icon", True)) if user_input is not None else prev_data.get("show_entity_icon", True)
+        if isinstance(show_entity_icon_default, str):
+            show_entity_icon_default = show_entity_icon_default == "true"
+        schema_dict[vol.Optional("show_entity_icon", default=show_entity_icon_default)] = bool
+        
+        scale_default = user_input.get("scale") if user_input else prev_data.get("scale", "normal")
+        schema_dict[vol.Optional("scale", default=scale_default)] = selector({"select": {"options": ["small", "normal", "big"], "translation_key": "scale"}})
         pill_entities_default = []
         if user_input:
             pill_entities_default = user_input.get("pill_entities", [e.get("entity_id") for e in prev_data.get("pills", [])])
         elif prev_data.get("pills"):
             pill_entities_default = [e.get("entity_id") for e in prev_data["pills"]]
         schema_dict[vol.Optional("pill_entities", default=pill_entities_default)] = selector({"entity": {"multiple": True}})
+        # Add Visualizations field
+        visualization_entities_default = []
+        if user_input:
+            visualization_entities_default = user_input.get("visualization_entities", [e.get("entity_id") for e in prev_data.get("visualizations", [])])
+        elif prev_data.get("visualizations"):
+            visualization_entities_default = [e.get("entity_id") for e in prev_data["visualizations"]]
+        schema_dict[vol.Optional("visualization_entities", default=visualization_entities_default)] = selector({"entity": {"multiple": True, "domain": "weather"}})
 
         groups = prev_data.get("groups", [])
         for i in range(num_groups):
@@ -177,105 +241,139 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
 
         # Always build groups from user_input if present, else from prev_data
         if user_input is not None:
-            # Determine current number of groups from user_input
-            i = 0
-            while f"group_{i}_name" in user_input or f"group_{i}_entities" in user_input:
-                i += 1
-            num_groups = i if i > 0 else 1
-            add_group = user_input.get("add_another_group", False)
-            # Handle group removal
-            removed_indices = []
-            for idx in range(num_groups):
-                if user_input.get(f"remove_group_{idx}"):
-                    removed_indices.append(idx)
-            # Build groups from user_input (just entity IDs)
-            updated_groups = []
-            for idx in range(num_groups):
-                if idx in removed_indices:
-                    continue
-                group_name = user_input.get(f"group_{idx}_name", f"Group {idx+1}")
-                group_entities = user_input.get(f"group_{idx}_entities", [])
-                group_dict = {
-                    "entities": [{"entity_id": ent} for ent in group_entities if ent]
-                }
-                if group_name:
-                    group_dict["groupName"] = group_name
-                updated_groups.append(group_dict)
-            if add_group:
-                updated_groups.append({"groupName": f"Group {len(updated_groups)+1}", "entities": []})
-                num_groups = len(updated_groups)
-                schema = self._get_dynamic_options_schema(prev_data, user_input, num_groups)
-                
-                # Build description_placeholders for dynamic group labels
-                placeholders = {}
-                for i in range(num_groups):
-                    placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
-                    placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
-                    placeholders[f"remove_group_{i}"] = {"number": str(i + 1)}
-                
-                return self.async_show_form(
-                    step_id="init",
-                    data_schema=schema,
-                    description_placeholders=placeholders,
-                )
-            webhook_url = user_input.get("webhook_url", prev_data.get("webhook_url", ""))
-            pills_entities = user_input.get("pill_entities", [])
-            pills_obj = [{"entity_id": ent} for ent in pills_entities if ent]
-            data = {
-                "webhook_url": webhook_url,
-                "groups": updated_groups,
-                "pills": pills_obj
-            }
-            # Send webhook on options update
-            if data.get("webhook_url"):
-                session = async_get_clientsession(hass)
-                # Expand entities like in __init__.py
-                groups = data.get("groups", [])
-                pills = data.get("pills", [])
+            if user_input is not None:
+                # Determine current number of groups from user_input
+                i = 0
+                while f"group_{i}_name" in user_input or f"group_{i}_entities" in user_input:
+                    i += 1
+                num_groups = i if i > 0 else 1
+                add_group = user_input.get("add_another_group", False)
+                # Handle group removal
+                removed_indices = []
+                for idx in range(num_groups):
+                    if user_input.get(f"remove_group_{idx}"):
+                        removed_indices.append(idx)
+                # Build groups from user_input (just entity IDs)
                 updated_groups = []
-                for group in groups:
-                    updated_entities = []
-                    for entity in group.get("entities", []):
-                        entity_id = entity.get("entity_id")
+                for idx in range(num_groups):
+                    if idx in removed_indices:
+                        continue
+                    group_name = user_input.get(f"group_{idx}_name", f"Group {idx+1}")
+                    group_entities = user_input.get(f"group_{idx}_entities", [])
+                    group_dict = {
+                        "entities": [{"entity_id": ent} for ent in group_entities if ent]
+                    }
+                    if group_name:
+                        group_dict["groupName"] = group_name
+                    updated_groups.append(group_dict)
+                if add_group:
+                    updated_groups.append({"groupName": f"Group {len(updated_groups)+1}", "entities": []})
+                    num_groups = len(updated_groups)
+                    schema = self._get_dynamic_options_schema(prev_data, user_input, num_groups)
+                    # Build description_placeholders for dynamic group labels
+                    placeholders = {}
+                    for i in range(num_groups):
+                        placeholders[f"group_{i}_name"] = {"number": str(i + 1)}
+                        placeholders[f"group_{i}_entities"] = {"number": str(i + 1)}
+                        placeholders[f"remove_group_{i}"] = {"number": str(i + 1)}
+                    return self.async_show_form(
+                        step_id="init",
+                        data_schema=schema,
+                        description_placeholders=placeholders
+                    )
+                webhook_url = user_input.get("webhook_url", prev_data.get("webhook_url", ""))
+                pills_entities = user_input.get("pill_entities", [])
+                pills_obj = [{"entity_id": ent} for ent in pills_entities if ent]
+                visualization_entities = user_input.get("visualization_entities", [])
+                visualizations_obj = [{"entity_id": ent} for ent in visualization_entities if ent]
+                data = {
+                    "webhook_url": webhook_url,
+                    "groups": updated_groups,
+                    "pills": pills_obj,
+                    "visualizations": visualizations_obj,
+                    "layout": user_input.get("layout", "groups"),
+                    "pill_position": user_input.get("pill_position", "top"),
+                    "show_title_bar": "true" if user_input.get("show_title_bar", True) else "false",
+                    "show_entity_title": "true" if user_input.get("show_entity_title", True) else "false",
+                    "show_entity_icon": "true" if user_input.get("show_entity_icon", True) else "false",
+                    "scale": user_input.get("scale", "normal")
+                }
+                # Send webhook on options update
+                if data.get("webhook_url"):
+                    session = async_get_clientsession(hass)
+                    # Expand entities like in __init__.py
+                    groups = data.get("groups", [])
+                    pills = data.get("pills", [])
+                    visualizations = data.get("visualizations", [])
+                    updated_groups = []
+                    for group in groups:
+                        updated_entities = []
+                        for entity in group.get("entities", []):
+                            entity_id = entity.get("entity_id")
+                            state_obj = hass.states.get(entity_id)
+                            if state_obj:
+                                updated_entity = {
+                                    "entity_id": entity_id,
+                                    "state": state_obj.state,
+                                    "attributes": dict(state_obj.attributes),
+                                    "last_changed": str(state_obj.last_changed),
+                                    "last_updated": str(state_obj.last_updated),
+                                }
+                                updated_entities.append(updated_entity)
+                            else:
+                                updated_entities.append(entity)
+                        updated_group = dict(group)
+                        updated_group["entities"] = updated_entities
+                        updated_groups.append(updated_group)
+                    updated_pills = []
+                    for pill in pills:
+                        entity_id = pill.get("entity_id")
                         state_obj = hass.states.get(entity_id)
                         if state_obj:
-                            updated_entity = {
+                            updated_pill = {
                                 "entity_id": entity_id,
                                 "state": state_obj.state,
                                 "attributes": dict(state_obj.attributes),
                                 "last_changed": str(state_obj.last_changed),
                                 "last_updated": str(state_obj.last_updated),
                             }
-                            updated_entities.append(updated_entity)
+                            updated_pills.append(updated_pill)
                         else:
-                            updated_entities.append(entity)
-                    updated_group = dict(group)
-                    updated_group["entities"] = updated_entities
-                    updated_groups.append(updated_group)
-                updated_pills = []
-                for pill in pills:
-                    entity_id = pill.get("entity_id")
-                    state_obj = hass.states.get(entity_id)
-                    if state_obj:
-                        updated_pill = {
-                            "entity_id": entity_id,
-                            "state": state_obj.state,
-                            "attributes": dict(state_obj.attributes),
-                            "last_changed": str(state_obj.last_changed),
-                            "last_updated": str(state_obj.last_updated),
+                            updated_pills.append(pill)
+                    updated_visualizations = []
+                    for viz in visualizations:
+                        entity_id = viz.get("entity_id")
+                        state_obj = hass.states.get(entity_id)
+                        if state_obj:
+                            updated_viz = {
+                                "entity_id": entity_id,
+                                "state": state_obj.state,
+                                "attributes": dict(state_obj.attributes),
+                                "last_changed": str(state_obj.last_changed),
+                                "last_updated": str(state_obj.last_updated),
+                            }
+                            updated_visualizations.append(updated_viz)
+                        else:
+                            updated_visualizations.append(viz)
+                    webhook_data = {
+                        "groups": updated_groups,
+                        "pills": updated_pills,
+                        "visualizations": updated_visualizations,
+                        "configuration": {
+                            "layout": data.get("layout", "groups"),
+                            "pill_position": data.get("pill_position", "top"),
+                            "show_title_bar": data.get("show_title_bar", "true"),
+                            "show_entity_title": data.get("show_entity_title", "true"),
+                            "show_entity_icon": data.get("show_entity_icon", "true"),
+                            "scale": data.get("scale", "normal")
                         }
-                        updated_pills.append(updated_pill)
-                    else:
-                        updated_pills.append(pill)
-                webhook_data = {
-                    "groups": updated_groups,
-                    "pills": updated_pills
-                }
-                try:
-                    await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
-                except Exception as e:
-                    import logging
-                    logging.getLogger(__name__).error(f"TRMNL Dashboard config_flow options webhook failed: {e}")
+                    }
+                    try:
+                        await send_to_trmnl_webhook(session, webhook_data, data["webhook_url"])
+                    except Exception as e:
+                        import logging
+                        logging.getLogger(__name__).error(f"TRMNL Dashboard config_flow options webhook failed: {e}")
+                return self.async_create_entry(title="config_flow.options_title", data=data)
             return self.async_create_entry(title="config_flow.options_title", data=data)
         else:
             groups = prev_data.get("groups", [])
@@ -296,12 +394,45 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
         schema_dict = {
             vol.Required("webhook_url", default=prev_data.get("webhook_url", "")): str,
         }
+        
+        # TRMNL Configuration fields
+        layout_default = user_input.get("layout") if user_input else prev_data.get("layout", "groups")
+        schema_dict[vol.Optional("layout", default=layout_default)] = selector({"select": {"options": ["groups", "list"], "translation_key": "layout"}})
+        
+        pill_position_default = user_input.get("pill_position") if user_input else prev_data.get("pill_position", "top")
+        schema_dict[vol.Optional("pill_position", default=pill_position_default)] = selector({"select": {"options": ["top", "bottom", "left", "right"], "translation_key": "pill_position"}})
+        
+        show_title_bar_default = user_input.get("show_title_bar", prev_data.get("show_title_bar", True)) if user_input is not None else prev_data.get("show_title_bar", True)
+        if isinstance(show_title_bar_default, str):
+            show_title_bar_default = show_title_bar_default == "true"
+        schema_dict[vol.Optional("show_title_bar", default=show_title_bar_default)] = bool
+        
+        show_entity_title_default = user_input.get("show_entity_title", prev_data.get("show_entity_title", True)) if user_input is not None else prev_data.get("show_entity_title", True)
+        if isinstance(show_entity_title_default, str):
+            show_entity_title_default = show_entity_title_default == "true"
+        schema_dict[vol.Optional("show_entity_title", default=show_entity_title_default)] = bool
+        
+        show_entity_icon_default = user_input.get("show_entity_icon", prev_data.get("show_entity_icon", True)) if user_input is not None else prev_data.get("show_entity_icon", True)
+        if isinstance(show_entity_icon_default, str):
+            show_entity_icon_default = show_entity_icon_default == "true"
+        schema_dict[vol.Optional("show_entity_icon", default=show_entity_icon_default)] = bool
+        
+        scale_default = user_input.get("scale") if user_input else prev_data.get("scale", "normal")
+        schema_dict[vol.Optional("scale", default=scale_default)] = selector({"select": {"options": ["small", "normal", "big"], "translation_key": "scale"}})
         pill_entities_default = []
         if user_input:
             pill_entities_default = user_input.get("pill_entities", [e.get("entity_id") for e in prev_data.get("pills", [])])
         elif prev_data.get("pills"):
             pill_entities_default = [e.get("entity_id") for e in prev_data["pills"]]
         schema_dict[vol.Optional("pill_entities", default=pill_entities_default)] = selector({"entity": {"multiple": True}})
+
+        # Add Visualizations field
+        visualization_entities_default = []
+        if user_input:
+            visualization_entities_default = user_input.get("visualization_entities", [e.get("entity_id") for e in prev_data.get("visualizations", [])])
+        elif prev_data.get("visualizations"):
+            visualization_entities_default = [e.get("entity_id") for e in prev_data["visualizations"]]
+        schema_dict[vol.Optional("visualization_entities", default=visualization_entities_default)] = selector({"entity": {"multiple": True, "domain": "weather"}})
 
         groups = prev_data.get("groups", [])
         for i in range(num_groups):

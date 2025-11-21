@@ -7,8 +7,14 @@
         "description": "Konfigurer din TRMNL Dashboard-integrasjon.",
         "data": {
           "webhook_url": "Webhook URL",
+          "layout": "Oppsett",
+          "pill_position": "Pilleposisjon",
+          "show_title_bar": "Vis tittellinje",
+          "show_entity_title": "Vis enhetstittel",
+          "show_entity_icon": "Vis enhetsikon",
+          "scale": "Skala",
           "pill_entities": "Pilleenheter",
-          "group_0_name": "Navn for Gruppe 1",
+          "group_0_name": "Navn for gruppe 1",
           "group_0_entities": "Enheter for Gruppe 1",
           "group_1_name": "Navn for Gruppe 2",
           "group_1_entities": "Enheter for Gruppe 2",
@@ -38,7 +44,8 @@
           "group_13_entities": "Enheter for Gruppe 14",
           "group_14_name": "Navn for Gruppe 15",
           "group_14_entities": "Enheter for Gruppe 15",
-          "add_another_group": "Legg til en ny gruppe"
+          "add_another_group": "Legg til en ny gruppe",
+          "visualization_entities": "Visualiseringer"
         }
       }
     }
@@ -96,8 +103,50 @@
           "group_14_name": "Navn for Gruppe 15",
           "group_14_entities": "Enheter for Gruppe 15",
           "remove_group_14": "Fjern Gruppe 15",
-          "add_another_group": "Legg til en ny gruppe"
+          "add_another_group": "Legg til en ny gruppe",
+          "visualization_entities": "Visualiseringer"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "Grupper",
+        "list": "Liste"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "Topp",
+        "bottom": "Bunn",
+        "left": "Venstre",
+        "right": "Høyre"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "Vis",
+        "false": "Skjul"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "Vis",
+        "false": "Skjul"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "Vis",
+        "false": "Skjul"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "Liten",
+        "normal": "Normal",
+        "big": "Stor"
       }
     }
   }

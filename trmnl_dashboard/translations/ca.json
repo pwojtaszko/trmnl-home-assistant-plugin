@@ -7,6 +7,12 @@
         "description": "Configura la teva integració TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL del webhook",
+          "layout": "Disseny",
+          "pill_position": "Posició de la píndola",
+          "show_title_bar": "Mostra la barra de títol",
+          "show_entity_title": "Mostra el títol de l'entitat",
+          "show_entity_icon": "Mostra la icona de l'entitat",
+          "scale": "Escala",
           "pill_entities": "Entitats de píndoles",
           "group_0_name": "Nom per al Grup 1",
           "group_0_entities": "Entitats per al Grup 1",
@@ -38,7 +44,8 @@
           "group_13_entities": "Entitats per al Grup 14",
           "group_14_name": "Nom per al Grup 15",
           "group_14_entities": "Entitats per al Grup 15",
-          "add_another_group": "Afegeix un altre grup"
+          "add_another_group": "Afegeix un altre grup",
+          "visualization_entities": "Visualitzacions"
         }
       }
     }
@@ -50,6 +57,12 @@
         "description": "Edita les entitats de píndoles i configura els grups.",
         "data": {
           "webhook_url": "URL del webhook",
+          "layout": "Disseny",
+          "pill_position": "Posició de la píndola",
+          "show_title_bar": "Mostra la barra de títol",
+          "show_entity_title": "Mostra el títol de l'entitat",
+          "show_entity_icon": "Mostra la icona de l'entitat",
+          "scale": "Escala",
           "pill_entities": "Entitats de píndoles",
           "group_0_name": "Nom per al Grup 1",
           "group_0_entities": "Entitats per al Grup 1",
@@ -96,7 +109,8 @@
           "group_14_name": "Nom per al Grup 15",
           "group_14_entities": "Entitats per al Grup 15",
           "remove_group_14": "Elimina el Grup 15",
-          "add_another_group": "Afegeix un altre grup"
+          "add_another_group": "Afegeix un altre grup",
+          "visualization_entities": "Visualitzacions"
         }
       }
     }

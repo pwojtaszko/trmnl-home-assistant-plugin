@@ -7,6 +7,12 @@
         "description": "قم بإعداد تكامل TRMNL Dashboard الخاص بك.",
         "data": {
           "webhook_url": "رابط الويب هوك",
+          "layout": "التخطيط",
+          "pill_position": "موضع الحبوب",
+          "show_title_bar": "عرض شريط العنوان",
+          "show_entity_title": "عرض عنوان الكيان",
+          "show_entity_icon": "عرض أيقونة الكيان",
+          "scale": "المقياس",
           "pill_entities": "كيانات الحبوب",
           "group_0_name": "اسم المجموعة 1",
           "group_0_entities": "كيانات المجموعة 1",
@@ -38,7 +44,8 @@
           "group_13_entities": "كيانات المجموعة 14",
           "group_14_name": "اسم المجموعة 15",
           "group_14_entities": "كيانات المجموعة 15",
-          "add_another_group": "إضافة مجموعة أخرى"
+          "add_another_group": "إضافة مجموعة أخرى",
+          "visualization_entities": "التصورات"
         }
       }
     }
@@ -50,6 +57,12 @@
         "description": "حرر كيانات الحبوب وقم بتكوين المجموعات.",
         "data": {
           "webhook_url": "رابط الويب هوك",
+          "layout": "التخطيط",
+          "pill_position": "موضع الحبوب",
+          "show_title_bar": "عرض شريط العنوان",
+          "show_entity_title": "عرض عنوان الكيان",
+          "show_entity_icon": "عرض أيقونة الكيان",
+          "scale": "المقياس",
           "pill_entities": "كيانات الحبوب",
           "group_0_name": "اسم المجموعة 1",
           "group_0_entities": "كيانات المجموعة 1",
@@ -96,8 +109,50 @@
           "group_14_name": "اسم المجموعة 15",
           "group_14_entities": "كيانات المجموعة 15",
           "remove_group_14": "إزالة المجموعة 15",
-          "add_another_group": "إضافة مجموعة أخرى"
+          "add_another_group": "إضافة مجموعة أخرى",
+          "visualization_entities": "التصورات"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "مجموعات",
+        "list": "قائمة"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "أعلى",
+        "bottom": "أسفل",
+        "left": "يسار",
+        "right": "يمين"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "عرض",
+        "false": "إخفاء"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "عرض",
+        "false": "إخفاء"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "عرض",
+        "false": "إخفاء"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "صغير",
+        "normal": "عادي",
+        "big": "كبير"
       }
     }
   }

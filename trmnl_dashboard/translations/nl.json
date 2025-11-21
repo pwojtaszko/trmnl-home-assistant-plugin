@@ -6,9 +6,21 @@
         "title": "TRMNL Dashboard Instellen",
         "description": "Configureer je TRMNL Dashboard-integratie.",
         "data": {
-          "webhook_url": "Webhook URL",
+          "webhook_url": "Webhook-URL",
+          "layout": "Indeling",
+          "pill_position": "Pilpositie",
+          "show_title_bar": "Titelbalk weergeven",
+          "show_entity_title": "Entiteitstitel weergeven",
+          "show_entity_icon": "Entiteitspictogram weergeven",
+          "scale": "Schaal",
           "pill_entities": "Pil-entiteiten",
-          "group_0_name": "Naam voor Groep 1",
+          "pill_position": "Pilpositie",
+          "show_title_bar": "Titelbalk weergeven",
+          "show_entity_title": "Entiteitstitel weergeven",
+          "show_entity_icon": "Entiteitspictogram weergeven",
+          "scale": "Schaal",
+          "pill_entities": "Pil-entiteiten",
+          "group_0_name": "Naam voor groep 1",
           "group_0_entities": "Entiteiten voor Groep 1",
           "group_1_name": "Naam voor Groep 2",
           "group_1_entities": "Entiteiten voor Groep 2",
@@ -38,7 +50,8 @@
           "group_13_entities": "Entiteiten voor Groep 14",
           "group_14_name": "Naam voor Groep 15",
           "group_14_entities": "Entiteiten voor Groep 15",
-          "add_another_group": "Nog een groep toevoegen"
+          "add_another_group": "Nog een groep toevoegen",
+          "visualization_entities": "Visualisaties"
         }
       }
     }
@@ -96,8 +109,50 @@
           "group_14_name": "Naam voor Groep 15",
           "group_14_entities": "Entiteiten voor Groep 15",
           "remove_group_14": "Groep 15 verwijderen",
-          "add_another_group": "Nog een groep toevoegen"
+          "add_another_group": "Nog een groep toevoegen",
+          "visualization_entities": "Visualisaties"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "Groepen",
+        "list": "Lijst"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "Boven",
+        "bottom": "Onder",
+        "left": "Links",
+        "right": "Rechts"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "Tonen",
+        "false": "Verbergen"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "Tonen",
+        "false": "Verbergen"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "Tonen",
+        "false": "Verbergen"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "Klein",
+        "normal": "Normaal",
+        "big": "Groot"
       }
     }
   }

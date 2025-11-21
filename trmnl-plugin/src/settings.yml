@@ -1,80 +1,9 @@
 ---
 strategy: webhook
-no_screen_padding: 'no'
-dark_mode: 'no'
-static_data: ''
 id: 138269
 custom_fields:
-- keyname: author_bio
-  field_type: author_bio
-  name: Author
-  description: Created by pwojtaszko | GitHub→ https://github.com/pwojtaszko/trmnl-home-assistant-plugin | Works with any Home Assistant instance with HACS TRMNL Dashboard integration enabled
-
-- keyname: layout
-  field_type: select
-  name: Layout
-  description: How entities are arranged
-  optional: false
-  default: groups
-  options:
-    - Groups: groups
-    - List: list
-
-- keyname: pill_position
-  field_type: select
-  name: Pill Position
-  description: Where to show pills
-  help_text: Choose where the pill indicators appear on your display.
-  optional: false
-  default: top
-  options:
-    - Top: top
-    - Bottom: bottom
-    - Left: left
-    - Right: right
-
-- keyname: show_title_bar
-  field_type: select
-  name: Show Title Bar
-  description: Display the title bar at the bottom
-  help_text: Show the title bar with plugin name and instance name at the bottom of the screen.
-  optional: false
-  default: "true"
-  options:
-    - Show: "true"
-    - Hide: "false"
-
-- keyname: show_entity_title
-  field_type: select
-  name: Show Entity Title
-  description: Display the entity title (friendly name) on cards
-  help_text: Show the title bar with plugin name and instance name at the bottom of the screen.
-  optional: false
-  default: "true"
-  options:
-    - Show: "true"
-    - Hide: "false"
-# Checkbox for showing entity icon
-- keyname: show_entity_icon
-  field_type: select
-  name: Show Entity Icon
-  description: Display the entity icon on cards
-  optional: false
-  default: "true"
-  options:
-    - Show: "true"
-    - Hide: "false"
-
-- keyname: scale
-  field_type: select
-  name: Scale
-  description: Text and icon size scale
-  help_text: Choose the overall size of text and icons. Title bar size remains unchanged.
-  optional: false
-  default: normal
-  options:
-    - Small: small
-    - Normal: normal
-    - Big: big
+  - keyname: author_bio
+    field_type: author_bio
+    name: Author
+    description: Created by pwojtaszko | GitHub→ https://github.com/pwojtaszko/trmnl-home-assistant-plugin | Works with any Home Assistant instance with HACS TRMNL Dashboard integration enabled
 name: Home Assistant Dashboard
-refresh_interval: 5

@@ -7,8 +7,20 @@
         "description": "กำหนดค่าอินทิเกรต TRMNL Dashboard ของคุณ",
         "data": {
           "webhook_url": "URL ของ Webhook",
-          "pill_entities": "เอนทิตีของยาเม็ด",
-          "group_0_name": "ชื่อสำหรับกลุ่มที่ 1",
+          "layout": "เค้าโครง",
+          "pill_position": "ตำแหน่งยาเม็ด",
+          "show_title_bar": "แสดงแถบชื่อเรื่อง",
+          "show_entity_title": "แสดงชื่อเอนทิตี",
+          "show_entity_icon": "แสดงไอคอนเอนทิตี",
+          "scale": "มาตราส่วน",
+          "pill_entities": "เอนทิตียาเม็ด",
+          "pill_position": "ตำแหน่งยาเม็ด",
+          "show_title_bar": "แสดงแถบชื่อเรื่อง",
+          "show_entity_title": "แสดงชื่อเอนทิตี",
+          "show_entity_icon": "แสดงไอคอนเอนทิตี",
+          "scale": "มาตราส่วน",
+          "pill_entities": "เอนทิตียาเม็ด",
+          "group_0_name": "ชื่อสำหรับกลุ่ม 1",
           "group_0_entities": "เอนทิตีสำหรับกลุ่มที่ 1",
           "group_1_name": "ชื่อสำหรับกลุ่มที่ 2",
           "group_1_entities": "เอนทิตีสำหรับกลุ่มที่ 2",
@@ -38,7 +50,8 @@
           "group_13_entities": "เอนทิตีสำหรับกลุ่มที่ 14",
           "group_14_name": "ชื่อสำหรับกลุ่มที่ 15",
           "group_14_entities": "เอนทิตีสำหรับกลุ่มที่ 15",
-          "add_another_group": "เพิ่มกลุ่มอีกหนึ่งกลุ่ม"
+          "add_another_group": "เพิ่มกลุ่มอีกหนึ่งกลุ่ม",
+          "visualization_entities": "การแสดงผล"
         }
       }
     }
@@ -96,8 +109,50 @@
           "group_14_name": "ชื่อสำหรับกลุ่มที่ 15",
           "group_14_entities": "เอนทิตีสำหรับกลุ่มที่ 15",
           "remove_group_14": "ลบกลุ่มที่ 15",
-          "add_another_group": "เพิ่มกลุ่มอีกหนึ่งกลุ่ม"
+          "add_another_group": "เพิ่มกลุ่มอีกหนึ่งกลุ่ม",
+          "visualization_entities": "การแสดงภาพ"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "กลุ่ม",
+        "list": "รายการ"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "ด้านบน",
+        "bottom": "ด้านล่าง",
+        "left": "ซ้าย",
+        "right": "ขวา"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "แสดง",
+        "false": "ซ่อน"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "แสดง",
+        "false": "ซ่อน"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "แสดง",
+        "false": "ซ่อน"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "เล็ก",
+        "normal": "ปกติ",
+        "big": "ใหญ่"
       }
     }
   }

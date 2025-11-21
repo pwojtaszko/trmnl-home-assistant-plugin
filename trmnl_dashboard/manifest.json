@@ -1,7 +1,7 @@
 {
   "domain": "trmnl_dashboard",
   "name": "TRMNL Dashboard",
-  "codeowners": ["@pwojtaszko"],
+  "codeowners": ["@yourgithub"],
   "config_flow": true,
   "documentation": "https://github.com/pwojtaszko/trmnl-home-assistant-plugin",
   "iot_class": "cloud_push",

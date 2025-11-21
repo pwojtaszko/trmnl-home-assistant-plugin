@@ -7,7 +7,13 @@
         "description": "Настройте интеграцию TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL вебхука",
-          "pill_entities": "Сущности таблеток",
+          "layout": "Макет",
+          "pill_position": "Положение таблеток",
+          "show_title_bar": "Показать заголовок",
+          "show_entity_title": "Показать название сущности",
+          "show_entity_icon": "Показать значок сущности",
+          "scale": "Масштаб",
+          "pill_entities": "Объекты таблеток",
           "group_0_name": "Имя для группы 1",
           "group_0_entities": "Сущности для группы 1",
           "group_1_name": "Имя для группы 2",
@@ -38,7 +44,8 @@
           "group_13_entities": "Сущности для группы 14",
           "group_14_name": "Имя для группы 15",
           "group_14_entities": "Сущности для группы 15",
-          "add_another_group": "Добавить ещё одну группу"
+          "add_another_group": "Добавить ещё одну группу",
+          "visualization_entities": "Визуализации"
         }
       }
     }
@@ -96,8 +103,50 @@
           "group_14_name": "Имя для группы 15",
           "group_14_entities": "Сущности для группы 15",
           "remove_group_14": "Удалить группу 15",
-          "add_another_group": "Добавить ещё одну группу"
+          "add_another_group": "Добавить ещё одну группу",
+          "visualization_entities": "Визуализации"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "Группы",
+        "list": "Список"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "Сверху",
+        "bottom": "Снизу",
+        "left": "Слева",
+        "right": "Справа"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "Показать",
+        "false": "Скрыть"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "Показать",
+        "false": "Скрыть"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "Показать",
+        "false": "Скрыть"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "Маленький",
+        "normal": "Нормальный",
+        "big": "Большой"
       }
     }
   }

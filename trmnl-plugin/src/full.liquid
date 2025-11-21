@@ -258,6 +258,67 @@
         width: 100%;
       }
 
+      /* Weather visualization styles */
+      .visualizations-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .weather-visualization {
+        width: 100%;
+        min-width: 250px;
+        max-width: 380px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .weather-main-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 8px;
+      }
+      .weather-icon {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+      }
+      .weather-main-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+      }
+      .weather-temp {
+        font-weight: 700;
+        letter-spacing: -1px;
+        line-height: 1.1;
+      }
+      .weather-state {
+        font-style: italic;
+        margin-top: 2px;
+      }
+      .weather-details-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 10px;
+      }
+      .weather-detail {
+        border-left: 1px solid black;
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+      }
+      .weather-detail-label {
+        font-weight: 500;
+      }
+      .weather-detail-value {
+        font-weight: 400;
+      }
+
     
     </style>
   </head>
@@ -268,17 +329,71 @@
      
 
 class HomeAssistantRenderer {
-  constructor(containerId = 'root') {
+  constructor(containerId = 'root', configuration = {}) {
     this.container = document.getElementById(containerId);
     this.iconMap = this.createIconMap();
-    this.layoutClass = '{{ trmnl.plugin_settings.custom_fields_values.layout | default: "groups" }}-layout';
-    this.pillPosition = '{{ trmnl.plugin_settings.custom_fields_values.pill_position | default: "top" }}';
-    this.showEntityTitle = {{ trmnl.plugin_settings.custom_fields_values.show_entity_title | default: true }};
-    this.showEntityIcon = {{ trmnl.plugin_settings.custom_fields_values.show_entity_icon | default: true }};
-    this.scale = '{{ trmnl.plugin_settings.custom_fields_values.scale | default: "normal" }}';
+    // Use configuration from webhook
+    this.layoutClass = (configuration.layout || 'groups') + '-layout';
+    this.pillPosition = configuration.pill_position || 'top';
+    this.showEntityTitle = configuration.show_entity_title !== undefined ? (configuration.show_entity_title === true || configuration.show_entity_title === 'true') : true;
+    this.showEntityIcon = configuration.show_entity_icon !== undefined ? (configuration.show_entity_icon === true || configuration.show_entity_icon === 'true') : true;
+    this.scale = configuration.scale || 'normal';
     this.initScaleClasses();
     this.init();
   }
+
+    createWeatherVisualization(entity) {
+      // Weather icon mapping for states
+      const weatherIcons = {
+        'clear-night': 'mdi:weather-night',
+        'cloudy': 'mdi:weather-cloudy',
+        'fog': 'mdi:weather-fog',
+        'hail': 'mdi:weather-hail',
+        'lightning': 'mdi:weather-lightning',
+        'lightning-rainy': 'mdi:weather-lightning-rainy',
+        'partlycloudy': 'mdi:weather-partly-cloudy',
+        'pouring': 'mdi:weather-pouring',
+        'rainy': 'mdi:weather-rainy',
+        'snowy': 'mdi:weather-snowy',
+        'snowy-rainy': 'mdi:weather-snowy-rainy',
+        'sunny': 'mdi:weather-sunny',
+        'windy': 'mdi:weather-windy',
+        'windy-variant': 'mdi:weather-windy-variant',
+        'exceptional': 'mdi:alert',
+      };
+      const stateIcon = weatherIcons[entity.state] || 'mdi:weather-partly-cloudy';
+      const iconUrl = `https://api.iconify.design/${stateIcon}.svg`;
+      const name = entity.attributes?.friendly_name || entity.entity_id;
+      const temp = entity.attributes?.temperature;
+      const tempUnit = entity.attributes?.temperature_unit || '°C';
+      const humidity = entity.attributes?.humidity;
+      const pressure = entity.attributes?.pressure;
+      const pressureUnit = entity.attributes?.pressure_unit || 'hPa';
+      const windSpeed = entity.attributes?.wind_speed;
+      const windSpeedUnit = entity.attributes?.wind_speed_unit || 'km/h';
+      const windBearing = entity.attributes?.wind_bearing;
+      const cloudCoverage = entity.attributes?.cloud_coverage;
+      const visibility = entity.attributes?.visibility;
+      const visibilityUnit = entity.attributes?.visibility_unit || 'km';
+      return `
+        <div class="weather-visualization">
+          <div class="weather-main-row">
+            <img class="weather-icon" src="${iconUrl}" alt="${entity.state}">
+            <div class="weather-main-info">
+              <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' ' + tempUnit : ''}</div>
+              <div class="weather-state value ${this.textClasses.entityUnit}">${entity.state.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+            </div>
+          </div>
+          <div class="weather-details-row">
+            ${humidity !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Humidity:</span> <span class="weather-detail-value">${humidity}%</span></div>` : ''}
+            ${pressure !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Pressure:</span> <span class="weather-detail-value">${pressure} ${pressureUnit}</span></div>` : ''}
+            ${windSpeed !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Wind:</span> <span class="weather-detail-value">${windSpeed} ${windSpeedUnit}${windBearing !== undefined ? ' (' + windBearing + '°)' : ''}</span></div>` : ''}
+            ${cloudCoverage !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Clouds:</span> <span class="weather-detail-value">${cloudCoverage}%</span></div>` : ''}
+            ${visibility !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Visibility:</span> <span class="weather-detail-value">${visibility} ${visibilityUnit}</span></div>` : ''}
+          </div>
+        </div>
+      `;
+    }
 
   initScaleClasses() {
     // Define text size classes based on scale setting
@@ -384,6 +499,9 @@ class HomeAssistantRenderer {
   }
 
   getEntityIcon(entity) {
+    if (!entity.attributes) {
+      return
+    }
     if (entity.attributes.icon) {
       return entity.attributes.icon;
     }
@@ -657,9 +775,9 @@ class HomeAssistantRenderer {
 
     this.container.innerHTML = '';
 
-    const { groups, pills } = webhookData || {};
+    const { groups, pills, visualizations } = webhookData || {};    
     
-    if (groups.length === 0 && pills.length === 0) {
+    if (!visualizations?.length && !groups?.length && !pills?.length ) {
       this.renderEmptyState();
       return;
     }
@@ -669,11 +787,25 @@ class HomeAssistantRenderer {
 
       // Create entity sections
       let mainContentHtml = '';
+      
+      if (visualizations?.length > 0) {
+        const vizSections = visualizations.map(viz => {
+          const domain = viz.entity_id.split('.')[0];
+          if (domain === 'weather') {
+            return this.createWeatherVisualization(viz);
+          } else {
+            return `<div class="visualization-container" data-viz-id="${viz.entity_id}"></div>`;
+          }
+        });
+
+          mainContentHtml += `<div class="visualizations-container">${vizSections.join('')}</div>`;
+      }
+
       if (groups.length > 0) {
         const sections = groups.map(group => {
           return this.createEntitySection(group);
         });
-        mainContentHtml = `<div class="free-layout-container">${sections.join('')}</div>`;
+        mainContentHtml += `<div class="free-layout-container">${sections.join('')}</div>`;
       }
 
       // Create the layout structure
@@ -723,9 +855,11 @@ function initializeHomeAssistantRenderer() {
     // Get webhook data
     const webhookData = {
       groups: {{ groups | json }},
-      pills: {{ pills | json }}
+      pills: {{ pills | json }},
+      visualizations: {{ visualizations | json }},
+      configuration: {{ configuration | json }}
     };
-    
+
     if (!webhookData) {
       throw new Error('No webhook data received. Please ensure the HACS TRMNL Dashboard integration is properly configured and sending data.');
     }
@@ -735,7 +869,8 @@ function initializeHomeAssistantRenderer() {
       return;
     }
 
-    const renderer = new HomeAssistantRenderer('root');
+    // Pass configuration from webhookData
+    const renderer = new HomeAssistantRenderer('root', webhookData.configuration || {});
     renderer.render(webhookData);
   } catch (error) {
     console.error('Error initializing renderer:', error);

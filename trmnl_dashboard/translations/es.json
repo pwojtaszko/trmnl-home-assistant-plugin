@@ -7,6 +7,12 @@
         "description": "Configura tu integración de TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL del webhook",
+          "layout": "Diseño",
+          "pill_position": "Posición de pastillas",
+          "show_title_bar": "Mostrar barra de título",
+          "show_entity_title": "Mostrar título de entidad",
+          "show_entity_icon": "Mostrar icono de entidad",
+          "scale": "Escala",
           "pill_entities": "Entidades de pastillas",
           "group_0_name": "Nombre para el Grupo 1",
           "group_0_entities": "Entidades para el Grupo 1",
@@ -38,7 +44,8 @@
           "group_13_entities": "Entidades para el Grupo 14",
           "group_14_name": "Nombre para el Grupo 15",
           "group_14_entities": "Entidades para el Grupo 15",
-          "add_another_group": "Agregar otro grupo"
+          "add_another_group": "Agregar otro grupo",
+          "visualization_entities": "Visualizaciones"
         }
       }
     }
@@ -50,6 +57,12 @@
         "description": "Edita las entidades de pastillas y configura los grupos.",
         "data": {
           "webhook_url": "URL del webhook",
+          "layout": "Diseño",
+          "pill_position": "Posición de pastillas",
+          "show_title_bar": "Mostrar barra de título",
+          "show_entity_title": "Mostrar título de entidad",
+          "show_entity_icon": "Mostrar icono de entidad",
+          "scale": "Escala",
           "pill_entities": "Entidades de pastillas",
           "group_0_name": "Nombre para el Grupo 1",
           "group_0_entities": "Entidades para el Grupo 1",
@@ -96,8 +109,50 @@
           "group_14_name": "Nombre para el Grupo 15",
           "group_14_entities": "Entidades para el Grupo 15",
           "remove_group_14": "Eliminar Grupo 15",
-          "add_another_group": "Agregar otro grupo"
+          "add_another_group": "Agregar otro grupo",
+          "visualization_entities": "Visualizaciones"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "Grupos",
+        "list": "Lista"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "Arriba",
+        "bottom": "Abajo",
+        "left": "Izquierda",
+        "right": "Derecha"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "Mostrar",
+        "false": "Ocultar"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "Mostrar",
+        "false": "Ocultar"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "Mostrar",
+        "false": "Ocultar"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "Pequeño",
+        "normal": "Normal",
+        "big": "Grande"
       }
     }
   }

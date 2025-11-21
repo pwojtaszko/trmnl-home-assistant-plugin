@@ -7,8 +7,14 @@
         "description": "Configurați integrarea TRMNL Dashboard.",
         "data": {
           "webhook_url": "URL Webhook",
+          "layout": "Aspect",
+          "pill_position": "Poziție pastile",
+          "show_title_bar": "Afișare bară de titlu",
+          "show_entity_title": "Afișare titlu entitate",
+          "show_entity_icon": "Afișare pictogramă entitate",
+          "scale": "Scală",
           "pill_entities": "Entități pastile",
-          "group_0_name": "Nume pentru Grupul 1",
+          "group_0_name": "Nume pentru grupul 1",
           "group_0_entities": "Entități pentru Grupul 1",
           "group_1_name": "Nume pentru Grupul 2",
           "group_1_entities": "Entități pentru Grupul 2",
@@ -38,7 +44,8 @@
           "group_13_entities": "Entități pentru Grupul 14",
           "group_14_name": "Nume pentru Grupul 15",
           "group_14_entities": "Entități pentru Grupul 15",
-          "add_another_group": "Adăugați încă un grup"
+          "add_another_group": "Adăugați încă un grup",
+          "visualization_entities": "Vizualizări"
         }
       }
     }
@@ -96,8 +103,50 @@
           "group_14_name": "Nume pentru Grupul 15",
           "group_14_entities": "Entități pentru Grupul 15",
           "remove_group_14": "Ștergeți Grupul 15",
-          "add_another_group": "Adăugați încă un grup"
+          "add_another_group": "Adăugați încă un grup",
+          "visualization_entities": "Vizualizări"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "Grupuri",
+        "list": "Listă"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "Sus",
+        "bottom": "Jos",
+        "left": "Stânga",
+        "right": "Dreapta"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "Afișare",
+        "false": "Ascundere"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "Afișare",
+        "false": "Ascundere"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "Afișare",
+        "false": "Ascundere"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "Mic",
+        "normal": "Normal",
+        "big": "Mare"
       }
     }
   }

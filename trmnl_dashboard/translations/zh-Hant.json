@@ -6,7 +6,13 @@
         "title": "TRMNL Dashboard 設定",
         "description": "配置您的 TRMNL Dashboard 整合。",
         "data": {
-          "webhook_url": "Webhook 網址",
+          "webhook_url": "Webhook URL",
+          "layout": "佈局",
+          "pill_position": "藥丸位置",
+          "show_title_bar": "顯示標題列",
+          "show_entity_title": "顯示實體標題",
+          "show_entity_icon": "顯示實體圖示",
+          "scale": "縮放",
           "pill_entities": "藥丸實體",
           "group_0_name": "第1組名稱",
           "group_0_entities": "第1組實體",
@@ -38,7 +44,8 @@
           "group_13_entities": "第14組實體",
           "group_14_name": "第15組名稱",
           "group_14_entities": "第15組實體",
-          "add_another_group": "新增另一組"
+          "add_another_group": "新增另一組",
+          "visualization_entities": "視覺化"
         }
       }
     }
@@ -96,8 +103,50 @@
           "group_14_name": "第15組名稱",
           "group_14_entities": "第15組實體",
           "remove_group_14": "刪除第15組",
-          "add_another_group": "新增另一組"
+          "add_another_group": "新增另一組",
+          "visualization_entities": "視覺化"
         }
+      }
+    }
+  },
+  "selector": {
+    "layout": {
+      "options": {
+        "groups": "分組",
+        "list": "清單"
+      }
+    },
+    "pill_position": {
+      "options": {
+        "top": "頂部",
+        "bottom": "底部",
+        "left": "左側",
+        "right": "右側"
+      }
+    },
+    "show_title_bar": {
+      "options": {
+        "true": "顯示",
+        "false": "隱藏"
+      }
+    },
+    "show_entity_title": {
+      "options": {
+        "true": "顯示",
+        "false": "隱藏"
+      }
+    },
+    "show_entity_icon": {
+      "options": {
+        "true": "顯示",
+        "false": "隱藏"
+      }
+    },
+    "scale": {
+      "options": {
+        "small": "小",
+        "normal": "正常",
+        "big": "大"
       }
     }
   }
