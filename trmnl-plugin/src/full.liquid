@@ -258,13 +258,12 @@
         width: 100%;
       }
 
-      /* Weather visualization styles */
+      /* Weather visualization styles - black and white, icon only */
       .visualizations-container {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
       }
-
       .weather-visualization {
         width: 100%;
         min-width: 250px;
@@ -273,6 +272,11 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        background: #fff;
+        border: 2px solid #000;
+        border-radius: 16px;
+        padding: 16px;
+        color: #000;
       }
       .weather-main-row {
         display: flex;
@@ -284,21 +288,21 @@
         width: 56px;
         height: 56px;
         flex-shrink: 0;
+        filter: grayscale(1) contrast(1.2);
       }
       .weather-main-info {
         display: flex;
         flex-direction: column;
         gap: 2px;
         flex: 1;
+        align-items: flex-start;
       }
       .weather-temp {
         font-weight: 700;
         letter-spacing: -1px;
         line-height: 1.1;
-      }
-      .weather-state {
-        font-style: italic;
-        margin-top: 2px;
+        font-size: 2.2em;
+        color: #000;
       }
       .weather-details-row {
         display: flex;
@@ -307,16 +311,23 @@
         margin-top: 10px;
       }
       .weather-detail {
-        border-left: 1px solid black;
         display: flex;
-        gap: 4px;
-        padding: 4px;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 6px;
+        border-left: 1px solid #000;
+        color: #000;
+        background: none;
       }
-      .weather-detail-label {
-        font-weight: 500;
+      .weather-detail-icon {
+        width: 22px;
+        height: 22px;
+        filter: grayscale(1) contrast(1.2);
       }
       .weather-detail-value {
-        font-weight: 400;
+        font-weight: 500;
+        font-size: 1.1em;
+        color: #000;
       }
 
     
@@ -361,9 +372,16 @@ class HomeAssistantRenderer {
         'windy-variant': 'mdi:weather-windy-variant',
         'exceptional': 'mdi:alert',
       };
+      // Detail icons (black and white, meaningful)
+      const detailIcons = {
+        humidity: 'mdi:water-percent',
+        pressure: 'mdi:gauge',
+        wind: 'mdi:weather-windy',
+        clouds: 'mdi:weather-cloudy',
+        visibility: 'mdi:eye',
+      };
       const stateIcon = weatherIcons[entity.state] || 'mdi:weather-partly-cloudy';
       const iconUrl = `https://api.iconify.design/${stateIcon}.svg`;
-      const name = entity.attributes?.friendly_name || entity.entity_id;
       const temp = entity.attributes?.temperature;
       const tempUnit = entity.attributes?.temperature_unit || '°C';
       const humidity = entity.attributes?.humidity;
@@ -381,15 +399,14 @@ class HomeAssistantRenderer {
             <img class="weather-icon" src="${iconUrl}" alt="${entity.state}">
             <div class="weather-main-info">
               <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' ' + tempUnit : ''}</div>
-              <div class="weather-state value ${this.textClasses.entityUnit}">${entity.state.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
             </div>
           </div>
           <div class="weather-details-row">
-            ${humidity !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Humidity:</span> <span class="weather-detail-value">${humidity}%</span></div>` : ''}
-            ${pressure !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Pressure:</span> <span class="weather-detail-value">${pressure} ${pressureUnit}</span></div>` : ''}
-            ${windSpeed !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Wind:</span> <span class="weather-detail-value">${windSpeed} ${windSpeedUnit}${windBearing !== undefined ? ' (' + windBearing + '°)' : ''}</span></div>` : ''}
-            ${cloudCoverage !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Clouds:</span> <span class="weather-detail-value">${cloudCoverage}%</span></div>` : ''}
-            ${visibility !== undefined ? `<div class="weather-detail value ${this.textClasses.entityUnit}"><span class="weather-detail-label">Visibility:</span> <span class="weather-detail-value">${visibility} ${visibilityUnit}</span></div>` : ''}
+            ${humidity !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.humidity}.svg" alt="Humidity"><span class="weather-detail-value">${humidity}%</span></div>` : ''}
+            ${pressure !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.pressure}.svg" alt="Pressure"><span class="weather-detail-value">${pressure} ${pressureUnit}</span></div>` : ''}
+            ${windSpeed !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.wind}.svg" alt="Wind"><span class="weather-detail-value">${windSpeed} ${windSpeedUnit}${windBearing !== undefined ? ' (' + windBearing + '°)' : ''}</span></div>` : ''}
+            ${cloudCoverage !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.clouds}.svg" alt="Clouds"><span class="weather-detail-value">${cloudCoverage}%</span></div>` : ''}
+            ${visibility !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.visibility}.svg" alt="Visibility"><span class="weather-detail-value">${visibility} ${visibilityUnit}</span></div>` : ''}
           </div>
         </div>
       `;
