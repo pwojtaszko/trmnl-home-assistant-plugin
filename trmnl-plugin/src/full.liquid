@@ -28,14 +28,6 @@
         position: relative;
         overflow: hidden;
       }
-      .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        overflow: hidden;
-        z-index: 1;
-      }
       #root:has(.pills-container--left) {
         flex-direction: row;
       }
@@ -151,9 +143,14 @@
 
       /* Groups layout */
       .groups-layout .free-layout-container {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        grid-auto-flow: dense;
+      }
+
+      .groups-layout .free-layout-container.scale-small {
+        grid-template-columns: repeat(5, 1fr);
       }
 
       .groups-layout .free-layout-container .group-content {
@@ -163,24 +160,21 @@
 
       /* List layout styles */
       .list-layout .free-layout-container {
-        max-width: 100%;
-        column-gap: 60px;
-        width: 46%;
-        min-width: 250px;
-        flex-wrap: wrap;
-        display: flex;
-        flex-direction: column;
-        max-height: 100%;
-        row-gap: var(--list-gap-small);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        width: 100%;
       }
       
       .list-layout .free-layout-container .entity-group {
-        width: 100%;
+        width: max-content;
         background: none;
         border: none;
         border-radius: 0;
         margin: 0;
         padding: 0;
+        grid-column: span 2;
+        margin-left: 17px;
       }
       
       .list-layout .free-layout-container .group-header {
@@ -200,19 +194,19 @@
       
       /* Dynamic grid columns based on what's shown */
       .list-layout .free-layout-container .group-content.show-all {
-        grid-template-columns: 1fr 28px auto;
+        grid-template-columns: 1fr 28px auto auto;
       }
       
       .list-layout .free-layout-container .group-content.hide-title {
-        grid-template-columns: 28px auto;
+        grid-template-columns: 28px auto auto;
       }
       
       .list-layout .free-layout-container .group-content.hide-icon {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto auto;
       }
       
       .list-layout .free-layout-container .group-content.hide-both {
-        grid-template-columns: auto;
+        grid-template-columns: auto auto;
       }
       
       .list-layout .free-layout-container .entity-list-row {
@@ -237,8 +231,9 @@
       .list-layout .free-layout-container .entity-list-row .entity-value {
         font-weight: 500;
         white-space: nowrap;
-        text-align: right;
+        text-align: left;
         align-self: center;
+
       }
       
       /* Grid column assignments based on visibility */
@@ -256,6 +251,11 @@
 
       .mashup--1Lx1R .free-layout-container, .mashup--2x2 .free-layout-container {
         width: 100%;
+        
+      }
+
+      .mashup--1Lx1R .free-layout-container, .mashup--2x2 .free-layout-container {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       /* Weather visualization styles - black and white, icon only */
@@ -265,6 +265,7 @@
         flex-wrap: wrap;
       }
       .weather-visualization {
+        grid-column: span 2; grid-row: span 2;
         width: 100%;
         min-width: 250px;
         max-width: 380px;
@@ -276,8 +277,12 @@
         border: 2px solid #000;
         border-radius: 16px;
         padding: 16px;
-        color: #000;
       }
+
+      .scale-small .weather-visualization {
+        grid-column: span 5;
+      }
+
       .weather-main-row {
         display: flex;
         align-items: center;
@@ -302,7 +307,6 @@
         letter-spacing: -1px;
         line-height: 1.1;
         font-size: 2.2em;
-        color: #000;
       }
       .weather-details-row {
         display: flex;
@@ -316,7 +320,6 @@
         gap: 6px;
         padding: 2px 6px;
         border-left: 1px solid #000;
-        color: #000;
         background: none;
       }
       .weather-detail-icon {
@@ -327,7 +330,6 @@
       .weather-detail-value {
         font-weight: 500;
         font-size: 1.1em;
-        color: #000;
       }
 
     
@@ -393,20 +395,23 @@ class HomeAssistantRenderer {
       const cloudCoverage = entity.attributes?.cloud_coverage;
       const visibility = entity.attributes?.visibility;
       const visibilityUnit = entity.attributes?.visibility_unit || 'km';
+      // Value scaling classes
+      const valueClass = `value ${this.textClasses.entityValue}`;
+      const unitClass = `value ${this.textClasses.entityUnit}`;
       return `
         <div class="weather-visualization">
           <div class="weather-main-row">
             <img class="weather-icon" src="${iconUrl}" alt="${entity.state}">
             <div class="weather-main-info">
-              <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' ' + tempUnit : ''}</div>
+              <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' <span class=\"${unitClass}\">' + tempUnit + '</span>' : ''}</div>
             </div>
           </div>
           <div class="weather-details-row">
-            ${humidity !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.humidity}.svg" alt="Humidity"><span class="weather-detail-value">${humidity}%</span></div>` : ''}
-            ${pressure !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.pressure}.svg" alt="Pressure"><span class="weather-detail-value">${pressure} ${pressureUnit}</span></div>` : ''}
-            ${windSpeed !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.wind}.svg" alt="Wind"><span class="weather-detail-value">${windSpeed} ${windSpeedUnit}${windBearing !== undefined ? ' (' + windBearing + '°)' : ''}</span></div>` : ''}
-            ${cloudCoverage !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.clouds}.svg" alt="Clouds"><span class="weather-detail-value">${cloudCoverage}%</span></div>` : ''}
-            ${visibility !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.visibility}.svg" alt="Visibility"><span class="weather-detail-value">${visibility} ${visibilityUnit}</span></div>` : ''}
+            ${humidity !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.humidity}.svg" alt="Humidity"><span class="weather-detail-value ${valueClass}">${humidity}<span class="${unitClass}">%</span></span></div>` : ''}
+            ${pressure !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.pressure}.svg" alt="Pressure"><span class="weather-detail-value ${valueClass}">${pressure} <span class="${unitClass}">${pressureUnit}</span></span></div>` : ''}
+            ${windSpeed !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.wind}.svg" alt="Wind"><span class="weather-detail-value ${valueClass}">${windSpeed} <span class="${unitClass}">${windSpeedUnit}</span>${windBearing !== undefined ? ' (<span class=\"' + unitClass + '\">' + windBearing + '°</span>)' : ''}</span></div>` : ''}
+            ${cloudCoverage !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.clouds}.svg" alt="Clouds"><span class="weather-detail-value ${valueClass}">${cloudCoverage}<span class="${unitClass}">%</span></span></div>` : ''}
+            ${visibility !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.visibility}.svg" alt="Visibility"><span class="weather-detail-value ${valueClass}">${visibility} <span class="${unitClass}">${visibilityUnit}</span></span></div>` : ''}
           </div>
         </div>
       `;
@@ -742,7 +747,8 @@ class HomeAssistantRenderer {
               <div class="entity-list-row" data-entity-id="${entity.entity_id || 'error'}">
                 ${this.showEntityTitle ? `<span class="entity-name value ${this.textClasses.entityName}">${name}</span>` : ''}
                 ${this.showEntityIcon ? `<img class="entity-icon ${iconClass}" src="${iconUrl}" alt="${name}" style="width: ${this.textClasses.iconSize}; height: ${this.textClasses.iconSize};" onerror="this.style.display='none'">` : ''}
-                <span class="entity-value value ${this.textClasses.entityValue} ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}${stateInfo.unit ? ' ' + stateInfo.unit : ''}</span>
+                <span class="entity-value value ${this.textClasses.entityValue} ${stateInfo.isNumeric ? 'value--tnums' : ''}">${stateInfo.value}</span>
+                <span class="enitity-unit value ${this.textClasses.entityUnit}">${stateInfo.unit}</span>
               </div>
             `;
         });
@@ -773,7 +779,7 @@ class HomeAssistantRenderer {
           .map(entity => this.createEntityCard(entity, groupName))
           .join('');
         return `
-          <div class="entity-group" data-label="${groupName}">
+          <div class="entity-group" style="grid-column: span ${entities.length} !important;" data-label="${groupName}">
             <div class="group-header">
               ${groupName ? `<span class="value ${this.textClasses.groupHeader}">${groupName}</span>` : ''}
             </div>
@@ -805,51 +811,45 @@ class HomeAssistantRenderer {
       // Create entity sections
       let mainContentHtml = '';
       
+      let vizSections = [];
       if (visualizations?.length > 0) {
-        const vizSections = visualizations.map(viz => {
+         vizSections = visualizations.map((viz, i) => {
           const domain = viz.entity_id.split('.')[0];
           if (domain === 'weather') {
-            return this.createWeatherVisualization(viz);
+            return this.createWeatherVisualization(viz, i);
           } else {
             return `<div class="visualization-container" data-viz-id="${viz.entity_id}"></div>`;
           }
         });
+     }
 
-          mainContentHtml += `<div class="visualizations-container">${vizSections.join('')}</div>`;
-      }
-
+      let sections = [];
       if (groups.length > 0) {
-        const sections = groups.map(group => {
+        sections = groups.map(group => {
           return this.createEntitySection(group);
         });
-        mainContentHtml += `<div class="free-layout-container">${sections.join('')}</div>`;
       }
+       mainContentHtml += `<div class="free-layout-container scale-${this.scale}">${vizSections.join('')}${sections.join('')}</div>`;
 
       // Create the layout structure
       if (pillsHtml) {
         this.container.innerHTML = `
           ${pillsHtml}
-          <div class="main-content">
-            ${mainContentHtml}
-          </div>
+          ${mainContentHtml}
         `;
       } else {
         this.container.innerHTML = `
-          <div class="main-content">
             ${mainContentHtml}
-          </div>
         `;
       }
   }
 
   renderEmptyState() {
     this.container.innerHTML = `
-      <div class="main-content">
-        <div class="empty-state">
-          <div class="empty-state-icon value value--xxxlarge">⚠</div>
-          <h3 class="value value--large">No entities found</h3>
-          <p class="value value--small">Check your Home Assistant configuration and ensure entities are properly configured.</p>
-        </div>
+      <div class="empty-state">
+        <div class="empty-state-icon value value--xxxlarge">⚠</div>
+        <h3 class="value value--large">No entities found</h3>
+        <p class="value value--small">Check your Home Assistant configuration and ensure entities are properly configured.</p>
       </div>
     `;
   }
@@ -894,7 +894,7 @@ function initializeHomeAssistantRenderer() {
     const rootElement = document.getElementById('root');
     if (rootElement) {
       rootElement.innerHTML = `
-        <div style="padding: 20px; text-align: center; color: #f44336;">
+        <div style="padding: 20px; text-align: center;">
           <h3 class="value value--large">❌ Error Loading Home Assistant Data</h3>
           <p class="value value--small">Please check the browser console for details.</p>
           <pre class="value value--small" style="background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: left; overflow: auto;">${error.message}</pre>
