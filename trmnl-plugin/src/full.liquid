@@ -9,16 +9,9 @@
 
     <style>
       /* Layout */
-      .trmnl .view .layout {
-        flex: 1;
-      }
-      
-      .trmnl .view--quadrant .title_bar {
-        background: none;
-      }
-      .trmnl .view--half_horizontal::before {
-        background: none;
-      }
+      .trmnl .view .layout { flex: 1; }
+      .trmnl .view--quadrant .title_bar,
+      .trmnl .view--half_horizontal::before { background: none; }
   
       #root {
         font-family: 'Inter', 'NicoClean', sans-serif;
@@ -28,18 +21,11 @@
         position: relative;
         overflow: hidden;
       }
-      #root:has(.pills-container--left) {
-        flex-direction: row;
-      }
-      #root:has(.pills-container--right) {
-        flex-direction: row-reverse;
-      }
-      #root:has(.pills-container--top) {
-        flex-direction: column;
-      }
-      #root:has(.pills-container--bottom) {
-        flex-direction: column-reverse;
-      }
+      #root:has(.pills-container--left) { flex-direction: row; }
+      #root:has(.pills-container--right) { flex-direction: row-reverse; }
+      #root:has(.pills-container--top) { flex-direction: column; }
+      #root:has(.pills-container--bottom) { flex-direction: column-reverse; }
+
       .sections-row {
         display: flex;
         flex-wrap: wrap;
@@ -49,61 +35,43 @@
         min-width: 0;
       }
 
-      /* Custom styles */
-      .pills-container {
-        margin-bottom: 10px;
-      }
-      
-      .pills-container--top {
-        margin-bottom: 10px;
-      }
-      
-      .pills-container--bottom {
-        margin-top: 10px;
-      }
-      
-      .pills-container--left {
-        margin-right: 10px;
-      }
-      
-      .pills-container--right {
-        margin-left: 10px;
-      }
+      /* Pills */
+      .pills-container,
+      .pills-container--top { margin-bottom: 10px; }
+      .pills-container--bottom { margin-top: 10px; }
+      .pills-container--left { margin-right: 10px; }
+      .pills-container--right { margin-left: 10px; }
 
       .pill-component {
-        border: 2px black solid;
+        border: 2px solid black;
         display: flex;
         align-items: center;
-        gap: 5px;    
+        gap: 5px;
         padding: 3px 5px;
       }
       
-      /* Rotate pills when on left or right side */
       .pills-container--left .pill-component,
       .pills-container--right .pill-component {
         writing-mode: vertical-lr;
         transform: rotate(180deg);
       }
       
-      .app-root.list-layout .pill-component {
-        border: none;
-      }
+      .app-root.list-layout .pill-component { border: none; }
 
-      .entity-name, .entity-value {
+      /* Entity common styles */
+      .entity-name,
+      .entity-value {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-
-      .entity-value {
-        max-width: 155px;
-      }
-      /* Entity group styling */
+      .entity-value { max-width: 155px; }
+      /* Entity groups */
       .entity-group {
         border: 2px solid black;
         border-radius: 16px;
         padding: 16px;
-        margin-top: 16px;
+        margin-top: 15px;
         background: #fff;
         position: relative;
       }
@@ -114,15 +82,12 @@
         padding: 0 4px;
         z-index: 2;
       }
+      .group-header span { color: inherit; }
 
       .groups-layout .group-header {
         top: 0;
         transform: translateY(-50%);
         line-height: 1;
-      }
-      
-      .group-header span {
-        color: inherit;
       }
 
       .group-content {
@@ -144,24 +109,20 @@
       /* Groups layout */
       .groups-layout .free-layout-container {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 5px;
         grid-auto-flow: dense;
       }
-
-      .groups-layout .free-layout-container.scale-small {
-        grid-template-columns: repeat(5, 1fr);
-      }
-
+      .groups-layout .free-layout-container.scale-small { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
       .groups-layout .free-layout-container .group-content {
         display: flex;
         flex-wrap: wrap;
       }
 
-      /* List layout styles */
+      /* List layout */
       .list-layout .free-layout-container {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 5px;
         width: 100%;
       }
@@ -171,10 +132,9 @@
         background: none;
         border: none;
         border-radius: 0;
-        margin: 0;
+        margin: 0 0 0 17px;
         padding: 0;
         grid-column: span 2;
-        margin-left: 17px;
       }
       
       .list-layout .free-layout-container .group-header {
@@ -192,28 +152,14 @@
         gap: 5px;
       }
       
-      /* Dynamic grid columns based on what's shown */
-      .list-layout .free-layout-container .group-content.show-all {
-        grid-template-columns: 1fr 28px auto auto;
-      }
+      /* Dynamic grid columns */
+      .list-layout .free-layout-container .group-content.show-all { grid-template-columns: 1fr 28px auto auto; }
+      .list-layout .free-layout-container .group-content.hide-title { grid-template-columns: 28px auto auto; }
+      .list-layout .free-layout-container .group-content.hide-icon { grid-template-columns: 1fr auto auto; }
+      .list-layout .free-layout-container .group-content.hide-both { grid-template-columns: auto auto; }
       
-      .list-layout .free-layout-container .group-content.hide-title {
-        grid-template-columns: 28px auto auto;
-      }
+      .list-layout .free-layout-container .entity-list-row { display: contents; }
       
-      .list-layout .free-layout-container .group-content.hide-icon {
-        grid-template-columns: 1fr auto auto;
-      }
-      
-      .list-layout .free-layout-container .group-content.hide-both {
-        grid-template-columns: auto auto;
-      }
-      
-      .list-layout .free-layout-container .entity-list-row {
-        display: contents;
-      }
-      
-      /* Common styles for list elements */
       .list-layout .free-layout-container .entity-list-row .entity-name {
         font-weight: 400;
         white-space: nowrap;
@@ -233,39 +179,35 @@
         white-space: nowrap;
         text-align: left;
         align-self: center;
-
       }
       
-      /* Grid column assignments based on visibility */
+      /* Grid column assignments */
       .list-layout .free-layout-container .group-content.show-all .entity-name { grid-column: 1; }
       .list-layout .free-layout-container .group-content.show-all .entity-icon { grid-column: 2; }
       .list-layout .free-layout-container .group-content.show-all .entity-value { grid-column: 3; }
-      
       .list-layout .free-layout-container .group-content.hide-title .entity-icon { grid-column: 1; }
       .list-layout .free-layout-container .group-content.hide-title .entity-value { grid-column: 2; }
-      
       .list-layout .free-layout-container .group-content.hide-icon .entity-name { grid-column: 1; }
       .list-layout .free-layout-container .group-content.hide-icon .entity-value { grid-column: 2; }
-      
       .list-layout .free-layout-container .group-content.hide-both .entity-value { grid-column: 1; }
 
-      .mashup--1Lx1R .free-layout-container, .mashup--2x2 .free-layout-container {
+      /* Mashup layouts */
+      .mashup--1Lx1R .free-layout-container,
+      .mashup--2x2 .free-layout-container {
         width: 100%;
-        
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       }
 
-      .mashup--1Lx1R .free-layout-container, .mashup--2x2 .free-layout-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      /* Weather visualization styles - black and white, icon only */
+      /* Weather visualization */
       .visualizations-container {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
       }
+
       .weather-visualization {
-        grid-column: span 2; grid-row: span 2;
+        grid-column: span 2;
+        grid-row: span 2;
         width: 100%;
         min-width: 250px;
         max-width: 380px;
@@ -273,28 +215,23 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        background: #fff;
-        border: 2px solid #000;
-        border-radius: 16px;
-        padding: 16px;
       }
-
-      .scale-small .weather-visualization {
-        grid-column: span 5;
-      }
+      .scale-small .weather-visualization { grid-column: span 5; }
 
       .weather-main-row {
         display: flex;
         align-items: center;
         gap: 18px;
-        margin-bottom: 8px;
       }
+
       .weather-icon {
-        width: 56px;
-        height: 56px;
         flex-shrink: 0;
         filter: grayscale(1) contrast(1.2);
       }
+      .scale-small .weather-icon { width: 45px; height: 45px; }
+      .scale-normal .weather-icon { width: 56px; height: 56px; }
+      .scale-big .weather-icon { width: 70px; height: 70px; }
+
       .weather-main-info {
         display: flex;
         flex-direction: column;
@@ -302,18 +239,21 @@
         flex: 1;
         align-items: flex-start;
       }
+
       .weather-temp {
         font-weight: 700;
         letter-spacing: -1px;
         line-height: 1.1;
         font-size: 2.2em;
       }
+
       .weather-details-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 18px;
-        margin-top: 10px;
+        gap: 3px;
+        flex: 1;
       }
+
       .weather-detail {
         display: flex;
         align-items: center;
@@ -321,18 +261,16 @@
         padding: 2px 6px;
         border-left: 1px solid #000;
         background: none;
-      }
-      .weather-detail-icon {
-        width: 22px;
-        height: 22px;
-        filter: grayscale(1) contrast(1.2);
-      }
-      .weather-detail-value {
-        font-weight: 500;
-        font-size: 1.1em;
+        height: max-content;
       }
 
-    
+      .weather-detail-icon {
+        filter: grayscale(1) contrast(1.2);
+      }
+      .scale-small .weather-detail-icon { width: 18px; height: 18px; }
+      .scale-normal .weather-detail-icon { width: 22px; height: 22px; }
+      .scale-big .weather-detail-icon { width: 28px; height: 28px; }
+
     </style>
   </head>
   <body class="environment trmnl">
@@ -345,6 +283,7 @@ class HomeAssistantRenderer {
   constructor(containerId = 'root', configuration = {}) {
     this.container = document.getElementById(containerId);
     this.iconMap = this.createIconMap();
+    this.weatherIconMap = this.createWeatherIconMap();
     // Use configuration from webhook
     this.layoutClass = (configuration.layout || 'groups') + '-layout';
     this.pillPosition = configuration.pill_position || 'top';
@@ -356,62 +295,43 @@ class HomeAssistantRenderer {
   }
 
     createWeatherVisualization(entity) {
-      // Weather icon mapping for states
-      const weatherIcons = {
-        'clear-night': 'mdi:weather-night',
-        'cloudy': 'mdi:weather-cloudy',
-        'fog': 'mdi:weather-fog',
-        'hail': 'mdi:weather-hail',
-        'lightning': 'mdi:weather-lightning',
-        'lightning-rainy': 'mdi:weather-lightning-rainy',
-        'partlycloudy': 'mdi:weather-partly-cloudy',
-        'pouring': 'mdi:weather-pouring',
-        'rainy': 'mdi:weather-rainy',
-        'snowy': 'mdi:weather-snowy',
-        'snowy-rainy': 'mdi:weather-snowy-rainy',
-        'sunny': 'mdi:weather-sunny',
-        'windy': 'mdi:weather-windy',
-        'windy-variant': 'mdi:weather-windy-variant',
-        'exceptional': 'mdi:alert',
-      };
-      // Detail icons (black and white, meaningful)
-      const detailIcons = {
-        humidity: 'mdi:water-percent',
-        pressure: 'mdi:gauge',
-        wind: 'mdi:weather-windy',
-        clouds: 'mdi:weather-cloudy',
-        visibility: 'mdi:eye',
-      };
-      const stateIcon = weatherIcons[entity.state] || 'mdi:weather-partly-cloudy';
+      const stateIcon = this.weatherIconMap[entity.state] || 'mdi:weather-partly-cloudy';
       const iconUrl = `https://api.iconify.design/${stateIcon}.svg`;
-      const temp = entity.attributes?.temperature;
-      const tempUnit = entity.attributes?.temperature_unit || '°C';
-      const humidity = entity.attributes?.humidity;
-      const pressure = entity.attributes?.pressure;
-      const pressureUnit = entity.attributes?.pressure_unit || 'hPa';
-      const windSpeed = entity.attributes?.wind_speed;
-      const windSpeedUnit = entity.attributes?.wind_speed_unit || 'km/h';
-      const windBearing = entity.attributes?.wind_bearing;
-      const cloudCoverage = entity.attributes?.cloud_coverage;
-      const visibility = entity.attributes?.visibility;
-      const visibilityUnit = entity.attributes?.visibility_unit || 'km';
+      
+      const attrs = entity.attributes || {};
+      const temp = attrs.temperature;
+      const tempUnit = attrs.temperature_unit || '°C';
+      
       // Value scaling classes
       const valueClass = `value ${this.textClasses.entityValue}`;
       const unitClass = `value ${this.textClasses.entityUnit}`;
+      
+      // Weather details configuration with direct access
+      const weatherDetails = [
+        { key: 'humidity', value: attrs.humidity, unit: '%', icon: 'mdi:water-percent', label: 'Humidity' },
+        { key: 'pressure', value: attrs.pressure, unit: attrs.pressure_unit || 'hPa', icon: 'mdi:gauge', label: 'Pressure' },
+        { key: 'wind_speed', value: attrs.wind_speed, unit: attrs.wind_speed_unit || 'km/h', icon: 'mdi:weather-windy', label: 'Wind' },
+        { key: 'cloud_coverage', value: attrs.cloud_coverage, unit: '%', icon: 'mdi:weather-cloudy', label: 'Clouds' },
+        { key: 'visibility', value: attrs.visibility, unit: attrs.visibility_unit || 'km', icon: 'mdi:eye', label: 'Visibility' }
+      ];
+      
+      // Generate detail items only for defined values
+      const detailsHtml = weatherDetails
+        .filter(detail => detail.value !== undefined)
+        .map(detail => 
+          `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detail.icon}.svg" alt="${detail.label}"><span class="weather-detail-value ${valueClass}">${detail.value}<span class="${unitClass}">${detail.unit}</span></span></div>`
+        ).join('');
+      
       return `
-        <div class="weather-visualization">
+        <div class="weather-visualization entity-group">
           <div class="weather-main-row">
             <img class="weather-icon" src="${iconUrl}" alt="${entity.state}">
             <div class="weather-main-info">
-              <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' <span class=\"${unitClass}\">' + tempUnit + '</span>' : ''}</div>
+              <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' <span class="' + unitClass + '">' + tempUnit + '</span>' : ''}</div>
             </div>
           </div>
           <div class="weather-details-row">
-            ${humidity !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.humidity}.svg" alt="Humidity"><span class="weather-detail-value ${valueClass}">${humidity}<span class="${unitClass}">%</span></span></div>` : ''}
-            ${pressure !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.pressure}.svg" alt="Pressure"><span class="weather-detail-value ${valueClass}">${pressure} <span class="${unitClass}">${pressureUnit}</span></span></div>` : ''}
-            ${windSpeed !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.wind}.svg" alt="Wind"><span class="weather-detail-value ${valueClass}">${windSpeed} <span class="${unitClass}">${windSpeedUnit}</span>${windBearing !== undefined ? ' (<span class=\"' + unitClass + '\">' + windBearing + '°</span>)' : ''}</span></div>` : ''}
-            ${cloudCoverage !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.clouds}.svg" alt="Clouds"><span class="weather-detail-value ${valueClass}">${cloudCoverage}<span class="${unitClass}">%</span></span></div>` : ''}
-            ${visibility !== undefined ? `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detailIcons.visibility}.svg" alt="Visibility"><span class="weather-detail-value ${valueClass}">${visibility} <span class="${unitClass}">${visibilityUnit}</span></span></div>` : ''}
+            ${detailsHtml}
           </div>
         </div>
       `;
@@ -517,6 +437,26 @@ class HomeAssistantRenderer {
       'default': 'mdi:information',
       'error': 'mdi:alert-circle',
       'unknown': 'mdi:help-circle'
+    };
+  }
+
+  createWeatherIconMap() {
+    return {
+      'clear-night': 'mdi:weather-night',
+      'cloudy': 'mdi:weather-cloudy',
+      'fog': 'mdi:weather-fog',
+      'hail': 'mdi:weather-hail',
+      'lightning': 'mdi:weather-lightning',
+      'lightning-rainy': 'mdi:weather-lightning-rainy',
+      'partlycloudy': 'mdi:weather-partly-cloudy',
+      'pouring': 'mdi:weather-pouring',
+      'rainy': 'mdi:weather-rainy',
+      'snowy': 'mdi:weather-snowy',
+      'snowy-rainy': 'mdi:weather-snowy-rainy',
+      'sunny': 'mdi:weather-sunny',
+      'windy': 'mdi:weather-windy',
+      'windy-variant': 'mdi:weather-windy-variant',
+      'exceptional': 'mdi:alert'
     };
   }
 
