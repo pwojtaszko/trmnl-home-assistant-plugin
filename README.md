@@ -3,6 +3,8 @@
 
 A TRMNL plugin for Home Assistant that displays your smart home entities on a TRMNL device. Home Assistant sends entity data to TRMNL via a webhook.
 
+> **Note:** This project is actively under development as we experiment with different layouts to find the optimal design for various setups. You may encounter occasional glitches or rapid changes. Contributions, feedback, and suggestions are highly appreciated!
+
 ---
 
 ## Features
@@ -15,6 +17,7 @@ A TRMNL plugin for Home Assistant that displays your smart home entities on a TR
 
 ## Screenshots (Default settings for Grid and List layouts)
 ![Groups Layout](screenshots/groups-layout.png)
+![Groups Layout - no vis](screenshots/groups-layout-no-vis.png)
 ![List layout](screenshots/list-layout.png)
 
 ---
@@ -56,8 +59,6 @@ Before setting up this plugin, ensure you have:
 ---
 
 ## Configuration Screenshots
-### Plugin configuration
-![plugin configuration](screenshots/plugin_configuration.png)
 
 ### HACS configuration
 ![hacs configuration](screenshots/hacs_configuration.png)
