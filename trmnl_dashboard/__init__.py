@@ -81,6 +81,21 @@ async def async_setup_entry(hass, entry):
                         "last_changed": str(state_obj.last_changed),
                         "last_updated": str(state_obj.last_updated),
                     }
+                    # Fetch forecast for weather entities
+                    if entity_id.startswith("weather."):
+                        try:
+                            forecast_response = await hass.services.async_call(
+                                "weather",
+                                "get_forecasts",
+                                {"entity_id": entity_id, "type": "daily"},
+                                blocking=True,
+                                return_response=True
+                            )
+                            if forecast_response and entity_id in forecast_response:
+                                updated_viz["forecast"] = forecast_response[entity_id].get("forecast", [])
+                        except Exception as forecast_err:
+                            # Some weather entities may not support get_forecasts service
+                            _LOGGER.debug(f"Could not fetch forecast for {entity_id}: {forecast_err}")
                     updated_visualizations.append(updated_viz)
                 else:
                     updated_visualizations.append(viz)
@@ -164,6 +179,21 @@ async def async_setup_entry(hass, entry):
                         "last_changed": str(state_obj.last_changed),
                         "last_updated": str(state_obj.last_updated),
                     }
+                    # Fetch forecast for weather entities
+                    if entity_id.startswith("weather."):
+                        try:
+                            forecast_response = await hass.services.async_call(
+                                "weather",
+                                "get_forecasts",
+                                {"entity_id": entity_id, "type": "daily"},
+                                blocking=True,
+                                return_response=True
+                            )
+                            if forecast_response and entity_id in forecast_response:
+                                updated_viz["forecast"] = forecast_response[entity_id].get("forecast", [])
+                        except Exception as forecast_err:
+                            # Some weather entities may not support get_forecasts service
+                            _LOGGER.debug(f"Could not fetch forecast for {entity_id}: {forecast_err}")
                     updated_visualizations.append(updated_viz)
                 else:
                     updated_visualizations.append(viz)

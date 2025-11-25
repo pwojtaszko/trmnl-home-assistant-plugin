@@ -1,10 +1,13 @@
 import voluptuous as vol
+import logging
 from homeassistant import config_entries
 from homeassistant.core import callback
 from . import DOMAIN
 from .webhook import send_to_trmnl_webhook
 from homeassistant.helpers.selector import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+_LOGGER = logging.getLogger(__name__)
 
 class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
@@ -117,6 +120,21 @@ class TrmnlWebhookConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             "last_changed": str(state_obj.last_changed),
                             "last_updated": str(state_obj.last_updated),
                         }
+                        # Fetch forecast for weather entities
+                        if entity_id.startswith("weather."):
+                            try:
+                                forecast_response = await hass.services.async_call(
+                                    "weather",
+                                    "get_forecasts",
+                                    {"entity_id": entity_id, "type": "daily"},
+                                    blocking=True,
+                                    return_response=True
+                                )
+                                if forecast_response and entity_id in forecast_response:
+                                    updated_viz["forecast"] = forecast_response[entity_id].get("forecast", [])
+                            except Exception as forecast_err:
+                                # Some weather entities may not support get_forecasts service
+                                _LOGGER.debug(f"Could not fetch forecast for {entity_id}: {forecast_err}")
                         updated_visualizations.append(updated_viz)
                     else:
                         updated_visualizations.append(viz)
@@ -352,6 +370,21 @@ class TrmnlWebhookOptionsFlowHandler(config_entries.OptionsFlow):
                                 "last_changed": str(state_obj.last_changed),
                                 "last_updated": str(state_obj.last_updated),
                             }
+                            # Fetch forecast for weather entities
+                            if entity_id.startswith("weather."):
+                                try:
+                                    forecast_response = await hass.services.async_call(
+                                        "weather",
+                                        "get_forecasts",
+                                        {"entity_id": entity_id, "type": "daily"},
+                                        blocking=True,
+                                        return_response=True
+                                    )
+                                    if forecast_response and entity_id in forecast_response:
+                                        updated_viz["forecast"] = forecast_response[entity_id].get("forecast", [])
+                                except Exception as forecast_err:
+                                    # Some weather entities may not support get_forecasts service
+                                    _LOGGER.debug(f"Could not fetch forecast for {entity_id}: {forecast_err}")
                             updated_visualizations.append(updated_viz)
                         else:
                             updated_visualizations.append(viz)

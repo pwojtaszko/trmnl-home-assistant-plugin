@@ -113,10 +113,11 @@
         gap: 5px;
         grid-auto-flow: dense;
       }
-      .groups-layout .free-layout-container.scale-small { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
       .groups-layout .free-layout-container .group-content {
         display: flex;
         flex-wrap: wrap;
+        height: 100%;
+        align-items: center;
       }
 
       /* List layout */
@@ -132,8 +133,8 @@
         background: none;
         border: none;
         border-radius: 0;
-        margin: 0 0 0 17px;
-        padding: 0;
+        padding: 0 0 0 17px;
+        margin: 0;
         grid-column: span 2;
       }
       
@@ -153,10 +154,10 @@
       }
       
       /* Dynamic grid columns */
-      .list-layout .free-layout-container .group-content.show-all { grid-template-columns: 1fr 28px auto auto; }
-      .list-layout .free-layout-container .group-content.hide-title { grid-template-columns: 28px auto auto; }
-      .list-layout .free-layout-container .group-content.hide-icon { grid-template-columns: 1fr auto auto; }
-      .list-layout .free-layout-container .group-content.hide-both { grid-template-columns: auto auto; }
+      .list-layout .free-layout-container.show-all .group-content { grid-template-columns: 1fr 28px auto auto; }
+      .list-layout .free-layout-container.hide-title .group-content { grid-template-columns: 28px auto auto; }
+      .list-layout .free-layout-container.hide-icon .group-content { grid-template-columns: 1fr auto auto; }
+      .list-layout .free-layout-container.hide-title.hide-icon .group-content { grid-template-columns: auto auto; }
       
       .list-layout .free-layout-container .entity-list-row { display: contents; }
       
@@ -182,14 +183,14 @@
       }
       
       /* Grid column assignments */
-      .list-layout .free-layout-container .group-content.show-all .entity-name { grid-column: 1; }
-      .list-layout .free-layout-container .group-content.show-all .entity-icon { grid-column: 2; }
-      .list-layout .free-layout-container .group-content.show-all .entity-value { grid-column: 3; }
-      .list-layout .free-layout-container .group-content.hide-title .entity-icon { grid-column: 1; }
-      .list-layout .free-layout-container .group-content.hide-title .entity-value { grid-column: 2; }
-      .list-layout .free-layout-container .group-content.hide-icon .entity-name { grid-column: 1; }
-      .list-layout .free-layout-container .group-content.hide-icon .entity-value { grid-column: 2; }
-      .list-layout .free-layout-container .group-content.hide-both .entity-value { grid-column: 1; }
+      .list-layout .free-layout-container.show-all .group-content .entity-name { grid-column: 1; }
+      .list-layout .free-layout-container.show-all .group-content .entity-icon { grid-column: 2; }
+      .list-layout .free-layout-container.show-all .group-content .entity-value { grid-column: 3; }
+      .list-layout .free-layout-container.hide-title .group-content .entity-icon { grid-column: 1; }
+      .list-layout .free-layout-container.hide-title .group-content .entity-value { grid-column: 2; }
+      .list-layout .free-layout-container.hide-icon .group-content .entity-name { grid-column: 1; }
+      .list-layout .free-layout-container.hide-icon .group-content .entity-value { grid-column: 2; }
+      .list-layout .free-layout-container.hide-title.hide-icon .group-content .entity-value { grid-column: 1; }
 
       /* Mashup layouts */
       .mashup--1Lx1R .free-layout-container,
@@ -198,6 +199,10 @@
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       }
 
+      .free-layout-container.hide-title.hide-icon .entity-group {
+        grid-column: span 1;
+      }
+  
       /* Weather visualization */
       .visualizations-container {
         display: flex;
@@ -206,9 +211,9 @@
       }
 
       .weather-visualization {
-        grid-column: span 2;
+        grid-column: span 2 !important;
         grid-row: span 2;
-        width: 100%;
+        width: 100% !important;
         min-width: 250px;
         max-width: 380px;
         box-sizing: border-box;
@@ -216,7 +221,10 @@
         flex-direction: column;
         align-items: stretch;
       }
-      .scale-small .weather-visualization { grid-column: span 5; }
+
+      .groups-layout .scale-normal .weather-visualization, .groups-layout .scale-small .weather-visualization { grid-row: span 3; }
+      
+      .groups-layout .scale-small .weather-visualization { grid-column: span 2; }
 
       .weather-main-row {
         display: flex;
@@ -224,34 +232,10 @@
         gap: 18px;
       }
 
-      .weather-icon {
-        flex-shrink: 0;
-        filter: grayscale(1) contrast(1.2);
-      }
-      .scale-small .weather-icon { width: 45px; height: 45px; }
-      .scale-normal .weather-icon { width: 56px; height: 56px; }
-      .scale-big .weather-icon { width: 70px; height: 70px; }
-
-      .weather-main-info {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        flex: 1;
-        align-items: flex-start;
-      }
-
-      .weather-temp {
-        font-weight: 700;
-        letter-spacing: -1px;
-        line-height: 1.1;
-        font-size: 2.2em;
-      }
-
       .weather-details-row {
         display: flex;
         flex-wrap: wrap;
         gap: 3px;
-        flex: 1;
       }
 
       .weather-detail {
@@ -267,9 +251,69 @@
       .weather-detail-icon {
         filter: grayscale(1) contrast(1.2);
       }
+
+      .weather-icon-small {
+        width: 45px; height: 45px;
+      }
+
+      .weather-icon-normal {
+        width: 56px; height: 56px;
+      }
+
+      .weather-icon-big {
+        width: 70px; height: 70px;
+      }
+
       .scale-small .weather-detail-icon { width: 18px; height: 18px; }
       .scale-normal .weather-detail-icon { width: 22px; height: 22px; }
       .scale-big .weather-detail-icon { width: 28px; height: 28px; }
+
+      /* Weather forecast */
+      .weather-forecast {
+        display: flex;
+        flex-direction: row;
+        gap: 1px;
+        overflow-x: auto;
+        padding: 8px 0;
+        justify-content: space-between;
+      }
+
+      .forecast-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #fff;
+      }
+
+      .forecast-date {
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .forecast-icon {
+        filter: grayscale(1) contrast(1.2);
+      }
+
+      .forecast-temps {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .forecast-temp-high {
+        font-weight: 600;
+      }
+
+      .forecast-temp-low {
+        opacity: 0.7;
+      }
+
+      .forecast-precip {
+        font-size: 0.85em;
+        text-align: center;
+      }
 
     </style>
   </head>
@@ -322,17 +366,48 @@ class HomeAssistantRenderer {
           `<div class="weather-detail"><img class="weather-detail-icon" src="https://api.iconify.design/${detail.icon}.svg" alt="${detail.label}"><span class="weather-detail-value ${valueClass}">${detail.value}<span class="${unitClass}">${detail.unit}</span></span></div>`
         ).join('');
       
-      return `
-        <div class="weather-visualization entity-group">
-          <div class="weather-main-row">
-            <img class="weather-icon" src="${iconUrl}" alt="${entity.state}">
-            <div class="weather-main-info">
-              <div class="weather-temp value ${this.textClasses.entityValue} ${typeof temp === 'number' ? 'value--tnums' : ''}">${temp !== undefined ? temp + ' <span class="' + unitClass + '">' + tempUnit + '</span>' : ''}</div>
+      // Render forecast if available
+      let forecastHtml = '';
+      if (entity.forecast && entity.forecast.length > 0) {
+        const forecastDays = entity.forecast.slice(0, 5).map(day => {
+          const dayIcon = this.weatherIconMap[day.condition] || 'mdi:weather-partly-cloudy';
+          const dayIconUrl = `https://api.iconify.design/${dayIcon}.svg`;
+          const date = new Date(day.datetime);
+          const dayLetter = date.toLocaleDateString(undefined, { weekday: 'short' });
+          // Format values as integers
+          const temp = day.temperature !== undefined ? Math.round(day.temperature) : '';
+          const templow = day.templow !== undefined ? Math.round(day.templow) : undefined;
+          const precip = day.precipitation !== undefined ? Math.round(day.precipitation) : undefined;
+          return `
+            <div class="forecast-day">
+              <div class="forecast-date">${dayLetter}</div>
+              <img class="forecast-icon ${this.weatherClasses.forecastIcon}" src="${dayIconUrl}" alt="${day.condition}">
+              <div class="forecast-temps">
+                <span class="value value--small forecast-temp-high">${temp}°</span>
+                ${templow !== undefined ? `<span class="value value--small forecast-temp-low">${templow}°</span>` : ''}
+              </div>
+              ${precip !== undefined && precip > 0 ? `<span>${precip}${attrs.precipitation_unit || 'mm'}</span>` : ''}
             </div>
+          `;
+        }).join('');
+        
+        forecastHtml = `
+          <div class="weather-forecast">
+            ${forecastDays}
+          </div>
+        `;
+      }
+      
+      return `
+        <div class="entity-group weather-visualization">
+          <div class="weather-main-row">
+            <img class="${this.weatherClasses.weatherIcon}" src="${iconUrl}" alt="${entity.state}">
+            <span class="value ${this.weatherClasses.weatherValue}">${temp !== undefined ? temp + tempUnit : ''}</span>
           </div>
           <div class="weather-details-row">
             ${detailsHtml}
           </div>
+          ${forecastHtml}
         </div>
       `;
     }
@@ -347,7 +422,7 @@ class HomeAssistantRenderer {
         deviceClass: 'value--xxsmall',
         groupHeader: 'value--xsmall',
         entityName: 'value--xxsmall',
-        iconSize: '20px'
+        iconSize: '20px',
       },
       normal: {
         pillValue: 'value--xsmall',
@@ -356,7 +431,7 @@ class HomeAssistantRenderer {
         deviceClass: 'value--xsmall',
         groupHeader: 'value--small',
         entityName: 'value--xsmall',
-        iconSize: '25px'
+        iconSize: '25px',
       },
       big: {
         pillValue: 'value--small',
@@ -365,11 +440,33 @@ class HomeAssistantRenderer {
         deviceClass: 'value--small',
         groupHeader: 'value--medium',
         entityName: 'value--small',
-        iconSize: '30px'
+        iconSize: '30px',
+      }
+    };
+
+    const weatherScale = {
+      small: {
+        weatherIcon: 'weather-icon-small',
+        weatherValue: 'value--regular',
+        forecastIcon: 'weather-icon-small',
+        forecastValue: 'value--regular'
+      },
+      normal: {
+        weatherIcon: 'weather-icon-normal',
+        weatherValue: 'value--large',
+        forecastIcon: 'weather-icon-small',
+        forecastValue: 'value--regular'
+      },
+      big: {
+        weatherIcon: 'weather-icon-big',
+        weatherValue: 'value--xlarge',
+        forecastIcon: 'weather-icon-small',
+        forecastValue: 'value--regular'
       }
     };
     
     this.textClasses = scaleConfig[this.scale] || scaleConfig.normal;
+    this.weatherClasses = weatherScale[this.scale] || weatherScale.normal;
   }
 
   init() {
@@ -693,22 +790,12 @@ class HomeAssistantRenderer {
             `;
         });
         
-        // Determine which CSS class to use based on visibility settings
-        let gridClass = 'show-all';
-        if (!this.showEntityTitle && !this.showEntityIcon) {
-          gridClass = 'hide-both';
-        } else if (!this.showEntityTitle) {
-          gridClass = 'hide-title';
-        } else if (!this.showEntityIcon) {
-          gridClass = 'hide-icon';
-        }
-        
         return `
           <div class="entity-group" data-label="${groupName}">
             <div class="group-header">
               ${groupName ? `<span class="value ${this.textClasses.groupHeader}">${groupName}</span>` : ''}
             </div>
-            <div class="group-content ${gridClass}">
+            <div class="group-content">
               ${entityRows.join('')}
             </div>
           </div>
@@ -769,7 +856,18 @@ class HomeAssistantRenderer {
           return this.createEntitySection(group);
         });
       }
-       mainContentHtml += `<div class="free-layout-container scale-${this.scale}">${vizSections.join('')}${sections.join('')}</div>`;
+
+      // Determine which CSS class to use based on visibility settings
+      let showDetailsClass = 'show-all';
+      if (!this.showEntityTitle && !this.showEntityIcon) {
+        showDetailsClass = 'hide-title hide-icon';
+      } else if (!this.showEntityTitle) {
+        showDetailsClass = 'hide-title';
+      } else if (!this.showEntityIcon) {
+        showDetailsClass = 'hide-icon';
+      }
+  
+       mainContentHtml += `<div class="free-layout-container scale-${this.scale} ${showDetailsClass}">${vizSections.join('')}${sections.join('')}</div>`;
 
       // Create the layout structure
       if (pillsHtml) {
